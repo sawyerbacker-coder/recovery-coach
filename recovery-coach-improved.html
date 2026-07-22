@@ -10,6 +10,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Firebase App & Auth & Firestore SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -64,7 +70,7 @@
 
     <div class="max-w-4xl w-full space-y-6 relative z-10">
         
-        <!-- Header & Profile Trigger -->
+        <!-- Header & Profile / Auth Trigger -->
         <header class="flex items-center justify-between pb-2">
             <div class="space-y-1">
                 <div class="inline-flex items-center space-x-2 bg-emerald-100 border border-emerald-300 px-3.5 py-1 rounded-full text-emerald-800 text-xs font-extrabold tracking-wide uppercase">
@@ -76,16 +82,19 @@
                 </h1>
             </div>
 
-            <!-- Top-Right Profile Button -->
-            <button onclick="toggleProfileModal()" class="flex items-center space-x-2 bg-white hover:bg-emerald-50 border border-emerald-300 p-2 md:px-4 md:py-2.5 rounded-2xl shadow-sm transition text-slate-700">
-                <div class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xs">
-                    <i class="fa-solid fa-user-gear"></i>
-                </div>
-                <div class="hidden md:block text-left">
-                    <p id="navProfileName" class="text-xs font-extrabold text-slate-900">Athlete Profile</p>
-                    <p id="navProfileSport" class="text-[10px] text-emerald-700 font-extrabold">Multi-Sport Bio</p>
-                </div>
-            </button>
+            <!-- Top-Right Account & Profile Buttons -->
+            <div class="flex items-center space-x-2">
+                <button id="authBtn" onclick="toggleAuthModal()" class="flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2.5 rounded-2xl shadow-md transition font-extrabold text-xs">
+                    <i class="fa-solid fa-user-lock"></i>
+                    <span id="authBtnText">Sign In / Register</span>
+                </button>
+
+                <button onclick="toggleProfileModal()" class="flex items-center space-x-2 bg-white hover:bg-emerald-50 border border-emerald-300 p-2 md:px-3 md:py-2.5 rounded-2xl shadow-sm transition text-slate-700">
+                    <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs">
+                        <i class="fa-solid fa-user-gear"></i>
+                    </div>
+                </button>
+            </div>
         </header>
 
         <!-- Navigation Bar -->
@@ -122,7 +131,6 @@
                     </div>
                 </div>
 
-                <!-- Form Grid -->
                 <form id="recoveryForm" class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         
@@ -130,7 +138,7 @@
                             <label class="text-xs font-extrabold tracking-wider uppercase text-slate-700 flex items-center gap-2">
                                 <i class="fa-solid fa-dumbbell text-emerald-600"></i> Workout / Session Today
                             </label>
-                            <input type="text" id="activity" required placeholder="e.g. Heavy Squat Workout, Basketball Game, Tempo Run" 
+                            <input type="text" id="activity" required placeholder="e.g. Heavy Legs, Basketball Game, Tempo Run" 
                                 class="fluid-input w-full px-4 py-3 text-sm">
                         </div>
 
@@ -227,15 +235,15 @@
                             <i class="fa-solid fa-person-stretching text-lg"></i>
                         </div>
                         <div>
-                            <h2 class="text-xl font-extrabold text-slate-900">Visual Stretch Demonstrations</h2>
-                            <p class="text-xs text-slate-500 font-medium" id="stretchTargetText">Targeted stretch routine with visual form cues</p>
+                            <h2 class="text-xl font-extrabold text-slate-900">Enhanced Visual Stretch Cues</h2>
+                            <p class="text-xs text-slate-500 font-medium" id="stretchTargetText">Highlighted red muscle zones show exact stretch mechanics</p>
                         </div>
                     </div>
-                    <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full border border-emerald-300">Pose Cards</span>
+                    <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full border border-emerald-300">Anatomical Cues</span>
                 </div>
 
                 <div id="stretchingCardsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Dynamic Visual Stretch Cards Render Here -->
+                    <!-- Dynamic Visual Pose Cards -->
                 </div>
             </div>
         </section>
@@ -250,7 +258,7 @@
                         </div>
                         <div>
                             <h2 class="text-xl font-extrabold text-slate-900">Training & Event Calendar</h2>
-                            <p class="text-xs text-slate-500 font-medium">Events display directly inside calendar dates</p>
+                            <p class="text-xs text-slate-500 font-medium">Events sync across all your devices automatically</p>
                         </div>
                     </div>
                     <span id="currentMonthYear" class="text-sm font-extrabold text-emerald-700"></span>
@@ -296,11 +304,10 @@
                     </div>
                     <div>
                         <h2 class="text-xl font-extrabold text-slate-900">Performance Nutrition Hub</h2>
-                        <p class="text-xs text-slate-500 font-medium">Click <strong>AI Refresh 🔄</strong> to fetch a new meal tailored to your sport!</p>
+                        <p class="text-xs text-slate-500 font-medium">Click <strong>AI Refresh 🔄</strong> to cycle through new options!</p>
                     </div>
                 </div>
 
-                <!-- PRE-LOADED HTML RECIPE CARDS (These will NEVER disappear) -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     
                     <div id="card-pre" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition">
@@ -385,6 +392,43 @@
 
     </div>
 
+    <!-- ================= ACCOUNT / LOGIN MODAL ================= -->
+    <div id="authModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="fluid-card w-full max-w-md p-6 md:p-8 space-y-6 bg-white relative shadow-2xl">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center shadow-md">
+                        <i class="fa-solid fa-user-lock text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-extrabold text-slate-900">Cross-Device Account</h3>
+                        <p class="text-xs text-slate-500">Log in to sync your profile & calendar anywhere.</p>
+                    </div>
+                </div>
+                <button onclick="toggleAuthModal()" class="text-slate-400 hover:text-slate-700 p-2 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="authForm" class="space-y-4">
+                <div class="space-y-1.5">
+                    <label class="text-xs font-extrabold uppercase text-slate-700">Email Address</label>
+                    <input type="email" id="authEmail" required placeholder="athlete@example.com" class="fluid-input w-full px-3.5 py-2.5 text-sm">
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="text-xs font-extrabold uppercase text-slate-700">Password</label>
+                    <input type="password" id="authPassword" required placeholder="••••••••" class="fluid-input w-full px-3.5 py-2.5 text-sm">
+                </div>
+
+                <div class="pt-2 flex flex-col gap-2">
+                    <button type="button" onclick="handleAuth('login')" class="w-full py-3 rounded-xl font-extrabold text-white bg-emerald-600 hover:bg-emerald-700 text-sm shadow-md">Sign In</button>
+                    <button type="button" onclick="handleAuth('signup')" class="w-full py-3 rounded-xl font-bold text-emerald-800 bg-emerald-100 hover:bg-emerald-200 text-sm">Create New Account</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- ================= TOP-RIGHT PROFILE MODAL ================= -->
     <div id="profileModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="fluid-card w-full max-w-lg p-6 md:p-8 space-y-6 bg-white relative shadow-2xl">
@@ -457,6 +501,36 @@
 
     <!-- Application Script -->
     <script>
+        // YOUR EXACT FIREBASE KEYS FROM SCREENSHOT
+        const firebaseConfig = {
+            apiKey: "AIzaSyBoUAlsqAR3vAdFzFYRcZBKjy6FwI400xI",
+            authDomain: "rebound-recovery-coach.firebaseapp.com",
+            projectId: "rebound-recovery-coach",
+            storageBucket: "rebound-recovery-coach.firebasestorage.app",
+            messagingSenderId: "829265408975",
+            appId: "1:829265408975:web:988d574f8d491e82f818ba",
+            measurementId: "G-KQ7SEL8T4R"
+        };
+
+        // Initialize Firebase
+        let auth, db, currentUser = null;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            auth = firebase.auth();
+            db = firebase.firestore();
+
+            auth.onAuthStateChanged(user => {
+                currentUser = user;
+                const authBtnText = document.getElementById('authBtnText');
+                if (user) {
+                    authBtnText.textContent = user.email.split('@')[0];
+                    loadCloudData();
+                } else {
+                    authBtnText.textContent = "Sign In / Register";
+                }
+            });
+        } catch (e) { console.log('Firebase init error:', e); }
+
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -473,65 +547,90 @@
             document.getElementById('profileModal').classList.toggle('hidden');
         }
 
-        // ================= VISUAL STRETCH GRAPHIC POSE CARDS =================
+        function toggleAuthModal() {
+            document.getElementById('authModal').classList.toggle('hidden');
+        }
+
+        // Handle Sign In / Registration
+        async function handleAuth(mode) {
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+
+            if (!email || !password) return alert('Please enter both email and password.');
+
+            try {
+                if (mode === 'signup') {
+                    await auth.createUserWithEmailAndPassword(email, password);
+                    alert('Account created! Your training data will now sync across devices.');
+                } else {
+                    await auth.signInWithEmailAndPassword(email, password);
+                    alert('Signed in successfully!');
+                }
+                toggleAuthModal();
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+
+        // ================= HIGH-CONTRAST MULTI-COLOR POSE SVGs =================
         const stretchLibrary = {
             'Quads': [
                 {
                     name: 'Standing Quad Stretch',
                     duration: '45 sec / leg',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32 text-emerald-600"><circle cx="50" cy="20" r="8" fill="currentColor"/><path d="M50 28 L50 60 M50 38 L35 50 M50 38 L65 50 M50 60 L42 90 M50 60 L60 75 L52 75" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none"/><circle cx="58" cy="75" r="4" fill="#059669"/></svg>`,
-                    desc: 'Stand tall. Pull foot to glutes keeping knees aligned and core braced.'
+                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="10" y1="92" x2="90" y2="92" stroke="#94a3b8" stroke-width="3"/><circle cx="50" cy="18" r="7" fill="#475569"/><path d="M50 25 L50 55 M50 35 L35 48 M50 35 L65 48 M50 55 L42 90 M50 55 L60 72 L52 72" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M50 55 L60 72" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/><circle cx="58" cy="72" r="4" fill="#059669"/></svg>`,
+                    desc: 'Stand tall. Pull heel to glute while bracing core. Highlighted red zone shows target quad stretch.'
                 },
                 {
                     name: 'Kneeling Couch Stretch',
                     duration: '60 sec / leg',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32 text-emerald-600"><circle cx="40" cy="25" r="8" fill="currentColor"/><path d="M40 33 L40 65 M40 45 L25 55 M40 45 L55 55 M40 65 L60 65 L60 90 M40 65 L25 90" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none"/><rect x="58" y="50" width="8" height="40" fill="#cbd5e1"/></svg>`,
-                    desc: 'Rear foot elevated against wall or bench. Keep torso vertical to open deep hip flexors.'
+                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><rect x="65" y="55" width="18" height="37" fill="#cbd5e1" rx="3"/><circle cx="35" cy="22" r="7" fill="#475569"/><path d="M35 29 L35 58 M35 40 L20 48 M35 40 L50 48 M35 58 L55 58 L55 90 M35 58 L20 90" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M35 58 L55 58" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
+                    desc: 'Rear foot against wall or box. Keep torso vertical to stretch deep hip flexors & quads.'
                 },
                 {
                     name: 'Foam Roll Quads',
                     duration: '90 sec total',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32 text-emerald-600"><circle cx="20" cy="45" r="8" fill="currentColor"/><path d="M28 47 L65 55 M35 50 L40 70 M65 55 L75 75 M65 55 L85 55" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none"/><ellipse cx="50" cy="62" rx="10" ry="5" fill="#059669"/></svg>`,
-                    desc: 'Roll slowly from hip crest down to above kneecap. Pause on tender knots.'
+                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="10" y1="80" x2="90" y2="80" stroke="#94a3b8" stroke-width="3"/><circle cx="20" cy="45" r="7" fill="#475569"/><path d="M27 47 L65 58 M35 50 L40 78 M65 58 L75 78 M65 58 L85 58" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M40 52 L62 57" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/><ellipse cx="52" cy="65" rx="8" ry="6" fill="#059669"/></svg>`,
+                    desc: 'Roll slowly from hip crest down to above kneecap. Pause on tight spots.'
                 }
             ],
             'Hamstrings': [
                 {
                     name: 'Elevated Single-Leg Hinge',
                     duration: '45 sec / leg',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32 text-emerald-600"><circle cx="35" cy="25" r="8" fill="currentColor"/><path d="M35 33 L45 58 M40 42 L25 55 M40 42 L55 35 M45 58 L35 88 M45 58 L70 58 L70 88" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none"/><rect x="68" y="68" width="20" height="20" fill="#cbd5e1"/></svg>`,
-                    desc: 'Place heel on box. Hinge at hips with flat back until hamstring opens.'
+                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><rect x="68" y="65" width="22" height="27" fill="#cbd5e1" rx="3"/><circle cx="32" cy="22" r="7" fill="#475569"/><path d="M32 29 L42 55 M38 38 L22 48 M38 38 L52 32 M42 55 L32 90 M42 55 L72 55 L72 90" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M42 55 L72 55" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
+                    desc: 'Place heel on box. Hinge forward at hips keeping back flat until hamstring opens.'
                 },
                 {
                     name: 'Seated Reach Stretch',
                     duration: '60 sec / leg',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32 text-emerald-600"><circle cx="30" cy="45" r="8" fill="currentColor"/><path d="M30 53 L45 70 M38 60 L68 62 M45 70 L85 70 M45 70 L35 88" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none"/></svg>`,
-                    desc: 'Sit tall with one leg extended. Reach toward toes keeping spine long.'
+                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="10" y1="85" x2="90" y2="85" stroke="#94a3b8" stroke-width="3"/><circle cx="28" cy="42" r="7" fill="#475569"/><path d="M28 49 L42 68 M35 55 L65 58 M42 68 L82 68 M42 68 L32 85" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M42 68 L82 68" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
+                    desc: 'Sit tall with extended leg. Reach toward toes with flat spine.'
                 },
                 {
                     name: 'Dynamic Leg Swings',
                     duration: '15 swings / leg',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32 text-emerald-600"><circle cx="50" cy="20" r="8" fill="currentColor"/><path d="M50 28 L50 60 M50 38 L35 50 M50 60 L42 90 M50 60 L75 45" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M70 40 Q80 50 65 60" stroke="#059669" stroke-width="2" fill="none"/></svg>`,
-                    desc: 'Hold support wall. Swing leg smoothly forward and back with full control.'
+                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="10" y1="92" x2="90" y2="92" stroke="#94a3b8" stroke-width="3"/><circle cx="50" cy="18" r="7" fill="#475569"/><path d="M50 25 L50 58 M50 35 L35 48 M50 58 L42 90 M50 58 L75 42" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M50 58 L75 42" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/><path d="M70 38 Q82 48 65 58" stroke="#059669" stroke-width="2" fill="none"/></svg>`,
+                    desc: 'Hold wall support. Swing leg smoothly forward and back with control.'
                 }
             ],
             'Calves': [
                 {
                     name: 'Wall Press Calf Stretch',
                     duration: '45 sec / leg',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32 text-emerald-600"><circle cx="35" cy="30" r="8" fill="currentColor"/><path d="M35 38 L50 55 M42 45 L65 40 M50 55 L35 85 M50 55 L75 88" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none"/><line x1="70" y1="20" x2="70" y2="90" stroke="#cbd5e1" stroke-width="6"/></svg>`,
-                    desc: 'Hands on wall. Press rear heel firmly into floor with straight knee.'
+                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="75" y1="10" x2="75" y2="92" stroke="#cbd5e1" stroke-width="6"/><circle cx="32" cy="28" r="7" fill="#475569"/><path d="M32 35 L48 52 M40 42 L68 38 M48 52 L32 88 M48 52 L72 90" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M48 52 L32 88" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
+                    desc: 'Hands against wall. Press rear heel firmly into floor with straight knee.'
                 },
                 {
                     name: 'Downward Dog Pedal',
                     duration: '60 sec',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32 text-emerald-600"><circle cx="50" cy="35" r="8" fill="currentColor"/><path d="M50 43 L30 75 M50 43 L75 75 M30 75 L20 90 M30 75 L35 90 M75 75 L70 90 M75 75 L80 90" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none"/></svg>`,
+                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="10" y1="90" x2="90" y2="90" stroke="#94a3b8" stroke-width="3"/><circle cx="50" cy="32" r="7" fill="#475569"/><path d="M50 39 L28 72 M50 39 L72 72 M28 72 L18 90 M28 72 L32 90 M72 72 L68 90 M72 72 L78 90" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M72 72 L78 90" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
                     desc: 'Press hips high. Alternate pressing each heel toward the floor slowly.'
                 },
                 {
                     name: 'Foam Roll Calves',
                     duration: '90 sec',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32 text-emerald-600"><circle cx="25" cy="50" r="8" fill="currentColor"/><path d="M33 52 L60 60 M40 55 L45 75 M60 60 L85 62" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none"/><ellipse cx="70" cy="65" rx="8" ry="5" fill="#059669"/></svg>`,
+                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="10" y1="82" x2="90" y2="82" stroke="#94a3b8" stroke-width="3"/><circle cx="22" cy="48" r="7" fill="#475569"/><path d="M29 50 L58 58 M38 52 L42 75 M58 58 L82 60" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M58 58 L82 60" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/><ellipse cx="68" cy="64" rx="7" ry="5" fill="#059669"/></svg>`,
                     desc: 'Cross ankles and roll from Achilles tendon up to upper calf.'
                 }
             ],
@@ -539,39 +638,39 @@
                 {
                     name: 'Pigeon Pose Hold',
                     duration: '60 sec / side',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32 text-emerald-600"><circle cx="30" cy="40" r="8" fill="currentColor"/><path d="M30 48 L45 65 M38 55 L60 55 M45 65 L20 75 M45 65 L85 75" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none"/></svg>`,
+                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="10" y1="85" x2="90" y2="85" stroke="#94a3b8" stroke-width="3"/><circle cx="28" cy="38" r="7" fill="#475569"/><path d="M28 45 L42 62 M35 52 L58 52 M42 62 L18 72 M42 62 L82 72" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M42 62 L18 72" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
                     desc: 'Front shin crosswise on floor, back leg straight. Sink hips square to floor.'
                 },
                 {
                     name: 'Figure-4 Glute Stretch',
                     duration: '45 sec / side',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32 text-emerald-600"><circle cx="20" cy="70" r="8" fill="currentColor"/><path d="M28 70 L60 70 M40 70 L55 50 L70 70 M60 70 L80 70" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none"/></svg>`,
+                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="10" y1="85" x2="90" y2="85" stroke="#94a3b8" stroke-width="3"/><circle cx="18" cy="68" r="7" fill="#475569"/><path d="M25 68 L58 68 M38 68 L52 48 L68 68 M58 68 L78 68" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M38 68 L52 48" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
                     desc: 'Lie on back, cross ankle over opposite knee, pull thigh to chest.'
                 },
                 {
                     name: '90/90 Hip Switches',
                     duration: '10 switches',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32 text-emerald-600"><circle cx="50" cy="30" r="8" fill="currentColor"/><path d="M50 38 L50 60 M50 60 L25 75 L35 90 M50 60 L75 75 L85 60" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none"/></svg>`,
-                    desc: 'Sit with both legs bent at 90 degrees. Rotate hips smoothly side to side.'
+                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><circle cx="50" cy="28" r="7" fill="#475569"/><path d="M50 35 L50 58 M50 58 L25 72 L35 88 M50 58 L75 72 L85 58" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M50 58 L25 72" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
+                    desc: 'Sit with legs bent at 90 degrees. Rotate hips smoothly side to side.'
                 }
             ],
             'Lower Back': [
                 {
                     name: 'Child’s Pose Reach',
                     duration: '60 sec',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32 text-emerald-600"><circle cx="25" cy="65" r="8" fill="currentColor"/><path d="M33 65 L60 65 L85 70 M40 65 L30 80 M45 65 L35 80" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none"/></svg>`,
+                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="10" y1="85" x2="90" y2="85" stroke="#94a3b8" stroke-width="3"/><circle cx="22" cy="62" r="7" fill="#475569"/><path d="M29 62 L58 62 L82 68 M38 62 L28 78 M42 62 L32 78" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M29 62 L58 62" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
                     desc: 'Hips back onto heels, extend arms forward and breathe deeply into lower back.'
                 },
                 {
                     name: 'Cat-Cow Flow',
                     duration: '10 reps',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32 text-emerald-600"><circle cx="30" cy="35" r="8" fill="currentColor"/><path d="M38 38 L65 42 M45 40 L45 75 M60 41 L60 75" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none"/></svg>`,
+                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="10" y1="85" x2="90" y2="85" stroke="#94a3b8" stroke-width="3"/><circle cx="28" cy="32" r="7" fill="#475569"/><path d="M35 35 L62 38 M42 37 L42 75 M58 38 L58 75" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M35 35 L62 38" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
                     desc: 'On hands and knees. Inhale to softly arch back, exhale to round spine.'
                 },
                 {
                     name: 'Supine Spinal Twist',
                     duration: '45 sec / side',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32 text-emerald-600"><circle cx="20" cy="50" r="8" fill="currentColor"/><path d="M28 50 L75 50 M45 50 L45 25 M45 50 L55 80" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none"/></svg>`,
+                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="10" y1="85" x2="90" y2="85" stroke="#94a3b8" stroke-width="3"/><circle cx="18" cy="48" r="7" fill="#475569"/><path d="M25 48 L72 48 M42 48 L42 22 M42 48 L52 78" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M42 48 L52 78" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
                     desc: 'Lie flat, draw knee across body toward floor keeping shoulders down.'
                 }
             ],
@@ -579,19 +678,19 @@
                 {
                     name: 'Doorway Chest Opener',
                     duration: '45 sec',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32 text-emerald-600"><circle cx="50" cy="25" r="8" fill="currentColor"/><path d="M50 33 L50 65 M50 42 L25 35 M50 42 L75 35 M50 65 L40 90 M50 65 L60 90" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none"/><line x1="20" y1="10" x2="20" y2="90" stroke="#cbd5e1" stroke-width="6"/><line x1="80" y1="10" x2="80" y2="90" stroke="#cbd5e1" stroke-width="6"/></svg>`,
+                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="18" y1="10" x2="18" y2="90" stroke="#cbd5e1" stroke-width="6"/><line x1="82" y1="10" x2="82" y2="90" stroke="#cbd5e1" stroke-width="6"/><circle cx="50" cy="22" r="7" fill="#475569"/><path d="M50 29 L50 62 M50 38 L22 32 M50 38 L78 32 M50 62 L40 88 M50 62 L60 88" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M22 32 L50 38 L78 32" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
                     desc: 'Forearms on doorframe, step through gently until chest opens.'
                 },
                 {
                     name: 'Cross-Body Shoulder Hold',
                     duration: '45 sec / side',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32 text-emerald-600"><circle cx="50" cy="25" r="8" fill="currentColor"/><path d="M50 33 L50 65 M50 42 L20 45 M50 42 L70 42 L65 55" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none"/></svg>`,
-                    desc: 'Pull arm across chest using opposite forearm to stretch rear deltoids.'
+                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><circle cx="50" cy="22" r="7" fill="#475569"/><path d="M50 29 L50 62 M50 38 L18 40 M50 38 L68 38 L62 52" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M50 38 L18 40" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
+                    desc: 'Pull arm across chest using opposite arm to stretch rear deltoid.'
                 },
                 {
                     name: 'Thread the Needle',
                     duration: '45 sec / side',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32 text-emerald-600"><circle cx="25" cy="45" r="8" fill="currentColor"/><path d="M33 48 L65 52 M45 50 L45 75 M60 52 L75 75" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none"/></svg>`,
+                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="10" y1="85" x2="90" y2="85" stroke="#94a3b8" stroke-width="3"/><circle cx="22" cy="42" r="7" fill="#475569"/><path d="M29 45 L62 48 M42 47 L42 72 M58 48 L72 72" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M29 45 L62 48" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
                     desc: 'From hands and knees, slide arm beneath torso to rest shoulder on floor.'
                 }
             ]
@@ -603,7 +702,7 @@
             if (!container) return;
 
             const stretches = stretchLibrary[area] || stretchLibrary['Quads'];
-            targetText.textContent = `Targeted stretch routine for: ${area}`;
+            targetText.textContent = `Highlighted red muscle zones show exact stretch mechanics for: ${area}`;
             container.innerHTML = '';
 
             stretches.forEach(item => {
@@ -611,7 +710,7 @@
                     <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200/90 space-y-3 hover:border-emerald-500 transition shadow-sm">
                         <div class="flex justify-between items-center">
                             <span class="text-xs bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1 rounded-full border border-emerald-300">${item.duration}</span>
-                            <span class="text-[10px] text-slate-400 font-bold uppercase">Form Visual</span>
+                            <span class="text-[10px] text-slate-400 font-bold uppercase">Multi-Color Form Visual</span>
                         </div>
                         <div class="bg-white rounded-xl p-2 border border-slate-200 flex items-center justify-center">
                             ${item.svg}
@@ -623,7 +722,7 @@
             });
         }
 
-        // ================= FORM SUBMIT & AI PROMPT INJECTION =================
+        // ================= FORM SUBMIT & AI PROMPT =================
         const form = document.getElementById('recoveryForm');
         const submitBtn = document.getElementById('submitBtn');
         const planOutput = document.getElementById('planOutput');
@@ -640,7 +739,6 @@
             const profGender = localStorage.getItem('rebound_gender') || 'Male';
             const profSeason = localStorage.getItem('rebound_season') || 'In-Season';
 
-            // We bundle the strict multi-sport instructions directly into the activity string!
             const multiSportContext = `Workout: ${rawActivity}. 
 [ATHLETE BIO: Primary In-Season Sport: ${profSport} | Off-Season/Secondary: ${profSecondary} | Age: ${profAge} | Gender: ${profGender} | Phase: ${profSeason}]. 
 INSTRUCTIONS FOR AI: Provide 3 distinct study-backed recovery techniques (e.g. cold water immersion, sauna/heat, active recovery <50% HRmax, targeted foam rolling). Explicitly state the scientific rationale for why these methods match the impact load of my multi-sport schedule and current season phase.`;
@@ -679,12 +777,8 @@ INSTRUCTIONS FOR AI: Provide 3 distinct study-backed recovery techniques (e.g. c
             }
         });
 
-        // ================= CALENDAR STATE =================
+        // ================= CALENDAR & CLOUD PERSISTENCE =================
         let scheduledEvents = { "2026-07-22": ["Basketball Game"] };
-        try {
-            const stored = localStorage.getItem('rebound_events');
-            if (stored) scheduledEvents = JSON.parse(stored);
-        } catch (e) { console.error('Failed to parse calendar events'); }
 
         function buildCalendar() {
             const calGrid = document.getElementById('calendarDays');
@@ -733,18 +827,17 @@ INSTRUCTIONS FOR AI: Provide 3 distinct study-backed recovery techniques (e.g. c
             }
         }
 
-        function addScheduleEvent() {
+        async function addScheduleEvent() {
             const dateVal = document.getElementById('eventDate').value;
             const titleVal = document.getElementById('eventTitle').value;
 
-            if (!dateVal || !titleVal) {
-                alert('Please select a date and enter an event name.');
-                return;
-            }
+            if (!dateVal || !titleVal) return alert('Please select a date and enter an event name.');
 
             if (!scheduledEvents[dateVal]) scheduledEvents[dateVal] = [];
             scheduledEvents[dateVal].push(titleVal);
+
             localStorage.setItem('rebound_events', JSON.stringify(scheduledEvents));
+            saveCloudData();
 
             buildCalendar();
             renderUpcomingEventsList();
@@ -774,31 +867,27 @@ INSTRUCTIONS FOR AI: Provide 3 distinct study-backed recovery techniques (e.g. c
             });
         }
 
-        // ================= SIMULATED AI RECIPE REFRESH ENGINE =================
+        // ================= ROTATING NUTRITION RECIPE ENGINE =================
         const recipeDatabase = {
             pre: [
                 { name: "Banana Rice Cakes & Peanut Butter", desc: "Quick-digesting carbohydrates for fast muscle glycogen fuel.", ingredients: ["2 whole grain rice cakes", "2 tbsp natural peanut butter", "1 sliced banana & honey drizzle"] },
                 { name: "Oatmeal with Berries & Chia", desc: "Sustained glucose release for longer endurance sessions.", ingredients: ["1/2 cup rolled oats", "1/2 cup fresh blueberries", "1 tbsp chia seeds & maple syrup"] },
-                { name: "Apple Slices & Almond Butter", desc: "Light, easy-digesting pre-workout energy without stomach distress.", ingredients: ["1 Honeycrisp apple", "2 tbsp almond butter", "Dash of cinnamon"] },
-                { name: "Honey Toast with Sea Salt", desc: "Rapidly absorbed glucose for immediate explosive energy.", ingredients: ["2 slices white or sourdough toast", "1 tbsp raw honey", "Pinch of coarse sea salt"] }
+                { name: "Apple Slices & Almond Butter", desc: "Light, easy-digesting pre-workout energy.", ingredients: ["1 Honeycrisp apple", "2 tbsp almond butter", "Dash of cinnamon"] }
             ],
             post: [
                 { name: "Tart Cherry & Whey Smoothie", desc: "Protein synthesis paired with tart cherry anti-inflammatory antioxidants.", ingredients: ["1 scoop Whey / Plant protein", "1/2 cup tart cherry juice", "1/2 cup almond milk & blueberries"] },
                 { name: "Chocolate Protein Rice Bowl", desc: "Optimal 3:1 carb-to-protein ratio for rapid muscle repair.", ingredients: ["1 cup cooked white rice", "1 cup chocolate protein milk", "Pinch of sea salt"] },
-                { name: "Greek Yogurt Berry Bowl", desc: "High leucine content to kickstart tissue building.", ingredients: ["1 cup 2% Greek Yogurt", "1/2 cup raspberries", "2 tbsp raw honey & sliced almonds"] },
-                { name: "Protein Packed Pancakes", desc: "Replenishes depleted glycogen while supplying amino acids.", ingredients: ["1/2 cup Kodiak pancake mix", "1 egg", "1/4 cup almond milk & 1/2 banana"] }
+                { name: "Greek Yogurt Berry Bowl", desc: "High leucine content to kickstart tissue building.", ingredients: ["1 cup 2% Greek Yogurt", "1/2 cup raspberries", "2 tbsp raw honey & sliced almonds"] }
             ],
             snack: [
                 { name: "Greek Yogurt & Pumpkin Seeds", desc: "Rich in casein protein, zinc, and magnesium for deep tissue repair.", ingredients: ["3/4 cup plain Greek yogurt", "2 tbsp pumpkin seeds (pepitas)", "1/2 cup fresh mixed berries"] },
                 { name: "Hard-Boiled Eggs & Avocado", desc: "Healthy fats and complete bioavailable proteins.", ingredients: ["2 pasture-raised eggs", "1 slice sourdough toast", "1/2 mashed avocado & sea salt"] },
-                { name: "Steamed Edamame with Sea Salt", desc: "Plant-based complete protein packed with electrolytes.", ingredients: ["1.5 cups edamame in pods", "Coarse sea salt", "1 tsp sesame oil"] },
-                { name: "Cottage Cheese & Pineapple", desc: "Slow-digesting protein combined with bromelain to reduce swelling.", ingredients: ["1 cup low-fat cottage cheese", "1/2 cup fresh pineapple chunks", "Sprinkle of chia seeds"] }
+                { name: "Steamed Edamame with Sea Salt", desc: "Plant-based complete protein packed with electrolytes.", ingredients: ["1.5 cups edamame in pods", "Coarse sea salt", "1 tsp sesame oil"] }
             ],
             dinner: [
                 { name: "Salmon Bowl with Quinoa", desc: "Omega-3 anti-inflammatory healthy fats paired with complex grains.", ingredients: ["6 oz wild salmon fillet", "1 cup cooked quinoa", "1 cup roasted asparagus & olive oil"] },
                 { name: "Grilled Chicken & Sweet Potato", desc: "Lean protein with complex carbs to replenish glycogen overnight.", ingredients: ["7 oz chicken breast", "1 medium baked sweet potato", "Steamed broccoli florets"] },
-                { name: "Lean Steak Sirloin & Peppers", desc: "Heme iron and zinc for muscle oxygenation and cellular repair.", ingredients: ["6 oz lean sirloin steak", "1 cup roasted bell peppers", "1/2 cup jasmine rice"] },
-                { name: "Turkey Meatball Whole Wheat Pasta", desc: "High protein dinner with sustained carbohydrates for next day fuel.", ingredients: ["5 lean ground turkey meatballs", "1 cup whole wheat pasta", "1/2 cup marinara sauce & spinach"] }
+                { name: "Lean Steak Sirloin & Peppers", desc: "Heme iron and zinc for muscle oxygenation and cellular repair.", ingredients: ["6 oz lean sirloin steak", "1 cup roasted bell peppers", "1/2 cup jasmine rice"] }
             ]
         };
 
@@ -808,15 +897,13 @@ INSTRUCTIONS FOR AI: Provide 3 distinct study-backed recovery techniques (e.g. c
             const container = document.getElementById(`card-${category}`);
             if (!container) return;
 
-            // Faux-AI Loading State
             container.innerHTML = `
-                <div class="h-full min-h-[220px] flex flex-col items-center justify-center space-y-3 text-emerald-600">
-                    <i class="fa-solid fa-circle-notch fa-spin text-3xl"></i>
-                    <p class="text-xs font-extrabold uppercase tracking-widest text-slate-600">AI Searching...</p>
+                <div class="h-full min-h-[200px] flex flex-col items-center justify-center space-y-3 text-emerald-600">
+                    <i class="fa-solid fa-circle-notch fa-spin text-2xl"></i>
+                    <p class="text-xs font-extrabold uppercase tracking-widest text-slate-600">AI Refreshing...</p>
                 </div>
             `;
 
-            // Wait 1 second, then generate
             setTimeout(() => {
                 recipeIndices[category] = (recipeIndices[category] + 1) % recipeDatabase[category].length;
                 const recipe = recipeDatabase[category][recipeIndices[category]];
@@ -844,7 +931,7 @@ INSTRUCTIONS FOR AI: Provide 3 distinct study-backed recovery techniques (e.g. c
                         </ul>
                     </div>
                 `;
-            }, 1000);
+            }, 800);
         }
 
         // Profile Storage Handler
@@ -861,6 +948,7 @@ INSTRUCTIONS FOR AI: Provide 3 distinct study-backed recovery techniques (e.g. c
             localStorage.setItem('rebound_gender', gender);
             localStorage.setItem('rebound_season', season);
 
+            saveCloudData();
             updateNavProfileHeader();
             toggleProfileModal();
         }
@@ -876,9 +964,47 @@ INSTRUCTIONS FOR AI: Provide 3 distinct study-backed recovery techniques (e.g. c
         }
 
         function updateNavProfileHeader() {
-            const sport = localStorage.getItem('rebound_sport') || 'Set Bio';
+            const sport = localStorage.getItem('rebound_sport') || 'Basketball';
             const navSport = document.getElementById('navProfileSport');
             if (navSport) navSport.textContent = sport;
+        }
+
+        // Save User Bio & Events to Firebase Cloud
+        async function saveCloudData() {
+            if (!currentUser || !db) return;
+            try {
+                await db.collection('users').doc(currentUser.uid).set({
+                    sport: localStorage.getItem('rebound_sport'),
+                    secondary: localStorage.getItem('rebound_secondary'),
+                    age: localStorage.getItem('rebound_age'),
+                    gender: localStorage.getItem('rebound_gender'),
+                    season: localStorage.getItem('rebound_season'),
+                    events: scheduledEvents
+                });
+            } catch (e) { console.log('Cloud sync error:', e); }
+        }
+
+        // Load User Bio & Events from Firebase Cloud across devices
+        async function loadCloudData() {
+            if (!currentUser || !db) return;
+            try {
+                const doc = await db.collection('users').doc(currentUser.uid).get();
+                if (doc.exists) {
+                    const data = doc.data();
+                    if (data.sport) localStorage.setItem('rebound_sport', data.sport);
+                    if (data.secondary) localStorage.setItem('rebound_secondary', data.secondary);
+                    if (data.age) localStorage.setItem('rebound_age', data.age);
+                    if (data.gender) localStorage.setItem('rebound_gender', data.gender);
+                    if (data.season) localStorage.setItem('rebound_season', data.season);
+                    if (data.events) {
+                        scheduledEvents = data.events;
+                        localStorage.setItem('rebound_events', JSON.stringify(scheduledEvents));
+                    }
+                    loadProfile();
+                    buildCalendar();
+                    renderUpcomingEventsList();
+                }
+            } catch (e) { console.log('Cloud load error:', e); }
         }
 
         // Initialize Page
