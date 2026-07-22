@@ -30,19 +30,19 @@ app.post('/api/recovery-plan', async (req, res) => {
 
     const apiKey = process.env.AI_API_KEY;
     
-    // Stable v1 models to attempt in order
+    // Active Gemini 3 series models
     const modelsToTry = [
-        'gemini-2.5-flash',
-        'gemini-2.0-flash',
-        'gemini-1.5-flash'
+        'gemini-3.6-flash',
+        'gemini-3.5-flash',
+        'gemini-3.5-flash-lite'
     ];
 
     let lastError = null;
 
     for (const model of modelsToTry) {
         try {
-            // Updated to standard production /v1/ API endpoint
-            const url = `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${apiKey}`;
+            // v1beta endpoint for Gemini 3 generation models
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
             const response = await fetch(url, {
                 method: 'POST',
@@ -59,12 +59,12 @@ app.post('/api/recovery-plan', async (req, res) => {
             if (data.error) {
                 console.warn(`Model ${model} returned error (${data.error.code}): ${data.error.message}`);
                 lastError = data.error;
-                continue; // Automatically try next model if one is unavailable
+                continue; // Fall through to next model if unavailable
             }
 
             const plan = data.candidates?.[0]?.content?.parts?.[0]?.text;
             if (plan) {
-                console.log(` success using model: ${model}`);
+                console.log(`Success using model: ${model}`);
                 return res.json({ plan });
             }
         } catch (err) {
