@@ -30,8 +30,8 @@ app.post('/api/recovery-plan', async (req, res) => {
 
     try {
         const apiKey = process.env.AI_API_KEY;
-        // Using active standard Gemini 2.5 Flash model
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+        // Standard production-ready model endpoint
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
         const response = await fetch(url, {
             method: 'POST',
