@@ -31,155 +31,344 @@
             border-color: #10b981;
             box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
         }
+        .tab-btn.active {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            border-color: rgba(16, 185, 129, 0.4);
+        }
     </style>
 </head>
-<body class="text-gray-100 min-h-screen flex flex-col items-center justify-center p-4 md:p-8">
+<body class="text-gray-100 min-h-screen flex flex-col items-center justify-start p-4 md:p-8">
 
-    <div class="max-w-3xl w-full space-y-6">
+    <div class="max-w-4xl w-full space-y-6">
         
         <!-- Header Section -->
         <header class="text-center space-y-2">
-            <div class="inline-flex items-center space-x-2 bg-emerald-950/60 border border-emerald-500/30 px-4 py-1.5 rounded-full text-emerald-400 text-sm font-semibold tracking-wide uppercase">
+            <div class="inline-flex items-center space-x-2 bg-emerald-950/60 border border-emerald-500/30 px-4 py-1.5 rounded-full text-emerald-400 text-xs md:text-sm font-semibold tracking-wide uppercase">
                 <i class="fa-solid fa-bolt text-emerald-400"></i>
-                <span>AI Performance Recovery</span>
+                <span>AI Performance Recovery Hub</span>
             </div>
-            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-white">
+            <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white">
                 REBOUND <span class="text-emerald-400">COACH</span>
             </h1>
-            <p class="text-gray-400 text-sm md:text-base max-w-md mx-auto">
-                Log today's training metrics to generate your personalized 3-step recovery protocol.
-            </p>
         </header>
 
-        <!-- Main Form Card -->
-        <div class="glass-card rounded-2xl p-6 md:p-8 space-y-6 shadow-2xl">
-            
-            <!-- Dynamic Readiness Header -->
-            <div class="flex flex-col sm:flex-row items-center justify-between p-4 rounded-xl bg-gray-900/80 border border-emerald-500/20 green-glow gap-4">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400">
-                        <i class="fa-solid fa-heart-pulse text-xl"></i>
+        <!-- Tab Navigation Bar -->
+        <nav class="grid grid-cols-2 md:grid-cols-4 gap-2 bg-gray-900/90 p-1.5 rounded-2xl border border-gray-800">
+            <button onclick="switchTab('checkin')" id="tab-btn-checkin" class="tab-btn active flex items-center justify-center space-x-2 py-3 px-4 rounded-xl text-xs md:text-sm font-bold border border-transparent transition duration-200">
+                <i class="fa-solid fa-clipboard-check"></i>
+                <span>Daily Check-In</span>
+            </button>
+            <button onclick="switchTab('protocol')" id="tab-btn-protocol" class="tab-btn flex items-center justify-center space-x-2 py-3 px-4 rounded-xl text-xs md:text-sm font-bold text-gray-400 border border-transparent hover:text-white transition duration-200">
+                <i class="fa-solid fa-list-check"></i>
+                <span>Today's Plan</span>
+            </button>
+            <button onclick="switchTab('schedule')" id="tab-btn-schedule" class="tab-btn flex items-center justify-center space-x-2 py-3 px-4 rounded-xl text-xs md:text-sm font-bold text-gray-400 border border-transparent hover:text-white transition duration-200">
+                <i class="fa-solid fa-calendar-days"></i>
+                <span>Schedule</span>
+            </button>
+            <button onclick="switchTab('nutrition')" id="tab-btn-nutrition" class="tab-btn flex items-center justify-center space-x-2 py-3 px-4 rounded-xl text-xs md:text-sm font-bold text-gray-400 border border-transparent hover:text-white transition duration-200">
+                <i class="fa-solid fa-utensils"></i>
+                <span>Nutrition</span>
+            </button>
+        </nav>
+
+        <!-- ================= TAB 1: DAILY CHECK-IN ================= -->
+        <section id="tab-checkin" class="tab-content space-y-6">
+            <div class="glass-card rounded-2xl p-6 md:p-8 space-y-6 shadow-2xl">
+                
+                <!-- Dynamic Readiness Header -->
+                <div class="flex flex-col sm:flex-row items-center justify-between p-4 rounded-xl bg-gray-900/80 border border-emerald-500/20 green-glow gap-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+                            <i class="fa-solid fa-heart-pulse text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-white text-sm">Estimated Readiness Score</h3>
+                            <p class="text-xs text-gray-400">Calculated dynamically from metrics</p>
+                        </div>
                     </div>
-                    <div>
-                        <h3 class="font-bold text-white text-sm">Estimated Readiness Score</h3>
-                        <p class="text-xs text-gray-400">Calculated dynamically from check-in data</p>
+                    <div class="flex items-baseline space-x-1">
+                        <span id="scoreDisplay" class="text-3xl font-extrabold text-emerald-400">85</span>
+                        <span class="text-gray-500 text-sm font-bold">/100</span>
                     </div>
                 </div>
-                <div class="flex items-baseline space-x-1">
-                    <span id="scoreDisplay" class="text-3xl font-extrabold text-emerald-400">85</span>
-                    <span class="text-gray-500 text-sm font-bold">/100</span>
+
+                <!-- Form Grid -->
+                <form id="recoveryForm" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        
+                        <!-- Activity Input -->
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold tracking-wider uppercase text-gray-300 flex items-center gap-2">
+                                <i class="fa-solid fa-dumbbell text-emerald-400"></i> Activity Today
+                            </label>
+                            <input type="text" id="activity" required placeholder="e.g. Heavy Squat Session, 5k Run" 
+                                class="glass-input w-full rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none transition">
+                        </div>
+
+                        <!-- Effort Level -->
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold tracking-wider uppercase text-gray-300 flex items-center gap-2">
+                                <i class="fa-solid fa-gauge-high text-emerald-400"></i> Effort Level
+                            </label>
+                            <select id="effort" class="glass-input w-full rounded-xl px-4 py-3 text-sm text-white focus:outline-none transition">
+                                <option value="1" class="bg-gray-900">1 - Light / Recovery</option>
+                                <option value="2" selected class="bg-gray-900">2 - Moderate Effort</option>
+                                <option value="3" class="bg-gray-900">3 - All-Out High Intensity</option>
+                            </select>
+                        </div>
+
+                        <!-- Sleep Hours -->
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold tracking-wider uppercase text-gray-300 flex items-center gap-2">
+                                <i class="fa-solid fa-bed text-emerald-400"></i> Sleep Last Night (Hours)
+                            </label>
+                            <input type="number" id="sleep" value="7.5" step="0.5" min="2" max="14" required 
+                                class="glass-input w-full rounded-xl px-4 py-3 text-sm text-white focus:outline-none transition">
+                        </div>
+
+                        <!-- Soreness Level & Area -->
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold tracking-wider uppercase text-gray-300 flex items-center gap-2">
+                                <i class="fa-solid fa-person-dots-from-line text-emerald-400"></i> Soreness & Focus Area
+                            </label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <select id="sore" class="glass-input rounded-xl px-3 py-3 text-sm text-white focus:outline-none transition">
+                                    <option value="1" class="bg-gray-900">1 - Low</option>
+                                    <option value="2" selected class="bg-gray-900">2 - Moderate</option>
+                                    <option value="3" class="bg-gray-900">3 - Severe</option>
+                                </select>
+                                <input type="text" id="area" required placeholder="Target area (e.g., Quads)" 
+                                    class="glass-input rounded-xl px-3 py-3 text-sm text-white placeholder-gray-500 focus:outline-none transition">
+                            </div>
+                        </div>
+
+                        <!-- Stress Level -->
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold tracking-wider uppercase text-gray-300 flex items-center gap-2">
+                                <i class="fa-solid fa-brain text-emerald-400"></i> Stress Level
+                            </label>
+                            <select id="stress" class="glass-input w-full rounded-xl px-4 py-3 text-sm text-white focus:outline-none transition">
+                                <option value="1" class="bg-gray-900">1 - Chill / Low Stress</option>
+                                <option value="2" class="bg-gray-900">2 - Elevated / High Stress</option>
+                            </select>
+                        </div>
+
+                        <!-- Next Scheduled Event -->
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold tracking-wider uppercase text-gray-300 flex items-center gap-2">
+                                <i class="fa-solid fa-calendar-day text-emerald-400"></i> Next Event / Workout
+                            </label>
+                            <input type="text" id="event" required placeholder="e.g. Match Tomorrow, Rest Day" 
+                                class="glass-input w-full rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none transition">
+                        </div>
+
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" id="submitBtn" 
+                        class="w-full py-4 rounded-xl font-bold text-gray-950 bg-emerald-400 hover:bg-emerald-300 transition duration-200 green-glow flex items-center justify-center space-x-2 text-base uppercase tracking-wider cursor-pointer">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>Generate Live Recovery Plan</span>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ================= TAB 2: TODAY'S PROTOCOL ================= -->
+        <section id="tab-protocol" class="tab-content hidden space-y-6">
+            <div class="glass-card rounded-2xl p-6 md:p-8 space-y-6 border-l-4 border-emerald-400 shadow-2xl">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+                            <i class="fa-solid fa-shield-halved text-xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-white">Today's Personalized Recovery Protocol</h2>
+                            <p class="text-xs text-gray-400">Tailored AI guidance based on your check-in</p>
+                        </div>
+                    </div>
+                    <span class="text-xs bg-emerald-500/10 text-emerald-400 font-semibold px-3 py-1 rounded-full border border-emerald-500/20">AI Active</span>
+                </div>
+
+                <hr class="border-gray-800">
+
+                <div id="planOutput" class="text-gray-300 leading-relaxed text-base space-y-4 whitespace-pre-line bg-gray-900/60 p-6 rounded-xl border border-gray-800">
+                    Submit your Daily Check-In to generate today's live recovery protocol!
                 </div>
             </div>
+        </section>
 
-            <!-- Form Grid -->
-            <form id="recoveryForm" class="space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <!-- ================= TAB 3: SCHEDULE & CALENDAR ================= -->
+        <section id="tab-schedule" class="tab-content hidden space-y-6">
+            <div class="glass-card rounded-2xl p-6 md:p-8 space-y-6 shadow-2xl">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+                            <i class="fa-solid fa-calendar-days text-xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-white">Training & Recovery Calendar</h2>
+                            <p class="text-xs text-gray-400">Schedule sessions and balance recovery days</p>
+                        </div>
+                    </div>
+                    <span id="currentMonthYear" class="text-sm font-bold text-emerald-400"></span>
+                </div>
+
+                <!-- Built-In Interactive Calendar Grid -->
+                <div class="bg-gray-900/80 p-4 rounded-xl border border-gray-800 space-y-4">
+                    <div class="grid grid-cols-7 text-center text-xs font-bold uppercase tracking-wider text-emerald-400 py-2 border-b border-gray-800">
+                        <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+                    </div>
+                    <div id="calendarDays" class="grid grid-cols-7 gap-1 text-center text-sm font-semibold">
+                        <!-- Calendar Days dynamically generated by JS -->
+                    </div>
+                </div>
+
+                <!-- Event Planner Input -->
+                <div class="p-4 rounded-xl bg-gray-900/50 border border-gray-800 space-y-3">
+                    <h4 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-plus text-emerald-400"></i> Add Event to Schedule
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <input type="date" id="eventDate" class="glass-input rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
+                        <input type="text" id="eventTitle" placeholder="e.g. Endurance Run / Rest Day" class="glass-input rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none">
+                        <button onclick="addScheduleEvent()" class="bg-emerald-400 hover:bg-emerald-300 text-gray-950 font-bold py-2.5 px-4 rounded-xl transition duration-200 text-sm">
+                            Add Event
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Upcoming Scheduled Events -->
+                <div class="space-y-3">
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-gray-300">Upcoming Events</h3>
+                    <div id="eventsList" class="space-y-2">
+                        <div class="p-3 bg-gray-900/60 rounded-xl border border-gray-800 flex justify-between items-center text-sm">
+                            <span class="font-semibold text-white">Today's Check-In Session</span>
+                            <span class="text-xs bg-emerald-500/20 text-emerald-400 px-2.5 py-1 rounded-md">Active</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 4: NUTRITION ================= -->
+        <section id="tab-nutrition" class="tab-content hidden space-y-6">
+            <div class="glass-card rounded-2xl p-6 md:p-8 space-y-6 shadow-2xl">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+                        <i class="fa-solid fa-utensils text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Athletic Recovery Nutrition</h2>
+                        <p class="text-xs text-gray-400">Targeted recipes for energy, muscle repair, and inflammation control</p>
+                    </div>
+                </div>
+
+                <!-- Recipe Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     
-                    <!-- Activity Input -->
-                    <div class="space-y-2">
-                        <label class="text-xs font-bold tracking-wider uppercase text-gray-300 flex items-center gap-2">
-                            <i class="fa-solid fa-dumbbell text-emerald-400"></i> Activity Today
-                        </label>
-                        <input type="text" id="activity" required placeholder="e.g. Heavy Squat Session, 5k Run" 
-                            class="glass-input w-full rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none transition">
-                    </div>
-
-                    <!-- Effort Level -->
-                    <div class="space-y-2">
-                        <label class="text-xs font-bold tracking-wider uppercase text-gray-300 flex items-center gap-2">
-                            <i class="fa-solid fa-gauge-high text-emerald-400"></i> Effort Level
-                        </label>
-                        <select id="effort" class="glass-input w-full rounded-xl px-4 py-3 text-sm text-white focus:outline-none transition">
-                            <option value="1" class="bg-gray-900">1 - Light / Recovery</option>
-                            <option value="2" selected class="bg-gray-900">2 - Moderate Effort</option>
-                            <option value="3" class="bg-gray-900">3 - All-Out High Intensity</option>
-                        </select>
-                    </div>
-
-                    <!-- Sleep Hours -->
-                    <div class="space-y-2">
-                        <label class="text-xs font-bold tracking-wider uppercase text-gray-300 flex items-center gap-2">
-                            <i class="fa-solid fa-bed text-emerald-400"></i> Sleep Last Night (Hours)
-                        </label>
-                        <input type="number" id="sleep" value="7.5" step="0.5" min="2" max="14" required 
-                            class="glass-input w-full rounded-xl px-4 py-3 text-sm text-white focus:outline-none transition">
-                    </div>
-
-                    <!-- Soreness Level & Area -->
-                    <div class="space-y-2">
-                        <label class="text-xs font-bold tracking-wider uppercase text-gray-300 flex items-center gap-2">
-                            <i class="fa-solid fa-person-dots-from-line text-emerald-400"></i> Soreness & Focus Area
-                        </label>
-                        <div class="grid grid-cols-2 gap-2">
-                            <select id="sore" class="glass-input rounded-xl px-3 py-3 text-sm text-white focus:outline-none transition">
-                                <option value="1" class="bg-gray-900">1 - Low</option>
-                                <option value="2" selected class="bg-gray-900">2 - Moderate</option>
-                                <option value="3" class="bg-gray-900">3 - Severe</option>
-                            </select>
-                            <input type="text" id="area" required placeholder="Target area (e.g., Quads)" 
-                                class="glass-input rounded-xl px-3 py-3 text-sm text-white placeholder-gray-500 focus:outline-none transition">
+                    <!-- Recipe 1: Pre-Training Snack -->
+                    <div class="bg-gray-900/80 rounded-xl p-5 border border-gray-800 space-y-3 hover:border-emerald-500/40 transition">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-md border border-emerald-500/20">Pre-Training Snack</span>
+                            <span class="text-xs text-gray-400"><i class="fa-regular fa-clock"></i> 5 mins</span>
+                        </div>
+                        <h3 class="font-bold text-white text-base">Banana Rice Cakes with Peanut Butter & Honey</h3>
+                        <p class="text-xs text-gray-400">Quick-digesting carbs for immediate muscle glycogen before training.</p>
+                        <div class="space-y-1 text-xs text-gray-300">
+                            <p class="font-semibold text-emerald-400">Ingredients:</p>
+                            <ul class="list-disc list-inside space-y-0.5 text-gray-400">
+                                <li>2 whole grain rice cakes</li>
+                                <li>2 tbsp natural peanut butter</li>
+                                <li>1 sliced ripe banana</li>
+                                <li>1 tsp raw honey & dash of cinnamon</li>
+                            </ul>
                         </div>
                     </div>
 
-                    <!-- Stress Level -->
-                    <div class="space-y-2">
-                        <label class="text-xs font-bold tracking-wider uppercase text-gray-300 flex items-center gap-2">
-                            <i class="fa-solid fa-brain text-emerald-400"></i> Stress Level
-                        </label>
-                        <select id="stress" class="glass-input w-full rounded-xl px-4 py-3 text-sm text-white focus:outline-none transition">
-                            <option value="1" class="bg-gray-900">1 - Chill / Low Stress</option>
-                            <option value="2" class="bg-gray-900">2 - Elevated / High Stress</option>
-                        </select>
+                    <!-- Recipe 2: Post-Training Snack -->
+                    <div class="bg-gray-900/80 rounded-xl p-5 border border-gray-800 space-y-3 hover:border-emerald-500/40 transition">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-md border border-emerald-500/20">Post-Training Snack</span>
+                            <span class="text-xs text-gray-400"><i class="fa-regular fa-clock"></i> 5 mins</span>
+                        </div>
+                        <h3 class="font-bold text-white text-base">Tart Cherry & Whey Recovery Smoothie</h3>
+                        <p class="text-xs text-gray-400">High protein for muscle synthesis plus tart cherry for soreness reduction.</p>
+                        <div class="space-y-1 text-xs text-gray-300">
+                            <p class="font-semibold text-emerald-400">Ingredients:</p>
+                            <ul class="list-disc list-inside space-y-0.5 text-gray-400">
+                                <li>1 scoop Whey / Plant Protein</li>
+                                <li>1/2 cup tart cherry juice</li>
+                                <li>1/2 cup frozen blueberries & almond milk</li>
+                                <li>1 tbsp chia seeds</li>
+                            </ul>
+                        </div>
                     </div>
 
-                    <!-- Next Scheduled Event -->
-                    <div class="space-y-2">
-                        <label class="text-xs font-bold tracking-wider uppercase text-gray-300 flex items-center gap-2">
-                            <i class="fa-solid fa-calendar-day text-emerald-400"></i> Next Event / Workout
-                        </label>
-                        <input type="text" id="event" required placeholder="e.g. Match Tomorrow, Rest Day" 
-                            class="glass-input w-full rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none transition">
+                    <!-- Recipe 3: Nutritious Daily Snack -->
+                    <div class="bg-gray-900/80 rounded-xl p-5 border border-gray-800 space-y-3 hover:border-emerald-500/40 transition">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-md border border-emerald-500/20">Nutritious Daily Snack</span>
+                            <span class="text-xs text-gray-400"><i class="fa-regular fa-clock"></i> 3 mins</span>
+                        </div>
+                        <h3 class="font-bold text-white text-base">Greek Yogurt Parfait with Pumpkin Seeds</h3>
+                        <p class="text-xs text-gray-400">Rich in casein protein, zinc, and magnesium for muscle recovery.</p>
+                        <div class="space-y-1 text-xs text-gray-300">
+                            <p class="font-semibold text-emerald-400">Ingredients:</p>
+                            <ul class="list-disc list-inside space-y-0.5 text-gray-400">
+                                <li>3/4 cup plain 2% Greek yogurt</li>
+                                <li>2 tbsp roasted pumpkin seeds (pepitas)</li>
+                                <li>1/2 cup fresh berries</li>
+                                <li>1 drizzle maple syrup</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Recipe 4: Nutritious Recovery Dinner -->
+                    <div class="bg-gray-900/80 rounded-xl p-5 border border-gray-800 space-y-3 hover:border-emerald-500/40 transition">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-md border border-emerald-500/20">Nutritious Dinner</span>
+                            <span class="text-xs text-gray-400"><i class="fa-regular fa-clock"></i> 20 mins</span>
+                        </div>
+                        <h3 class="font-bold text-white text-base">Salmon Power Bowl with Quinoa & Asparagus</h3>
+                        <p class="text-xs text-gray-400">Omega-3 anti-inflammatory fats paired with complex recovery carbohydrates.</p>
+                        <div class="space-y-1 text-xs text-gray-300">
+                            <p class="font-semibold text-emerald-400">Ingredients:</p>
+                            <ul class="list-disc list-inside space-y-0.5 text-gray-400">
+                                <li>6 oz grilled or baked salmon fillet</li>
+                                <li>1 cup cooked quinoa</li>
+                                <li>1 cup roasted asparagus & sweet potato</li>
+                                <li>Olive oil, lemon & sea salt</li>
+                            </ul>
+                        </div>
                     </div>
 
                 </div>
-
-                <!-- Submit Button -->
-                <button type="submit" id="submitBtn" 
-                    class="w-full py-4 rounded-xl font-bold text-gray-950 bg-emerald-400 hover:bg-emerald-300 transition duration-200 green-glow flex items-center justify-center space-x-2 text-base uppercase tracking-wider cursor-pointer">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i>
-                    <span>Generate Recovery Plan</span>
-                </button>
-            </form>
-        </div>
-
-        <!-- AI Output Plan Container -->
-        <div id="resultContainer" class="hidden glass-card rounded-2xl p-6 md:p-8 space-y-4 border-l-4 border-emerald-400">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400">
-                        <i class="fa-solid fa-shield-halved"></i>
-                    </div>
-                    <h2 class="text-lg font-bold text-white">Your Custom Protocol</h2>
-                </div>
-                <span class="text-xs bg-emerald-500/10 text-emerald-400 font-semibold px-2.5 py-1 rounded-md border border-emerald-500/20">AI Generated</span>
             </div>
-            <hr class="border-gray-800">
-            <div id="planOutput" class="text-gray-300 leading-relaxed text-sm md:text-base space-y-3 whitespace-pre-line">
-                <!-- AI Protocol dynamically populates here -->
-            </div>
-        </div>
+        </section>
 
     </div>
 
     <!-- Application Script -->
     <script>
-        const form = document.getElementById('recoveryForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const resultContainer = document.getElementById('resultContainer');
-        const planOutput = document.getElementById('planOutput');
-        const scoreDisplay = document.getElementById('scoreDisplay');
+        // Tab Switcher Logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.add('text-gray-400');
+            });
+
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+            activeBtn.classList.add('active');
+            activeBtn.classList.remove('text-gray-400');
+        }
 
         // Dynamic Readiness Score Calculator
+        const scoreDisplay = document.getElementById('scoreDisplay');
         function updateScore() {
             const sleep = parseFloat(document.getElementById('sleep').value) || 7;
             const sore = parseInt(document.getElementById('sore').value) || 1;
@@ -187,22 +376,27 @@
             const effort = parseInt(document.getElementById('effort').value) || 2;
 
             let score = Math.round((sleep * 8.5) + (100 - (sore * 15)) - (stress * 10) - (effort * 5));
-            score = Math.max(15, Math.min(99, score)); // Keep within realistic range
+            score = Math.max(15, Math.min(99, score));
             
             scoreDisplay.textContent = score;
             return score;
         }
 
-        // Event listeners to update score live
         ['sleep', 'sore', 'stress', 'effort'].forEach(id => {
-            document.getElementById(id).addEventListener('change', updateScore);
-            document.getElementById(id).addEventListener('input', updateScore);
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('change', updateScore);
+                el.addEventListener('input', updateScore);
+            }
         });
 
         // Form Submit Handler
+        const form = document.getElementById('recoveryForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const planOutput = document.getElementById('planOutput');
+
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-
             const calculatedScore = updateScore();
 
             const payload = {
@@ -219,7 +413,6 @@
             // Loading state
             submitBtn.disabled = true;
             submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i><span>Analyzing Recovery Data...</span>`;
-            resultContainer.classList.add('hidden');
 
             try {
                 const response = await fetch('/api/recovery-plan', {
@@ -231,22 +424,79 @@
                 const data = await response.json();
                 
                 planOutput.textContent = data.plan;
-                resultContainer.classList.remove('hidden');
                 
-                // Smooth scroll to results
-                resultContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                // Automatically switch to Today's Plan tab to display protocol
+                switchTab('protocol');
 
             } catch (err) {
                 planOutput.textContent = "Unable to generate plan right now. Please check your network connection and try again.";
-                resultContainer.classList.remove('hidden');
+                switchTab('protocol');
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i><span>Generate Recovery Plan</span>`;
+                submitBtn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i><span>Generate Live Recovery Plan</span>`;
             }
         });
 
-        // Initialize score on page load
+        // Interactive Calendar Renderer
+        function buildCalendar() {
+            const calGrid = document.getElementById('calendarDays');
+            const monthHeader = document.getElementById('currentMonthYear');
+            if (!calGrid) return;
+
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth();
+
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            monthHeader.textContent = `${monthNames[month]} ${year}`;
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const todayDate = now.getDate();
+
+            calGrid.innerHTML = '';
+
+            // Empty slots for alignment
+            for (let i = 0; i < firstDay; i++) {
+                calGrid.innerHTML += `<div class="p-2 text-gray-700"></div>`;
+            }
+
+            // Days of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const isToday = day === todayDate;
+                const activeClass = isToday 
+                    ? 'bg-emerald-400 text-gray-950 font-bold rounded-lg green-glow' 
+                    : 'text-gray-300 hover:bg-gray-800 rounded-lg transition';
+
+                calGrid.innerHTML += `<div class="p-2 ${activeClass}">${day}</div>`;
+            }
+        }
+
+        // Add Schedule Event Handler
+        function addScheduleEvent() {
+            const dateVal = document.getElementById('eventDate').value;
+            const titleVal = document.getElementById('eventTitle').value;
+            const eventsList = document.getElementById('eventsList');
+
+            if (!dateVal || !titleVal) {
+                alert('Please select a date and enter an event name.');
+                return;
+            }
+
+            const eventItem = document.createElement('div');
+            eventItem.className = 'p-3 bg-gray-900/60 rounded-xl border border-gray-800 flex justify-between items-center text-sm';
+            eventItem.innerHTML = `
+                <span class="font-semibold text-white">${titleVal}</span>
+                <span class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-md">${dateVal}</span>
+            `;
+
+            eventsList.prepend(eventItem);
+            document.getElementById('eventTitle').value = '';
+        }
+
+        // Init page functions
         updateScore();
+        buildCalendar();
     </script>
 </body>
 </html>
