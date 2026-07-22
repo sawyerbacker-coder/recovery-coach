@@ -24,7 +24,7 @@
             min-height: 100vh;
         }
         .fluid-card {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(16px);
             border: 1px solid rgba(16, 185, 129, 0.18);
             box-shadow: 0 10px 30px -5px rgba(16, 185, 129, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
@@ -63,39 +63,48 @@
 </head>
 <body class="min-h-screen flex flex-col items-center justify-start p-4 md:p-8 relative overflow-x-hidden">
 
-    <!-- Decorative Sports Visual Stickers -->
+    <!-- Decorative Background Badges -->
     <div class="fixed top-12 left-6 text-emerald-300/40 text-6xl pointer-events-none sticker-badge"><i class="fa-solid fa-basketball"></i></div>
     <div class="fixed bottom-12 right-8 text-teal-300/40 text-6xl pointer-events-none sticker-badge" style="animation-delay: 2s;"><i class="fa-solid fa-person-running"></i></div>
     <div class="fixed top-1/2 -left-8 text-emerald-200/30 text-7xl pointer-events-none sticker-badge" style="animation-delay: 1s;"><i class="fa-solid fa-trophy"></i></div>
 
     <div class="max-w-4xl w-full space-y-6 relative z-10">
         
-        <!-- Header & Profile / Auth Trigger -->
+        <!-- Header & Account/Profile Controls -->
         <header class="flex items-center justify-between pb-2">
             <div class="space-y-1">
                 <div class="inline-flex items-center space-x-2 bg-emerald-100 border border-emerald-300 px-3.5 py-1 rounded-full text-emerald-800 text-xs font-extrabold tracking-wide uppercase">
-                    <i class="fa-solid fa-microscope text-emerald-600"></i>
-                    <span>Science-Backed Recovery</span>
+                    <i class="fa-solid fa-bolt text-emerald-600"></i>
+                    <span>Evidence-Based Recovery</span>
                 </div>
                 <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
                     REBOUND <span class="text-emerald-600">COACH</span>
                 </h1>
             </div>
 
-            <!-- Top-Right Account & Profile Buttons -->
+            <!-- Top-Right Account & Profile Bar -->
             <div class="flex items-center space-x-2">
-                <button id="authBtn" onclick="toggleAuthModal()" class="flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2.5 rounded-2xl shadow-md transition font-extrabold text-xs">
-                    <i class="fa-solid fa-user-lock"></i>
-                    <span id="authBtnText">Sign In / Register</span>
+                <button id="authBtn" onclick="toggleAuthModal()" class="flex items-center space-x-2 bg-slate-900 hover:bg-slate-800 text-white px-3.5 py-2.5 rounded-2xl shadow-md transition font-extrabold text-xs">
+                    <i class="fa-solid fa-user-circle text-emerald-400"></i>
+                    <span id="authBtnText">Account Login</span>
                 </button>
 
-                <button onclick="toggleProfileModal()" class="flex items-center space-x-2 bg-white hover:bg-emerald-50 border border-emerald-300 p-2 md:px-3 md:py-2.5 rounded-2xl shadow-sm transition text-slate-700">
-                    <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs">
-                        <i class="fa-solid fa-user-gear"></i>
+                <button onclick="toggleProfileModal()" class="flex items-center space-x-2 bg-white hover:bg-emerald-50 border border-emerald-300 p-2.5 rounded-2xl shadow-sm transition text-slate-700" title="Athlete Bio Setup">
+                    <div class="w-7 h-7 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs">
+                        <i class="fa-solid fa-sliders"></i>
                     </div>
                 </button>
             </div>
         </header>
+
+        <!-- Email Memory Banner when Logged In -->
+        <div id="accountBanner" class="hidden bg-emerald-900 text-white p-3 px-5 rounded-2xl flex items-center justify-between text-xs font-semibold shadow-sm">
+            <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-cloud-check text-emerald-400 text-sm"></i>
+                <span>Cloud Memory Active: <strong id="userEmailDisplay" class="text-emerald-300"></strong></span>
+            </div>
+            <button onclick="handleSignOut()" class="text-slate-300 hover:text-white underline font-bold">Sign Out</button>
+        </div>
 
         <!-- Navigation Bar -->
         <nav class="grid grid-cols-2 md:grid-cols-4 gap-2 bg-slate-200/70 backdrop-blur-md p-1.5 rounded-2xl border border-slate-300/60">
@@ -127,7 +136,7 @@
                     </div>
                     <div>
                         <h2 class="text-xl font-extrabold text-slate-900">Daily Training Check-In</h2>
-                        <p class="text-xs text-slate-500 font-medium">Log training effort to generate study-backed recovery plans.</p>
+                        <p class="text-xs text-slate-500 font-medium">Log today's workout to generate clear, actionable recovery steps.</p>
                     </div>
                 </div>
 
@@ -138,7 +147,7 @@
                             <label class="text-xs font-extrabold tracking-wider uppercase text-slate-700 flex items-center gap-2">
                                 <i class="fa-solid fa-dumbbell text-emerald-600"></i> Workout / Session Today
                             </label>
-                            <input type="text" id="activity" required placeholder="e.g. Heavy Legs, Basketball Game, Tempo Run" 
+                            <input type="text" id="activity" required placeholder="e.g. Heavy Squat Workout, Basketball Game, Tempo Run" 
                                 class="fluid-input w-full px-4 py-3 text-sm">
                         </div>
 
@@ -198,7 +207,7 @@
                     <button type="submit" id="submitBtn" 
                         class="w-full py-4 rounded-2xl font-extrabold text-white bg-emerald-600 hover:bg-emerald-700 transition duration-200 shadow-lg shadow-emerald-600/30 flex items-center justify-center space-x-2 text-base uppercase tracking-wider cursor-pointer">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        <span>Generate Study-Backed Recovery Protocol</span>
+                        <span>Generate Recovery Protocol</span>
                     </button>
                 </form>
             </div>
@@ -214,20 +223,21 @@
                             <i class="fa-solid fa-microscope text-lg"></i>
                         </div>
                         <div>
-                            <h2 class="text-xl font-extrabold text-slate-900">Research-Backed Protocol</h2>
-                            <p class="text-xs text-slate-500 font-medium">Tailored to your sports demands, season phase, and soreness</p>
+                            <h2 class="text-xl font-extrabold text-slate-900">Custom Recovery Protocol</h2>
+                            <p class="text-xs text-slate-500 font-medium">Science-backed instructions tailored to your bio & soreness</p>
                         </div>
                     </div>
-                    <span class="text-xs bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1 rounded-full border border-emerald-300">Sports Science AI</span>
+                    <span class="text-xs bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1 rounded-full border border-emerald-300">AI Sports Bio</span>
                 </div>
 
                 <hr class="border-slate-200">
 
-                <div id="planOutput" class="text-slate-700 leading-relaxed text-base space-y-4 whitespace-pre-line bg-slate-50/80 p-5 rounded-2xl border border-slate-200 font-medium">
-                    Submit your Daily Check-In to generate today's evidence-based protocol!
+                <div id="planOutput" class="space-y-4 bg-slate-50/80 p-5 rounded-2xl border border-slate-200">
+                    <p class="text-slate-500 text-sm font-medium">Submit your Daily Check-In to generate today's customized protocol!</p>
                 </div>
             </div>
 
+            <!-- Modern Clean Stretch Routine Cards -->
             <div class="fluid-card p-6 md:p-8 space-y-6">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
@@ -235,15 +245,15 @@
                             <i class="fa-solid fa-person-stretching text-lg"></i>
                         </div>
                         <div>
-                            <h2 class="text-xl font-extrabold text-slate-900">Enhanced Visual Stretch Cues</h2>
-                            <p class="text-xs text-slate-500 font-medium" id="stretchTargetText">Highlighted red muscle zones show exact stretch mechanics</p>
+                            <h2 class="text-xl font-extrabold text-slate-900">Targeted Mobility Routine</h2>
+                            <p class="text-xs text-slate-500 font-medium" id="stretchTargetText">Clear step-by-step form cues for optimal relief</p>
                         </div>
                     </div>
-                    <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full border border-emerald-300">Anatomical Cues</span>
+                    <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full border border-emerald-300">Form Cues</span>
                 </div>
 
                 <div id="stretchingCardsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Dynamic Visual Pose Cards -->
+                    <!-- Modern Clean Cards Render Here -->
                 </div>
             </div>
         </section>
@@ -258,7 +268,7 @@
                         </div>
                         <div>
                             <h2 class="text-xl font-extrabold text-slate-900">Training & Event Calendar</h2>
-                            <p class="text-xs text-slate-500 font-medium">Events sync across all your devices automatically</p>
+                            <p class="text-xs text-slate-500 font-medium">Synced to your email memory across all devices</p>
                         </div>
                     </div>
                     <span id="currentMonthYear" class="text-sm font-extrabold text-emerald-700"></span>
@@ -304,88 +314,15 @@
                     </div>
                     <div>
                         <h2 class="text-xl font-extrabold text-slate-900">Performance Nutrition Hub</h2>
-                        <p class="text-xs text-slate-500 font-medium">Click <strong>AI Refresh 🔄</strong> to cycle through new options!</p>
+                        <p class="text-xs text-slate-500 font-medium">Click <strong>AI Refresh 🔄</strong> to cycle through meal options!</p>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    
-                    <div id="card-pre" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition">
-                        <div class="flex justify-between items-center">
-                            <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-md border border-emerald-300">Pre-Training Fuel</span>
-                            <button onclick="refreshRecipe('pre')" class="text-xs text-emerald-700 hover:text-emerald-900 font-bold flex items-center gap-1 bg-white px-2.5 py-1 rounded-lg border border-slate-300 shadow-sm transition">
-                                <i class="fa-solid fa-arrows-rotate text-[10px]"></i> AI Refresh
-                            </button>
-                        </div>
-                        <h3 class="font-extrabold text-slate-900 text-base">Banana Rice Cakes & Peanut Butter</h3>
-                        <p class="text-xs text-slate-600">Quick-digesting carbohydrates for fast muscle glycogen fuel.</p>
-                        <div class="space-y-1 text-xs text-slate-700">
-                            <p class="font-bold text-emerald-700">Ingredients:</p>
-                            <ul class="list-disc list-inside space-y-0.5 text-slate-600">
-                                <li>2 whole grain rice cakes</li>
-                                <li>2 tbsp natural peanut butter</li>
-                                <li>1 sliced banana & honey drizzle</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div id="card-post" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition">
-                        <div class="flex justify-between items-center">
-                            <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-md border border-emerald-300">Post-Training Recovery</span>
-                            <button onclick="refreshRecipe('post')" class="text-xs text-emerald-700 hover:text-emerald-900 font-bold flex items-center gap-1 bg-white px-2.5 py-1 rounded-lg border border-slate-300 shadow-sm transition">
-                                <i class="fa-solid fa-arrows-rotate text-[10px]"></i> AI Refresh
-                            </button>
-                        </div>
-                        <h3 class="font-extrabold text-slate-900 text-base">Tart Cherry & Whey Smoothie</h3>
-                        <p class="text-xs text-slate-600">Protein synthesis paired with tart cherry anti-inflammatory antioxidants.</p>
-                        <div class="space-y-1 text-xs text-slate-700">
-                            <p class="font-bold text-emerald-700">Ingredients:</p>
-                            <ul class="list-disc list-inside space-y-0.5 text-slate-600">
-                                <li>1 scoop Whey / Plant protein</li>
-                                <li>1/2 cup tart cherry juice</li>
-                                <li>1/2 cup almond milk & blueberries</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div id="card-snack" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition">
-                        <div class="flex justify-between items-center">
-                            <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-md border border-emerald-300">Nutritious Daily Snack</span>
-                            <button onclick="refreshRecipe('snack')" class="text-xs text-emerald-700 hover:text-emerald-900 font-bold flex items-center gap-1 bg-white px-2.5 py-1 rounded-lg border border-slate-300 shadow-sm transition">
-                                <i class="fa-solid fa-arrows-rotate text-[10px]"></i> AI Refresh
-                            </button>
-                        </div>
-                        <h3 class="font-extrabold text-slate-900 text-base">Greek Yogurt & Pumpkin Seeds</h3>
-                        <p class="text-xs text-slate-600">Rich in casein protein, zinc, and magnesium for deep tissue repair.</p>
-                        <div class="space-y-1 text-xs text-slate-700">
-                            <p class="font-bold text-emerald-700">Ingredients:</p>
-                            <ul class="list-disc list-inside space-y-0.5 text-slate-600">
-                                <li>3/4 cup plain Greek yogurt</li>
-                                <li>2 tbsp pumpkin seeds (pepitas)</li>
-                                <li>1/2 cup fresh mixed berries</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div id="card-dinner" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition">
-                        <div class="flex justify-between items-center">
-                            <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-md border border-emerald-300">Recovery Dinner</span>
-                            <button onclick="refreshRecipe('dinner')" class="text-xs text-emerald-700 hover:text-emerald-900 font-bold flex items-center gap-1 bg-white px-2.5 py-1 rounded-lg border border-slate-300 shadow-sm transition">
-                                <i class="fa-solid fa-arrows-rotate text-[10px]"></i> AI Refresh
-                            </button>
-                        </div>
-                        <h3 class="font-extrabold text-slate-900 text-base">Salmon Bowl with Quinoa</h3>
-                        <p class="text-xs text-slate-600">Omega-3 anti-inflammatory healthy fats paired with complex grains.</p>
-                        <div class="space-y-1 text-xs text-slate-700">
-                            <p class="font-bold text-emerald-700">Ingredients:</p>
-                            <ul class="list-disc list-inside space-y-0.5 text-slate-600">
-                                <li>6 oz wild salmon fillet</li>
-                                <li>1 cup cooked quinoa</li>
-                                <li>1 cup roasted asparagus & olive oil</li>
-                            </ul>
-                        </div>
-                    </div>
-
+                    <div id="card-pre" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition"></div>
+                    <div id="card-post" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition"></div>
+                    <div id="card-snack" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition"></div>
+                    <div id="card-dinner" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition"></div>
                 </div>
             </div>
         </section>
@@ -393,16 +330,16 @@
     </div>
 
     <!-- ================= ACCOUNT / LOGIN MODAL ================= -->
-    <div id="authModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="fluid-card w-full max-w-md p-6 md:p-8 space-y-6 bg-white relative shadow-2xl">
+    <div id="authModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="fluid-card w-full max-w-md p-6 md:p-8 space-y-6 bg-white relative shadow-2xl border-2 border-emerald-500">
             <div class="flex items-center justify-between pb-3 border-b border-slate-200">
                 <div class="flex items-center space-x-3">
                     <div class="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center shadow-md">
                         <i class="fa-solid fa-user-lock text-lg"></i>
                     </div>
                     <div>
-                        <h3 class="text-lg font-extrabold text-slate-900">Cross-Device Account</h3>
-                        <p class="text-xs text-slate-500">Log in to sync your profile & calendar anywhere.</p>
+                        <h3 class="text-lg font-extrabold text-slate-900">Account Access</h3>
+                        <p class="text-xs text-slate-500">Enter email to save and load memory across devices.</p>
                     </div>
                 </div>
                 <button onclick="toggleAuthModal()" class="text-slate-400 hover:text-slate-700 p-2 text-lg">
@@ -412,25 +349,30 @@
 
             <form id="authForm" class="space-y-4">
                 <div class="space-y-1.5">
-                    <label class="text-xs font-extrabold uppercase text-slate-700">Email Address</label>
-                    <input type="email" id="authEmail" required placeholder="athlete@example.com" class="fluid-input w-full px-3.5 py-2.5 text-sm">
+                    <label class="text-xs font-extrabold uppercase text-slate-700">Your Email Address</label>
+                    <input type="email" id="authEmail" required placeholder="athlete@example.com" class="fluid-input w-full px-4 py-3 text-sm">
                 </div>
 
                 <div class="space-y-1.5">
                     <label class="text-xs font-extrabold uppercase text-slate-700">Password</label>
-                    <input type="password" id="authPassword" required placeholder="••••••••" class="fluid-input w-full px-3.5 py-2.5 text-sm">
+                    <input type="password" id="authPassword" required placeholder="••••••••" class="fluid-input w-full px-4 py-3 text-sm">
                 </div>
 
                 <div class="pt-2 flex flex-col gap-2">
-                    <button type="button" onclick="handleAuth('login')" class="w-full py-3 rounded-xl font-extrabold text-white bg-emerald-600 hover:bg-emerald-700 text-sm shadow-md">Sign In</button>
-                    <button type="button" onclick="handleAuth('signup')" class="w-full py-3 rounded-xl font-bold text-emerald-800 bg-emerald-100 hover:bg-emerald-200 text-sm">Create New Account</button>
+                    <button type="button" onclick="handleAuth('login')" class="w-full py-3.5 rounded-xl font-extrabold text-white bg-emerald-600 hover:bg-emerald-700 text-sm shadow-md flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        <span>Log In to Account</span>
+                    </button>
+                    <button type="button" onclick="handleAuth('signup')" class="w-full py-3 rounded-xl font-bold text-emerald-900 bg-emerald-100 hover:bg-emerald-200 text-sm">
+                        Create New Email Account
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- ================= TOP-RIGHT PROFILE MODAL ================= -->
-    <div id="profileModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <!-- ================= ATHLETE BIO PROFILE MODAL ================= -->
+    <div id="profileModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="fluid-card w-full max-w-lg p-6 md:p-8 space-y-6 bg-white relative shadow-2xl">
             <div class="flex items-center justify-between pb-3 border-b border-slate-200">
                 <div class="flex items-center space-x-3">
@@ -438,8 +380,8 @@
                         <i class="fa-solid fa-id-card text-lg"></i>
                     </div>
                     <div>
-                        <h3 class="text-lg font-extrabold text-slate-900">Multi-Sport Athlete Profile</h3>
-                        <p class="text-xs text-slate-500">Integrated directly into your AI recovery prompts.</p>
+                        <h3 class="text-lg font-extrabold text-slate-900">Multi-Sport Athlete Bio</h3>
+                        <p class="text-xs text-slate-500">Saved to your email account and injected into AI prompts.</p>
                     </div>
                 </div>
                 <button onclick="toggleProfileModal()" class="text-slate-400 hover:text-slate-700 p-2 text-lg">
@@ -501,7 +443,7 @@
 
     <!-- Application Script -->
     <script>
-        // YOUR EXACT FIREBASE KEYS FROM SCREENSHOT
+        // YOUR FIREBASE KEYS
         const firebaseConfig = {
             apiKey: "AIzaSyBoUAlsqAR3vAdFzFYRcZBKjy6FwI400xI",
             authDomain: "rebound-recovery-coach.firebaseapp.com",
@@ -512,7 +454,6 @@
             measurementId: "G-KQ7SEL8T4R"
         };
 
-        // Initialize Firebase
         let auth, db, currentUser = null;
         try {
             firebase.initializeApp(firebaseConfig);
@@ -522,11 +463,17 @@
             auth.onAuthStateChanged(user => {
                 currentUser = user;
                 const authBtnText = document.getElementById('authBtnText');
+                const accountBanner = document.getElementById('accountBanner');
+                const userEmailDisplay = document.getElementById('userEmailDisplay');
+
                 if (user) {
                     authBtnText.textContent = user.email.split('@')[0];
+                    userEmailDisplay.textContent = user.email;
+                    accountBanner.classList.remove('hidden');
                     loadCloudData();
                 } else {
-                    authBtnText.textContent = "Sign In / Register";
+                    authBtnText.textContent = "Account Login";
+                    accountBanner.classList.add('hidden');
                 }
             });
         } catch (e) { console.log('Firebase init error:', e); }
@@ -551,7 +498,7 @@
             document.getElementById('authModal').classList.toggle('hidden');
         }
 
-        // Handle Sign In / Registration
+        // Email Authentication Handler
         async function handleAuth(mode) {
             const email = document.getElementById('authEmail').value;
             const password = document.getElementById('authPassword').value;
@@ -561,10 +508,10 @@
             try {
                 if (mode === 'signup') {
                     await auth.createUserWithEmailAndPassword(email, password);
-                    alert('Account created! Your training data will now sync across devices.');
+                    alert(`Account created for ${email}! Memory synced.`);
                 } else {
                     await auth.signInWithEmailAndPassword(email, password);
-                    alert('Signed in successfully!');
+                    alert(`Signed in as ${email}`);
                 }
                 toggleAuthModal();
             } catch (err) {
@@ -572,126 +519,152 @@
             }
         }
 
-        // ================= HIGH-CONTRAST MULTI-COLOR POSE SVGs =================
+        async function handleSignOut() {
+            if (auth) {
+                await auth.signOut();
+                alert('Signed out.');
+            }
+        }
+
+        // ================= CLEAN, HIGH-END POSE CARDS (NO STICK FIGURES) =================
         const stretchLibrary = {
             'Quads': [
                 {
-                    name: 'Standing Quad Stretch',
+                    name: 'Standing Quad Pull',
                     duration: '45 sec / leg',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="10" y1="92" x2="90" y2="92" stroke="#94a3b8" stroke-width="3"/><circle cx="50" cy="18" r="7" fill="#475569"/><path d="M50 25 L50 55 M50 35 L35 48 M50 35 L65 48 M50 55 L42 90 M50 55 L60 72 L52 72" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M50 55 L60 72" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/><circle cx="58" cy="72" r="4" fill="#059669"/></svg>`,
-                    desc: 'Stand tall. Pull heel to glute while bracing core. Highlighted red zone shows target quad stretch.'
+                    focus: 'Quadriceps & Hip Flexors',
+                    icon: 'fa-person-walking-arrow-right',
+                    steps: ['Stand tall near a wall or chair for balance.', 'Pull heel directly toward glutes with your hand.', 'Keep knees aligned and squeeze core to protect lower back.']
                 },
                 {
                     name: 'Kneeling Couch Stretch',
                     duration: '60 sec / leg',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><rect x="65" y="55" width="18" height="37" fill="#cbd5e1" rx="3"/><circle cx="35" cy="22" r="7" fill="#475569"/><path d="M35 29 L35 58 M35 40 L20 48 M35 40 L50 48 M35 58 L55 58 L55 90 M35 58 L20 90" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M35 58 L55 58" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
-                    desc: 'Rear foot against wall or box. Keep torso vertical to stretch deep hip flexors & quads.'
+                    focus: 'Deep Hip Flexors & Rectus Femoris',
+                    icon: 'fa-drumstick-bite',
+                    focusTag: 'High Impact Relief',
+                    steps: ['Place rear foot elevated against a wall or box.', 'Lower knee onto a padded cushion or mat.', 'Drive torso upright to open up tight anterior thigh muscles.']
                 },
                 {
-                    name: 'Foam Roll Quads',
+                    name: 'Targeted Quad Foam Roll',
                     duration: '90 sec total',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="10" y1="80" x2="90" y2="80" stroke="#94a3b8" stroke-width="3"/><circle cx="20" cy="45" r="7" fill="#475569"/><path d="M27 47 L65 58 M35 50 L40 78 M65 58 L75 78 M65 58 L85 58" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M40 52 L62 57" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/><ellipse cx="52" cy="65" rx="8" ry="6" fill="#059669"/></svg>`,
-                    desc: 'Roll slowly from hip crest down to above kneecap. Pause on tight spots.'
+                    focus: 'Muscle Tissue Myofascial Release',
+                    icon: 'fa-mattress-pillow',
+                    steps: ['Lie face down with foam roller under your upper thighs.', 'Roll slowly from hip bone down to 1 inch above kneecap.', 'Pause and breathe through tight trigger points for 15 seconds.']
                 }
             ],
             'Hamstrings': [
                 {
-                    name: 'Elevated Single-Leg Hinge',
+                    name: 'Elevated Heel Hinge',
                     duration: '45 sec / leg',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><rect x="68" y="65" width="22" height="27" fill="#cbd5e1" rx="3"/><circle cx="32" cy="22" r="7" fill="#475569"/><path d="M32 29 L42 55 M38 38 L22 48 M38 38 L52 32 M42 55 L32 90 M42 55 L72 55 L72 90" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M42 55 L72 55" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
-                    desc: 'Place heel on box. Hinge forward at hips keeping back flat until hamstring opens.'
+                    focus: 'Biceps Femoris & Upper Hamstrings',
+                    icon: 'fa-box-archive',
+                    steps: ['Place heel on a low bench or sturdy box.', 'Hinge forward from hips keeping back flat and spine long.', 'Reach torso toward toes until a gentle opening is felt.']
                 },
                 {
                     name: 'Seated Reach Stretch',
                     duration: '60 sec / leg',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="10" y1="85" x2="90" y2="85" stroke="#94a3b8" stroke-width="3"/><circle cx="28" cy="42" r="7" fill="#475569"/><path d="M28 49 L42 68 M35 55 L65 58 M42 68 L82 68 M42 68 L32 85" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M42 68 L82 68" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
-                    desc: 'Sit tall with extended leg. Reach toward toes with flat spine.'
+                    focus: 'Lower Hamstring & Calves',
+                    icon: 'fa-chair',
+                    steps: ['Sit tall with one leg extended out straight.', 'Keep foot flexed back toward your shin.', 'Lean forward from lower back smoothly without rounding.']
                 },
                 {
-                    name: 'Dynamic Leg Swings',
+                    name: 'Controlled Leg Swings',
                     duration: '15 swings / leg',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="10" y1="92" x2="90" y2="92" stroke="#94a3b8" stroke-width="3"/><circle cx="50" cy="18" r="7" fill="#475569"/><path d="M50 25 L50 58 M50 35 L35 48 M50 58 L42 90 M50 58 L75 42" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M50 58 L75 42" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/><path d="M70 38 Q82 48 65 58" stroke="#059669" stroke-width="2" fill="none"/></svg>`,
-                    desc: 'Hold wall support. Swing leg smoothly forward and back with control.'
+                    focus: 'Dynamic Hamstring Mobility',
+                    icon: 'fa-person-running',
+                    steps: ['Place hand against wall for balance support.', 'Swing leg smoothly forward and backward in a full arc.', 'Increase range of motion progressively on each pass.']
                 }
             ],
             'Calves': [
                 {
                     name: 'Wall Press Calf Stretch',
                     duration: '45 sec / leg',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="75" y1="10" x2="75" y2="92" stroke="#cbd5e1" stroke-width="6"/><circle cx="32" cy="28" r="7" fill="#475569"/><path d="M32 35 L48 52 M40 42 L68 38 M48 52 L32 88 M48 52 L72 90" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M48 52 L32 88" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
-                    desc: 'Hands against wall. Press rear heel firmly into floor with straight knee.'
+                    focus: 'Gastrocnemius & Achilles Tendon',
+                    icon: 'fa-shield-halved',
+                    steps: ['Hands flat against wall at chest height.', 'Step one leg back, pressing rear heel firmly into floor.', 'Keep rear knee fully straight and lean hips forward.']
                 },
                 {
                     name: 'Downward Dog Pedal',
                     duration: '60 sec',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="10" y1="90" x2="90" y2="90" stroke="#94a3b8" stroke-width="3"/><circle cx="50" cy="32" r="7" fill="#475569"/><path d="M50 39 L28 72 M50 39 L72 72 M28 72 L18 90 M28 72 L32 90 M72 72 L68 90 M72 72 L78 90" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M72 72 L78 90" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
-                    desc: 'Press hips high. Alternate pressing each heel toward the floor slowly.'
+                    focus: 'Soleus & Ankle Mobility',
+                    icon: 'fa-mountain',
+                    steps: ['Press hands and feet onto floor with hips pushed high.', 'Alternate pressing one heel down while bending opposite knee.', 'Hold each heel down for 3 deep breaths.']
                 },
                 {
-                    name: 'Foam Roll Calves',
+                    name: 'Calf & Achilles Roller',
                     duration: '90 sec',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="10" y1="82" x2="90" y2="82" stroke="#94a3b8" stroke-width="3"/><circle cx="22" cy="48" r="7" fill="#475569"/><path d="M29 50 L58 58 M38 52 L42 75 M58 58 L82 60" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M58 58 L82 60" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/><ellipse cx="68" cy="64" rx="7" ry="5" fill="#059669"/></svg>`,
-                    desc: 'Cross ankles and roll from Achilles tendon up to upper calf.'
+                    focus: 'Myofascial Calf Release',
+                    icon: 'fa-circle-dot',
+                    steps: ['Sit with foam roller under lower calf.', 'Cross opposite leg over for extra pressure.', 'Roll slowly from lower Achilles tendon to calf muscle belly.']
                 }
             ],
             'Glutes & Hips': [
                 {
                     name: 'Pigeon Pose Hold',
                     duration: '60 sec / side',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="10" y1="85" x2="90" y2="85" stroke="#94a3b8" stroke-width="3"/><circle cx="28" cy="38" r="7" fill="#475569"/><path d="M28 45 L42 62 M35 52 L58 52 M42 62 L18 72 M42 62 L82 72" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M42 62 L18 72" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
-                    desc: 'Front shin crosswise on floor, back leg straight. Sink hips square to floor.'
+                    focus: 'Gluteus Maximus & Deep Rotators',
+                    icon: 'fa-feather',
+                    steps: ['Lay front leg shin flat across mat at 40 to 90 degrees.', 'Extend rear leg directly back.', 'Lower forearms to floor and sink hips square toward ground.']
                 },
                 {
-                    name: 'Figure-4 Glute Stretch',
+                    name: 'Supine Figure-4 Stretch',
                     duration: '45 sec / side',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="10" y1="85" x2="90" y2="85" stroke="#94a3b8" stroke-width="3"/><circle cx="18" cy="68" r="7" fill="#475569"/><path d="M25 68 L58 68 M38 68 L52 48 L68 68 M58 68 L78 68" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M38 68 L52 48" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
-                    desc: 'Lie on back, cross ankle over opposite knee, pull thigh to chest.'
+                    focus: 'Piriformis & Sciatic Nerve Relief',
+                    icon: 'fa-cross-hairs',
+                    steps: ['Lie flat on back with knees bent.', 'Cross right ankle over left knee.', 'Reach hands around left thigh and pull gently toward chest.']
                 },
                 {
                     name: '90/90 Hip Switches',
                     duration: '10 switches',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><circle cx="50" cy="28" r="7" fill="#475569"/><path d="M50 35 L50 58 M50 58 L25 72 L35 88 M50 58 L75 72 L85 58" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M50 58 L25 72" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
-                    desc: 'Sit with legs bent at 90 degrees. Rotate hips smoothly side to side.'
+                    focus: 'Hip Joint Internal & External Rotation',
+                    icon: 'fa-arrows-rotate',
+                    steps: ['Sit on floor with both legs bent at 90-degree angles.', 'Keep chest tall without leaning back.', 'Rotate knees smoothly side to side touching floor.']
                 }
             ],
             'Lower Back': [
                 {
                     name: 'Child’s Pose Reach',
                     duration: '60 sec',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="10" y1="85" x2="90" y2="85" stroke="#94a3b8" stroke-width="3"/><circle cx="22" cy="62" r="7" fill="#475569"/><path d="M29 62 L58 62 L82 68 M38 62 L28 78 M42 62 L32 78" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M29 62 L58 62" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
-                    desc: 'Hips back onto heels, extend arms forward and breathe deeply into lower back.'
+                    focus: 'Thoracolumbar Fascia & Erector Spinae',
+                    icon: 'fa-spa',
+                    steps: ['Kneel on floor, sink hips back onto heels.', 'Extend arms straight out on floor in front of you.', 'Breathe deeply into lower back, sinking lower on exhales.']
                 },
                 {
                     name: 'Cat-Cow Flow',
                     duration: '10 reps',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="10" y1="85" x2="90" y2="85" stroke="#94a3b8" stroke-width="3"/><circle cx="28" cy="32" r="7" fill="#475569"/><path d="M35 35 L62 38 M42 37 L42 75 M58 38 L58 75" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M35 35 L62 38" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
-                    desc: 'On hands and knees. Inhale to softly arch back, exhale to round spine.'
+                    focus: 'Spinal Articulation & Decompression',
+                    icon: 'fa-arrows-up-down',
+                    steps: ['Start on hands and knees under shoulders and hips.', 'Inhale to softly drop belly and look up (Cow).', 'Exhale to round back completely toward ceiling (Cat).']
                 },
                 {
                     name: 'Supine Spinal Twist',
                     duration: '45 sec / side',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="10" y1="85" x2="90" y2="85" stroke="#94a3b8" stroke-width="3"/><circle cx="18" cy="48" r="7" fill="#475569"/><path d="M25 48 L72 48 M42 48 L42 22 M42 48 L52 78" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M42 48 L52 78" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
-                    desc: 'Lie flat, draw knee across body toward floor keeping shoulders down.'
+                    focus: 'Lower Back & Quadratus Lumborum',
+                    icon: 'fa-repeat',
+                    steps: ['Lie flat on back with arms extended out wide.', 'Draw right knee up and rotate it across body to floor.', 'Keep both shoulders glued flat against ground.']
                 }
             ],
             'Shoulders & Chest': [
                 {
                     name: 'Doorway Chest Opener',
                     duration: '45 sec',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="18" y1="10" x2="18" y2="90" stroke="#cbd5e1" stroke-width="6"/><line x1="82" y1="10" x2="82" y2="90" stroke="#cbd5e1" stroke-width="6"/><circle cx="50" cy="22" r="7" fill="#475569"/><path d="M50 29 L50 62 M50 38 L22 32 M50 38 L78 32 M50 62 L40 88 M50 62 L60 88" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M22 32 L50 38 L78 32" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
-                    desc: 'Forearms on doorframe, step through gently until chest opens.'
+                    focus: 'Pectoralis Major & Minor',
+                    icon: 'fa-door-open',
+                    steps: ['Place elbows and forearms flat against a doorframe.', 'Step one foot forward through doorway.', 'Lean chest forward until stretch is felt across shoulders.']
                 },
                 {
-                    name: 'Cross-Body Shoulder Hold',
+                    name: 'Cross-Body Deltoid Pull',
                     duration: '45 sec / side',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><circle cx="50" cy="22" r="7" fill="#475569"/><path d="M50 29 L50 62 M50 38 L18 40 M50 38 L68 38 L62 52" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M50 38 L18 40" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
-                    desc: 'Pull arm across chest using opposite arm to stretch rear deltoid.'
+                    focus: 'Rear Deltoids & Upper Back',
+                    icon: 'fa-hand-holding-hand',
+                    steps: ['Bring straight arm across your chest.', 'Use opposite arm to hold elbow close to torso.', 'Keep shoulder blade pulled down and away from ear.']
                 },
                 {
                     name: 'Thread the Needle',
                     duration: '45 sec / side',
-                    svg: `<svg viewBox="0 0 100 100" class="w-full h-32"><line x1="10" y1="85" x2="90" y2="85" stroke="#94a3b8" stroke-width="3"/><circle cx="22" cy="42" r="7" fill="#475569"/><path d="M29 45 L62 48 M42 47 L42 72 M58 48 L72 72" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M29 45 L62 48" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/></svg>`,
-                    desc: 'From hands and knees, slide arm beneath torso to rest shoulder on floor.'
+                    focus: 'Thoracic Spine & Scapular Release',
+                    icon: 'fa-hashtag',
+                    steps: ['On all fours, slide right arm underneath chest across floor.', 'Rest right shoulder and temple flat on ground.', 'Breathe into shoulder blade area.']
                 }
             ]
         };
@@ -702,24 +675,69 @@
             if (!container) return;
 
             const stretches = stretchLibrary[area] || stretchLibrary['Quads'];
-            targetText.textContent = `Highlighted red muscle zones show exact stretch mechanics for: ${area}`;
+            targetText.textContent = `Targeted mobility protocol for: ${area}`;
             container.innerHTML = '';
 
             stretches.forEach(item => {
+                const stepsHtml = item.steps.map((st, idx) => `
+                    <li class="flex items-start gap-2 text-xs text-slate-700">
+                        <span class="w-4 h-4 rounded-full bg-emerald-100 text-emerald-800 font-extrabold flex items-center justify-center text-[10px] shrink-0 mt-0.5">${idx + 1}</span>
+                        <span>${st}</span>
+                    </li>
+                `).join('');
+
                 container.innerHTML += `
-                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200/90 space-y-3 hover:border-emerald-500 transition shadow-sm">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1 rounded-full border border-emerald-300">${item.duration}</span>
-                            <span class="text-[10px] text-slate-400 font-bold uppercase">Multi-Color Form Visual</span>
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200/90 space-y-4 hover:border-emerald-500 transition shadow-sm flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-[10px] bg-emerald-100 text-emerald-900 font-extrabold px-3 py-1 rounded-full border border-emerald-300 uppercase tracking-wider">${item.duration}</span>
+                                <div class="w-8 h-8 rounded-xl bg-slate-100 text-emerald-700 flex items-center justify-center">
+                                    <i class="fa-solid ${item.icon} text-sm"></i>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-extrabold text-slate-900 text-base">${item.name}</h4>
+                                <p class="text-[11px] font-bold text-emerald-700 mt-0.5">${item.focus}</p>
+                            </div>
+
+                            <ul class="space-y-2 pt-1 border-t border-slate-100">
+                                ${stepsHtml}
+                            </ul>
                         </div>
-                        <div class="bg-white rounded-xl p-2 border border-slate-200 flex items-center justify-center">
-                            ${item.svg}
-                        </div>
-                        <h4 class="font-extrabold text-slate-900 text-sm">${item.name}</h4>
-                        <p class="text-xs text-slate-600 leading-relaxed">${item.desc}</p>
                     </div>
                 `;
             });
+        }
+
+        // ================= PARSER FOR RECOVERY PROTOCOL FORMATTING =================
+        function formatRecoveryPlan(text) {
+            if (!text) return '<p class="text-slate-500 text-sm">No plan generated yet.</p>';
+            
+            let lines = text.split('\n');
+            let html = '';
+
+            lines.forEach(line => {
+                let trimmed = line.trim();
+                if (!trimmed) return;
+
+                // Check for Headers or Numbered Titles (e.g. 1. Cold Water Immersion, ### Protocol, **1. Title**)
+                if (trimmed.startsWith('#') || trimmed.match(/^(1|2|3|4|5)\./) || trimmed.startsWith('**1.') || trimmed.startsWith('**2.') || trimmed.startsWith('**3.')) {
+                    let cleanTitle = trimmed.replace(/^[#\*\d\.\s]+/, '').replace(/\*+/g, '');
+                    html += `
+                        <h3 class="text-lg md:text-xl font-extrabold text-slate-900 mt-5 mb-1.5 flex items-center gap-2">
+                            <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
+                            <span>${cleanTitle}</span>
+                        </h3>
+                    `;
+                } else {
+                    // Regular Description Text
+                    let cleanDesc = trimmed.replace(/\*\*(.*?)\*\*/g, '<strong class="font-extrabold text-slate-900">$1</strong>');
+                    html += `<p class="text-sm text-slate-600 leading-relaxed font-normal mb-2">${cleanDesc}</p>`;
+                }
+            });
+
+            return html;
         }
 
         // ================= FORM SUBMIT & AI PROMPT =================
@@ -739,9 +757,10 @@
             const profGender = localStorage.getItem('rebound_gender') || 'Male';
             const profSeason = localStorage.getItem('rebound_season') || 'In-Season';
 
+            // NO CITATIONS INSTRUCTION ADDED
             const multiSportContext = `Workout: ${rawActivity}. 
 [ATHLETE BIO: Primary In-Season Sport: ${profSport} | Off-Season/Secondary: ${profSecondary} | Age: ${profAge} | Gender: ${profGender} | Phase: ${profSeason}]. 
-INSTRUCTIONS FOR AI: Provide 3 distinct study-backed recovery techniques (e.g. cold water immersion, sauna/heat, active recovery <50% HRmax, targeted foam rolling). Explicitly state the scientific rationale for why these methods match the impact load of my multi-sport schedule and current season phase.`;
+INSTRUCTIONS: Provide 3 study-backed recovery techniques (e.g., Cold Water Immersion, Heat Therapy/Sauna, Active Recovery Walk <50% HRmax). DO NOT INCLUDE ANY FORMAL CITATIONS, PAPER TITLES, AUTHOR NAMES, OR IN-TEXT REFERENCES. State the practical reason why it helps. Format each strategy title on its own line like "1. Strategy Name" so it stands out.`;
 
             const payload = {
                 activity: multiSportContext,
@@ -755,7 +774,7 @@ INSTRUCTIONS FOR AI: Provide 3 distinct study-backed recovery techniques (e.g. c
             renderStretches(areaVal);
 
             submitBtn.disabled = true;
-            submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i><span>Analyzing Sports Science Data...</span>`;
+            submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i><span>Analyzing Recovery Protocols...</span>`;
 
             try {
                 const response = await fetch('/api/recovery-plan', {
@@ -765,15 +784,15 @@ INSTRUCTIONS FOR AI: Provide 3 distinct study-backed recovery techniques (e.g. c
                 });
 
                 const data = await response.json();
-                planOutput.textContent = data.plan;
+                planOutput.innerHTML = formatRecoveryPlan(data.plan);
                 switchTab('protocol');
 
             } catch (err) {
-                planOutput.textContent = "Unable to generate plan right now. Please check your network connection and try again.";
+                planOutput.innerHTML = `<p class="text-sm text-red-600">Unable to generate plan right now. Please check your network connection.</p>`;
                 switchTab('protocol');
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i><span>Generate Study-Backed Recovery Protocol</span>`;
+                submitBtn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i><span>Generate Recovery Protocol</span>`;
             }
         });
 
@@ -871,23 +890,19 @@ INSTRUCTIONS FOR AI: Provide 3 distinct study-backed recovery techniques (e.g. c
         const recipeDatabase = {
             pre: [
                 { name: "Banana Rice Cakes & Peanut Butter", desc: "Quick-digesting carbohydrates for fast muscle glycogen fuel.", ingredients: ["2 whole grain rice cakes", "2 tbsp natural peanut butter", "1 sliced banana & honey drizzle"] },
-                { name: "Oatmeal with Berries & Chia", desc: "Sustained glucose release for longer endurance sessions.", ingredients: ["1/2 cup rolled oats", "1/2 cup fresh blueberries", "1 tbsp chia seeds & maple syrup"] },
-                { name: "Apple Slices & Almond Butter", desc: "Light, easy-digesting pre-workout energy.", ingredients: ["1 Honeycrisp apple", "2 tbsp almond butter", "Dash of cinnamon"] }
+                { name: "Oatmeal with Berries & Chia", desc: "Sustained glucose release for longer endurance sessions.", ingredients: ["1/2 cup rolled oats", "1/2 cup fresh blueberries", "1 tbsp chia seeds & maple syrup"] }
             ],
             post: [
                 { name: "Tart Cherry & Whey Smoothie", desc: "Protein synthesis paired with tart cherry anti-inflammatory antioxidants.", ingredients: ["1 scoop Whey / Plant protein", "1/2 cup tart cherry juice", "1/2 cup almond milk & blueberries"] },
-                { name: "Chocolate Protein Rice Bowl", desc: "Optimal 3:1 carb-to-protein ratio for rapid muscle repair.", ingredients: ["1 cup cooked white rice", "1 cup chocolate protein milk", "Pinch of sea salt"] },
-                { name: "Greek Yogurt Berry Bowl", desc: "High leucine content to kickstart tissue building.", ingredients: ["1 cup 2% Greek Yogurt", "1/2 cup raspberries", "2 tbsp raw honey & sliced almonds"] }
+                { name: "Chocolate Protein Rice Bowl", desc: "Optimal 3:1 carb-to-protein ratio for rapid muscle repair.", ingredients: ["1 cup cooked white rice", "1 cup chocolate protein milk", "Pinch of sea salt"] }
             ],
             snack: [
                 { name: "Greek Yogurt & Pumpkin Seeds", desc: "Rich in casein protein, zinc, and magnesium for deep tissue repair.", ingredients: ["3/4 cup plain Greek yogurt", "2 tbsp pumpkin seeds (pepitas)", "1/2 cup fresh mixed berries"] },
-                { name: "Hard-Boiled Eggs & Avocado", desc: "Healthy fats and complete bioavailable proteins.", ingredients: ["2 pasture-raised eggs", "1 slice sourdough toast", "1/2 mashed avocado & sea salt"] },
-                { name: "Steamed Edamame with Sea Salt", desc: "Plant-based complete protein packed with electrolytes.", ingredients: ["1.5 cups edamame in pods", "Coarse sea salt", "1 tsp sesame oil"] }
+                { name: "Hard-Boiled Eggs & Avocado", desc: "Healthy fats and complete bioavailable proteins.", ingredients: ["2 pasture-raised eggs", "1 slice sourdough toast", "1/2 mashed avocado & sea salt"] }
             ],
             dinner: [
                 { name: "Salmon Bowl with Quinoa", desc: "Omega-3 anti-inflammatory healthy fats paired with complex grains.", ingredients: ["6 oz wild salmon fillet", "1 cup cooked quinoa", "1 cup roasted asparagus & olive oil"] },
-                { name: "Grilled Chicken & Sweet Potato", desc: "Lean protein with complex carbs to replenish glycogen overnight.", ingredients: ["7 oz chicken breast", "1 medium baked sweet potato", "Steamed broccoli florets"] },
-                { name: "Lean Steak Sirloin & Peppers", desc: "Heme iron and zinc for muscle oxygenation and cellular repair.", ingredients: ["6 oz lean sirloin steak", "1 cup roasted bell peppers", "1/2 cup jasmine rice"] }
+                { name: "Grilled Chicken & Sweet Potato", desc: "Lean protein with complex carbs to replenish glycogen overnight.", ingredients: ["7 oz chicken breast", "1 medium baked sweet potato", "Steamed broccoli florets"] }
             ]
         };
 
@@ -898,7 +913,7 @@ INSTRUCTIONS FOR AI: Provide 3 distinct study-backed recovery techniques (e.g. c
             if (!container) return;
 
             container.innerHTML = `
-                <div class="h-full min-h-[200px] flex flex-col items-center justify-center space-y-3 text-emerald-600">
+                <div class="h-full min-h-[180px] flex flex-col items-center justify-center space-y-3 text-emerald-600">
                     <i class="fa-solid fa-circle-notch fa-spin text-2xl"></i>
                     <p class="text-xs font-extrabold uppercase tracking-widest text-slate-600">AI Refreshing...</p>
                 </div>
@@ -906,35 +921,45 @@ INSTRUCTIONS FOR AI: Provide 3 distinct study-backed recovery techniques (e.g. c
 
             setTimeout(() => {
                 recipeIndices[category] = (recipeIndices[category] + 1) % recipeDatabase[category].length;
-                const recipe = recipeDatabase[category][recipeIndices[category]];
-                
-                const categoryLabels = {
-                    pre: "Pre-Training Fuel",
-                    post: "Post-Training Recovery",
-                    snack: "Nutritious Daily Snack",
-                    dinner: "Recovery Dinner"
-                };
-
-                container.innerHTML = `
-                    <div class="flex justify-between items-center">
-                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-md border border-emerald-300">${categoryLabels[category]}</span>
-                        <button onclick="refreshRecipe('${category}')" class="text-xs text-emerald-700 hover:text-emerald-900 font-bold flex items-center gap-1 bg-white px-2.5 py-1 rounded-lg border border-slate-300 shadow-sm transition">
-                            <i class="fa-solid fa-arrows-rotate text-[10px]"></i> AI Refresh
-                        </button>
-                    </div>
-                    <h3 class="font-extrabold text-slate-900 text-base">${recipe.name}</h3>
-                    <p class="text-xs text-slate-600">${recipe.desc}</p>
-                    <div class="space-y-1 text-xs text-slate-700">
-                        <p class="font-bold text-emerald-700">Ingredients:</p>
-                        <ul class="list-disc list-inside space-y-0.5 text-slate-600">
-                            ${recipe.ingredients.map(ing => `<li>${ing}</li>`).join('')}
-                        </ul>
-                    </div>
-                `;
-            }, 800);
+                renderRecipeCard(category);
+            }, 600);
         }
 
-        // Profile Storage Handler
+        function renderRecipeCard(category) {
+            const container = document.getElementById(`card-${category}`);
+            if (!container) return;
+
+            const recipe = recipeDatabase[category][recipeIndices[category]];
+            const categoryLabels = {
+                pre: "Pre-Training Fuel",
+                post: "Post-Training Recovery",
+                snack: "Nutritious Daily Snack",
+                dinner: "Recovery Dinner"
+            };
+
+            container.innerHTML = `
+                <div class="flex justify-between items-center">
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-md border border-emerald-300">${categoryLabels[category]}</span>
+                    <button onclick="refreshRecipe('${category}')" class="text-xs text-emerald-700 hover:text-emerald-900 font-bold flex items-center gap-1 bg-white px-2.5 py-1 rounded-lg border border-slate-300 shadow-sm transition">
+                        <i class="fa-solid fa-arrows-rotate text-[10px]"></i> AI Refresh
+                    </button>
+                </div>
+                <h3 class="font-extrabold text-slate-900 text-base">${recipe.name}</h3>
+                <p class="text-xs text-slate-600">${recipe.desc}</p>
+                <div class="space-y-1 text-xs text-slate-700">
+                    <p class="font-bold text-emerald-700">Ingredients:</p>
+                    <ul class="list-disc list-inside space-y-0.5 text-slate-600">
+                        ${recipe.ingredients.map(ing => `<li>${ing}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+
+        function renderAllRecipes() {
+            ['pre', 'post', 'snack', 'dinner'].forEach(c => renderRecipeCard(c));
+        }
+
+        // Profile Storage
         function saveProfile() {
             const sport = document.getElementById('profSport').value;
             const secondary = document.getElementById('profSecondarySports').value;
@@ -949,7 +974,6 @@ INSTRUCTIONS FOR AI: Provide 3 distinct study-backed recovery techniques (e.g. c
             localStorage.setItem('rebound_season', season);
 
             saveCloudData();
-            updateNavProfileHeader();
             toggleProfileModal();
         }
 
@@ -959,17 +983,8 @@ INSTRUCTIONS FOR AI: Provide 3 distinct study-backed recovery techniques (e.g. c
             if (localStorage.getItem('rebound_age')) document.getElementById('profAge').value = localStorage.getItem('rebound_age');
             if (localStorage.getItem('rebound_gender')) document.getElementById('profGender').value = localStorage.getItem('rebound_gender');
             if (localStorage.getItem('rebound_season')) document.getElementById('profSeason').value = localStorage.getItem('rebound_season');
-
-            updateNavProfileHeader();
         }
 
-        function updateNavProfileHeader() {
-            const sport = localStorage.getItem('rebound_sport') || 'Basketball';
-            const navSport = document.getElementById('navProfileSport');
-            if (navSport) navSport.textContent = sport;
-        }
-
-        // Save User Bio & Events to Firebase Cloud
         async function saveCloudData() {
             if (!currentUser || !db) return;
             try {
@@ -984,7 +999,6 @@ INSTRUCTIONS FOR AI: Provide 3 distinct study-backed recovery techniques (e.g. c
             } catch (e) { console.log('Cloud sync error:', e); }
         }
 
-        // Load User Bio & Events from Firebase Cloud across devices
         async function loadCloudData() {
             if (!currentUser || !db) return;
             try {
@@ -1007,10 +1021,11 @@ INSTRUCTIONS FOR AI: Provide 3 distinct study-backed recovery techniques (e.g. c
             } catch (e) { console.log('Cloud load error:', e); }
         }
 
-        // Initialize Page
+        // Initialize Page Components
         renderStretches('Quads');
         buildCalendar();
         renderUpcomingEventsList();
+        renderAllRecipes();
         loadProfile();
     </script>
 </body>
