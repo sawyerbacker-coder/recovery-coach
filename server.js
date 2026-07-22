@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
 
-// Serve the main web app
+// Serve main web app
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'recovery-coach-improved.html'));
 });
@@ -30,7 +30,8 @@ app.post('/api/recovery-plan', async (req, res) => {
 
     try {
         const apiKey = process.env.AI_API_KEY;
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        // Updated endpoint path for Google Gemini API
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
         const response = await fetch(url, {
             method: 'POST',
