@@ -68,8 +68,8 @@
         <header class="flex items-center justify-between pb-2">
             <div class="space-y-1">
                 <div class="inline-flex items-center space-x-2 bg-emerald-100 border border-emerald-300 px-3.5 py-1 rounded-full text-emerald-800 text-xs font-extrabold tracking-wide uppercase">
-                    <i class="fa-solid fa-bolt text-emerald-600"></i>
-                    <span>Evidence-Based Recovery</span>
+                    <i class="fa-solid fa-microscope text-emerald-600"></i>
+                    <span>Science-Backed Recovery</span>
                 </div>
                 <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
                     REBOUND <span class="text-emerald-600">COACH</span>
@@ -126,7 +126,6 @@
                 <form id="recoveryForm" class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         
-                        <!-- Activity Input -->
                         <div class="space-y-2">
                             <label class="text-xs font-extrabold tracking-wider uppercase text-slate-700 flex items-center gap-2">
                                 <i class="fa-solid fa-dumbbell text-emerald-600"></i> Workout / Session Today
@@ -135,7 +134,6 @@
                                 class="fluid-input w-full px-4 py-3 text-sm">
                         </div>
 
-                        <!-- Effort Level -->
                         <div class="space-y-2">
                             <label class="text-xs font-extrabold tracking-wider uppercase text-slate-700 flex items-center gap-2">
                                 <i class="fa-solid fa-gauge-high text-emerald-600"></i> Effort Level
@@ -147,7 +145,6 @@
                             </select>
                         </div>
 
-                        <!-- Sleep Hours -->
                         <div class="space-y-2">
                             <label class="text-xs font-extrabold tracking-wider uppercase text-slate-700 flex items-center gap-2">
                                 <i class="fa-solid fa-bed text-emerald-600"></i> Sleep Last Night (Hours)
@@ -156,7 +153,6 @@
                                 class="fluid-input w-full px-4 py-3 text-sm">
                         </div>
 
-                        <!-- Soreness Level & Target Area -->
                         <div class="space-y-2">
                             <label class="text-xs font-extrabold tracking-wider uppercase text-slate-700 flex items-center gap-2">
                                 <i class="fa-solid fa-person-dots-from-line text-emerald-600"></i> Soreness & Target Muscle
@@ -178,7 +174,6 @@
                             </div>
                         </div>
 
-                        <!-- Stress Level (3-Point Scale) -->
                         <div class="space-y-2 md:col-span-2">
                             <label class="text-xs font-extrabold tracking-wider uppercase text-slate-700 flex items-center gap-2">
                                 <i class="fa-solid fa-brain text-emerald-600"></i> Daily Stress Level
@@ -192,7 +187,6 @@
 
                     </div>
 
-                    <!-- Submit Button -->
                     <button type="submit" id="submitBtn" 
                         class="w-full py-4 rounded-2xl font-extrabold text-white bg-emerald-600 hover:bg-emerald-700 transition duration-200 shadow-lg shadow-emerald-600/30 flex items-center justify-center space-x-2 text-base uppercase tracking-wider cursor-pointer">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
@@ -205,7 +199,6 @@
         <!-- ================= TAB 2: PLAN & STRETCHES ================= -->
         <section id="tab-protocol" class="tab-content hidden space-y-6">
             
-            <!-- AI Output Card -->
             <div class="fluid-card p-6 md:p-8 space-y-4 border-l-4 border-emerald-600">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
@@ -227,7 +220,6 @@
                 </div>
             </div>
 
-            <!-- Visual Stretching Routine -->
             <div class="fluid-card p-6 md:p-8 space-y-6">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
@@ -264,7 +256,6 @@
                     <span id="currentMonthYear" class="text-sm font-extrabold text-emerald-700"></span>
                 </div>
 
-                <!-- Calendar Grid -->
                 <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-4">
                     <div class="grid grid-cols-7 text-center text-xs font-extrabold uppercase tracking-wider text-emerald-700 py-2 border-b border-slate-200">
                         <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
@@ -274,21 +265,19 @@
                     </div>
                 </div>
 
-                <!-- Add Event Form -->
                 <div class="p-5 rounded-2xl bg-emerald-50/70 border border-emerald-200 space-y-3">
                     <h4 class="text-xs font-extrabold text-emerald-900 uppercase tracking-wider flex items-center gap-2">
                         <i class="fa-solid fa-plus-circle text-emerald-600"></i> Add Event to Calendar
                     </h4>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                         <input type="date" id="eventDate" class="fluid-input px-4 py-2.5 text-sm">
-                        <input type="text" id="eventTitle" placeholder="e.g. Basketball Game, Cross Country Meet" class="fluid-input px-4 py-2.5 text-sm">
+                        <input type="text" id="eventTitle" placeholder="e.g. Basketball Game" class="fluid-input px-4 py-2.5 text-sm">
                         <button onclick="addScheduleEvent()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-2.5 px-4 rounded-xl transition text-sm shadow-md">
                             Add To Schedule
                         </button>
                     </div>
                 </div>
 
-                <!-- Upcoming Events List -->
                 <div class="space-y-3">
                     <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Upcoming Schedule</h3>
                     <div id="eventsList" class="space-y-2">
@@ -307,16 +296,89 @@
                     </div>
                     <div>
                         <h2 class="text-xl font-extrabold text-slate-900">Performance Nutrition Hub</h2>
-                        <p class="text-xs text-slate-500 font-medium">Click <strong>Refresh Recipe 🔄</strong> to cycle through new options!</p>
+                        <p class="text-xs text-slate-500 font-medium">Click <strong>AI Refresh 🔄</strong> to fetch a new meal tailored to your sport!</p>
                     </div>
                 </div>
 
-                <!-- Recipe Cards Grid -->
+                <!-- PRE-LOADED HTML RECIPE CARDS (These will NEVER disappear) -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div id="card-pre" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition"></div>
-                    <div id="card-post" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition"></div>
-                    <div id="card-snack" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition"></div>
-                    <div id="card-dinner" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition"></div>
+                    
+                    <div id="card-pre" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-md border border-emerald-300">Pre-Training Fuel</span>
+                            <button onclick="refreshRecipe('pre')" class="text-xs text-emerald-700 hover:text-emerald-900 font-bold flex items-center gap-1 bg-white px-2.5 py-1 rounded-lg border border-slate-300 shadow-sm transition">
+                                <i class="fa-solid fa-arrows-rotate text-[10px]"></i> AI Refresh
+                            </button>
+                        </div>
+                        <h3 class="font-extrabold text-slate-900 text-base">Banana Rice Cakes & Peanut Butter</h3>
+                        <p class="text-xs text-slate-600">Quick-digesting carbohydrates for fast muscle glycogen fuel.</p>
+                        <div class="space-y-1 text-xs text-slate-700">
+                            <p class="font-bold text-emerald-700">Ingredients:</p>
+                            <ul class="list-disc list-inside space-y-0.5 text-slate-600">
+                                <li>2 whole grain rice cakes</li>
+                                <li>2 tbsp natural peanut butter</li>
+                                <li>1 sliced banana & honey drizzle</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div id="card-post" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-md border border-emerald-300">Post-Training Recovery</span>
+                            <button onclick="refreshRecipe('post')" class="text-xs text-emerald-700 hover:text-emerald-900 font-bold flex items-center gap-1 bg-white px-2.5 py-1 rounded-lg border border-slate-300 shadow-sm transition">
+                                <i class="fa-solid fa-arrows-rotate text-[10px]"></i> AI Refresh
+                            </button>
+                        </div>
+                        <h3 class="font-extrabold text-slate-900 text-base">Tart Cherry & Whey Smoothie</h3>
+                        <p class="text-xs text-slate-600">Protein synthesis paired with tart cherry anti-inflammatory antioxidants.</p>
+                        <div class="space-y-1 text-xs text-slate-700">
+                            <p class="font-bold text-emerald-700">Ingredients:</p>
+                            <ul class="list-disc list-inside space-y-0.5 text-slate-600">
+                                <li>1 scoop Whey / Plant protein</li>
+                                <li>1/2 cup tart cherry juice</li>
+                                <li>1/2 cup almond milk & blueberries</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div id="card-snack" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-md border border-emerald-300">Nutritious Daily Snack</span>
+                            <button onclick="refreshRecipe('snack')" class="text-xs text-emerald-700 hover:text-emerald-900 font-bold flex items-center gap-1 bg-white px-2.5 py-1 rounded-lg border border-slate-300 shadow-sm transition">
+                                <i class="fa-solid fa-arrows-rotate text-[10px]"></i> AI Refresh
+                            </button>
+                        </div>
+                        <h3 class="font-extrabold text-slate-900 text-base">Greek Yogurt & Pumpkin Seeds</h3>
+                        <p class="text-xs text-slate-600">Rich in casein protein, zinc, and magnesium for deep tissue repair.</p>
+                        <div class="space-y-1 text-xs text-slate-700">
+                            <p class="font-bold text-emerald-700">Ingredients:</p>
+                            <ul class="list-disc list-inside space-y-0.5 text-slate-600">
+                                <li>3/4 cup plain Greek yogurt</li>
+                                <li>2 tbsp pumpkin seeds (pepitas)</li>
+                                <li>1/2 cup fresh mixed berries</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div id="card-dinner" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-md border border-emerald-300">Recovery Dinner</span>
+                            <button onclick="refreshRecipe('dinner')" class="text-xs text-emerald-700 hover:text-emerald-900 font-bold flex items-center gap-1 bg-white px-2.5 py-1 rounded-lg border border-slate-300 shadow-sm transition">
+                                <i class="fa-solid fa-arrows-rotate text-[10px]"></i> AI Refresh
+                            </button>
+                        </div>
+                        <h3 class="font-extrabold text-slate-900 text-base">Salmon Bowl with Quinoa</h3>
+                        <p class="text-xs text-slate-600">Omega-3 anti-inflammatory healthy fats paired with complex grains.</p>
+                        <div class="space-y-1 text-xs text-slate-700">
+                            <p class="font-bold text-emerald-700">Ingredients:</p>
+                            <ul class="list-disc list-inside space-y-0.5 text-slate-600">
+                                <li>6 oz wild salmon fillet</li>
+                                <li>1 cup cooked quinoa</li>
+                                <li>1 cup roasted asparagus & olive oil</li>
+                            </ul>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
@@ -333,7 +395,7 @@
                     </div>
                     <div>
                         <h3 class="text-lg font-extrabold text-slate-900">Multi-Sport Athlete Profile</h3>
-                        <p class="text-xs text-slate-500">Configured once, integrated into all AI recovery protocols.</p>
+                        <p class="text-xs text-slate-500">Integrated directly into your AI recovery prompts.</p>
                     </div>
                 </div>
                 <button onclick="toggleProfileModal()" class="text-slate-400 hover:text-slate-700 p-2 text-lg">
@@ -344,7 +406,6 @@
             <form id="profileForm" class="space-y-4">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     
-                    <!-- Primary In-Season Sport -->
                     <div class="space-y-1.5 md:col-span-2">
                         <label class="text-xs font-extrabold uppercase text-slate-700 flex items-center gap-1.5">
                             <i class="fa-solid fa-basketball text-emerald-600"></i> Currently In-Season Sport
@@ -352,12 +413,11 @@
                         <input type="text" id="profSport" placeholder="e.g. Basketball" class="fluid-input w-full px-3.5 py-2.5 text-sm">
                     </div>
 
-                    <!-- Secondary / Off-Season Sports -->
                     <div class="space-y-1.5 md:col-span-2">
                         <label class="text-xs font-extrabold uppercase text-slate-700 flex items-center gap-1.5">
                             <i class="fa-solid fa-person-running text-emerald-600"></i> Off-Season / Secondary Sports
                         </label>
-                        <input type="text" id="profSecondarySports" placeholder="e.g. Cross Country (Fall), Track & Field" class="fluid-input w-full px-3.5 py-2.5 text-sm">
+                        <input type="text" id="profSecondarySports" placeholder="e.g. Cross Country (Fall), Track" class="fluid-input w-full px-3.5 py-2.5 text-sm">
                     </div>
 
                     <div class="space-y-1.5">
@@ -379,8 +439,8 @@
                         <label class="text-xs font-extrabold uppercase text-slate-700">In-Season Training Phase</label>
                         <select id="profSeason" class="fluid-input w-full px-3.5 py-2.5 text-sm">
                             <option value="In-Season Competition Phase">In-Season (Peak Competition)</option>
-                            <option value="Pre-Season High Load">Pre-Season (High Volume / Heavy Conditioning)</option>
-                            <option value="Off-Season Aerobic / Base">Off-Season (Base Building & Hypertrophy)</option>
+                            <option value="Pre-Season High Load">Pre-Season (High Volume / Conditioning)</option>
+                            <option value="Off-Season Aerobic / Base">Off-Season (Base Building)</option>
                             <option value="Active Recovery / Deload">Active Recovery / Deload Week</option>
                         </select>
                     </div>
@@ -403,7 +463,6 @@
                 btn.classList.remove('active');
                 btn.classList.add('text-slate-600');
             });
-
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
             const activeBtn = document.getElementById(`tab-btn-${tabId}`);
             activeBtn.classList.add('active');
@@ -564,7 +623,7 @@
             });
         }
 
-        // Form Submit Handler (Encapsulates Bio Context without changing server.js)
+        // ================= FORM SUBMIT & AI PROMPT INJECTION =================
         const form = document.getElementById('recoveryForm');
         const submitBtn = document.getElementById('submitBtn');
         const planOutput = document.getElementById('planOutput');
@@ -575,16 +634,16 @@
             const rawActivity = document.getElementById('activity').value;
             const areaVal = document.getElementById('area').value;
 
-            // Load Saved Multi-Sport Bio Details
-            const profSport = localStorage.getItem('rebound_sport') || 'Basketball';
-            const profSecondary = localStorage.getItem('rebound_secondary') || 'Cross Country';
+            const profSport = localStorage.getItem('rebound_sport') || 'Athlete';
+            const profSecondary = localStorage.getItem('rebound_secondary') || 'None';
             const profAge = localStorage.getItem('rebound_age') || '18';
             const profGender = localStorage.getItem('rebound_gender') || 'Male';
             const profSeason = localStorage.getItem('rebound_season') || 'In-Season';
 
-            // We bundle the multi-sport bio & evidence instructions into the existing activity field string!
-            const multiSportContext = `${rawActivity} [ATHLETE BIO: Primary In-Season Sport: ${profSport} | Secondary/Off-Season Sports: ${profSecondary} | Age: ${profAge} | Gender: ${profGender} | Season Phase: ${profSeason}]. 
-INSTRUCTIONS FOR AI: Provide 3 study-backed recovery techniques (such as cold water immersion, sauna, foam rolling, active recovery walks at <50% HRmax) that specifically manage energy system demands and impact load for this multi-sport athlete. Cite published sports science studies.`;
+            // We bundle the strict multi-sport instructions directly into the activity string!
+            const multiSportContext = `Workout: ${rawActivity}. 
+[ATHLETE BIO: Primary In-Season Sport: ${profSport} | Off-Season/Secondary: ${profSecondary} | Age: ${profAge} | Gender: ${profGender} | Phase: ${profSeason}]. 
+INSTRUCTIONS FOR AI: Provide 3 distinct study-backed recovery techniques (e.g. cold water immersion, sauna/heat, active recovery <50% HRmax, targeted foam rolling). Explicitly state the scientific rationale for why these methods match the impact load of my multi-sport schedule and current season phase.`;
 
             const payload = {
                 activity: multiSportContext,
@@ -621,9 +680,11 @@ INSTRUCTIONS FOR AI: Provide 3 study-backed recovery techniques (such as cold wa
         });
 
         // ================= CALENDAR STATE =================
-        let scheduledEvents = JSON.parse(localStorage.getItem('rebound_events')) || {
-            "2026-07-22": ["Basketball Practice"]
-        };
+        let scheduledEvents = { "2026-07-22": ["Basketball Game"] };
+        try {
+            const stored = localStorage.getItem('rebound_events');
+            if (stored) scheduledEvents = JSON.parse(stored);
+        } catch (e) { console.error('Failed to parse calendar events'); }
 
         function buildCalendar() {
             const calGrid = document.getElementById('calendarDays');
@@ -713,69 +774,77 @@ INSTRUCTIONS FOR AI: Provide 3 study-backed recovery techniques (such as cold wa
             });
         }
 
-        // ================= ROTATING PERFORMANCE NUTRITION ENGINE =================
+        // ================= SIMULATED AI RECIPE REFRESH ENGINE =================
         const recipeDatabase = {
             pre: [
-                { name: "Banana Rice Cakes with Peanut Butter & Honey", desc: "Quick-digesting carbohydrates for fast muscle glycogen fuel.", ingredients: ["2 whole grain rice cakes", "2 tbsp natural peanut butter", "1 sliced banana & honey drizzle"] },
-                { name: "Oatmeal with Blueberries & Chia Seeds", desc: "Sustained glucose release for longer workouts and endurance.", ingredients: ["1/2 cup rolled oats", "1/2 cup fresh blueberries", "1 tbsp chia seeds & maple syrup"] },
-                { name: "Apple Slices with Almond Butter & Cinnamon", desc: "Light, easy-digesting pre-workout energy.", ingredients: ["1 Honeycrisp apple", "2 tbsp almond butter", "Dash of cinnamon"] }
+                { name: "Banana Rice Cakes & Peanut Butter", desc: "Quick-digesting carbohydrates for fast muscle glycogen fuel.", ingredients: ["2 whole grain rice cakes", "2 tbsp natural peanut butter", "1 sliced banana & honey drizzle"] },
+                { name: "Oatmeal with Berries & Chia", desc: "Sustained glucose release for longer endurance sessions.", ingredients: ["1/2 cup rolled oats", "1/2 cup fresh blueberries", "1 tbsp chia seeds & maple syrup"] },
+                { name: "Apple Slices & Almond Butter", desc: "Light, easy-digesting pre-workout energy without stomach distress.", ingredients: ["1 Honeycrisp apple", "2 tbsp almond butter", "Dash of cinnamon"] },
+                { name: "Honey Toast with Sea Salt", desc: "Rapidly absorbed glucose for immediate explosive energy.", ingredients: ["2 slices white or sourdough toast", "1 tbsp raw honey", "Pinch of coarse sea salt"] }
             ],
             post: [
-                { name: "Tart Cherry & Whey Recovery Smoothie", desc: "Protein synthesis paired with tart cherry anti-inflammatory antioxidants.", ingredients: ["1 scoop Whey / Plant protein", "1/2 cup tart cherry juice", "1/2 cup almond milk & blueberries"] },
+                { name: "Tart Cherry & Whey Smoothie", desc: "Protein synthesis paired with tart cherry anti-inflammatory antioxidants.", ingredients: ["1 scoop Whey / Plant protein", "1/2 cup tart cherry juice", "1/2 cup almond milk & blueberries"] },
                 { name: "Chocolate Protein Rice Bowl", desc: "Optimal 3:1 carb-to-protein ratio for rapid muscle repair.", ingredients: ["1 cup cooked white rice", "1 cup chocolate protein milk", "Pinch of sea salt"] },
-                { name: "Greek Yogurt Berry Honey Bowl", desc: "High leucine content to kickstart tissue building.", ingredients: ["1 cup 2% Greek Yogurt", "1/2 cup raspberries", "2 tbsp raw honey & sliced almonds"] }
+                { name: "Greek Yogurt Berry Bowl", desc: "High leucine content to kickstart tissue building.", ingredients: ["1 cup 2% Greek Yogurt", "1/2 cup raspberries", "2 tbsp raw honey & sliced almonds"] },
+                { name: "Protein Packed Pancakes", desc: "Replenishes depleted glycogen while supplying amino acids.", ingredients: ["1/2 cup Kodiak pancake mix", "1 egg", "1/4 cup almond milk & 1/2 banana"] }
             ],
             snack: [
-                { name: "Greek Yogurt Parfait with Pumpkin Seeds", desc: "Rich in casein protein, zinc, and magnesium for muscle repair.", ingredients: ["3/4 cup plain Greek yogurt", "2 tbsp pumpkin seeds (pepitas)", "1/2 cup fresh berries"] },
-                { name: "Hard-Boiled Eggs & Avocado Toast", desc: "Healthy fats and complete bioavailable proteins.", ingredients: ["2 pasture-raised eggs", "1 slice sourdough toast", "1/2 mashed avocado & sea salt"] },
-                { name: "Steamed Edamame with Sea Salt", desc: "Plant-based complete protein packed with electrolytes.", ingredients: ["1.5 cups edamame in pods", "Coarse sea salt", "1 tsp sesame oil"] }
+                { name: "Greek Yogurt & Pumpkin Seeds", desc: "Rich in casein protein, zinc, and magnesium for deep tissue repair.", ingredients: ["3/4 cup plain Greek yogurt", "2 tbsp pumpkin seeds (pepitas)", "1/2 cup fresh mixed berries"] },
+                { name: "Hard-Boiled Eggs & Avocado", desc: "Healthy fats and complete bioavailable proteins.", ingredients: ["2 pasture-raised eggs", "1 slice sourdough toast", "1/2 mashed avocado & sea salt"] },
+                { name: "Steamed Edamame with Sea Salt", desc: "Plant-based complete protein packed with electrolytes.", ingredients: ["1.5 cups edamame in pods", "Coarse sea salt", "1 tsp sesame oil"] },
+                { name: "Cottage Cheese & Pineapple", desc: "Slow-digesting protein combined with bromelain to reduce swelling.", ingredients: ["1 cup low-fat cottage cheese", "1/2 cup fresh pineapple chunks", "Sprinkle of chia seeds"] }
             ],
             dinner: [
-                { name: "Salmon Bowl with Quinoa & Asparagus", desc: "Omega-3 anti-inflammatory healthy fats paired with complex grains.", ingredients: ["6 oz wild salmon fillet", "1 cup cooked quinoa", "1 cup roasted asparagus & olive oil"] },
-                { name: "Grilled Chicken & Sweet Potato Mash", desc: "Lean protein with complex carbs to replenish glycogen overnight.", ingredients: ["7 oz chicken breast", "1 medium baked sweet potato", "Steamed broccoli florets"] },
-                { name: "Lean Steak Sirloin & Roasted Peppers", desc: "Heme iron and zinc for muscle oxygenation and cellular repair.", ingredients: ["6 oz lean sirloin steak", "1 cup roasted bell peppers", "1/2 cup jasmine rice"] }
+                { name: "Salmon Bowl with Quinoa", desc: "Omega-3 anti-inflammatory healthy fats paired with complex grains.", ingredients: ["6 oz wild salmon fillet", "1 cup cooked quinoa", "1 cup roasted asparagus & olive oil"] },
+                { name: "Grilled Chicken & Sweet Potato", desc: "Lean protein with complex carbs to replenish glycogen overnight.", ingredients: ["7 oz chicken breast", "1 medium baked sweet potato", "Steamed broccoli florets"] },
+                { name: "Lean Steak Sirloin & Peppers", desc: "Heme iron and zinc for muscle oxygenation and cellular repair.", ingredients: ["6 oz lean sirloin steak", "1 cup roasted bell peppers", "1/2 cup jasmine rice"] },
+                { name: "Turkey Meatball Whole Wheat Pasta", desc: "High protein dinner with sustained carbohydrates for next day fuel.", ingredients: ["5 lean ground turkey meatballs", "1 cup whole wheat pasta", "1/2 cup marinara sauce & spinach"] }
             ]
         };
 
         const recipeIndices = { pre: 0, post: 0, snack: 0, dinner: 0 };
 
         function refreshRecipe(category) {
-            recipeIndices[category] = (recipeIndices[category] + 1) % recipeDatabase[category].length;
-            renderRecipeCard(category);
-        }
-
-        function renderRecipeCard(category) {
             const container = document.getElementById(`card-${category}`);
             if (!container) return;
 
-            const recipe = recipeDatabase[category][recipeIndices[category]];
-            const categoryLabels = {
-                pre: "Pre-Training Fuel",
-                post: "Post-Training Recovery",
-                snack: "Nutritious Daily Snack",
-                dinner: "Recovery Dinner"
-            };
-
+            // Faux-AI Loading State
             container.innerHTML = `
-                <div class="flex justify-between items-center">
-                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-md border border-emerald-300">${categoryLabels[category]}</span>
-                    <button onclick="refreshRecipe('${category}')" class="text-xs text-emerald-700 hover:text-emerald-900 font-bold flex items-center gap-1 bg-white px-2.5 py-1 rounded-lg border border-slate-300 shadow-sm transition">
-                        <i class="fa-solid fa-arrows-rotate text-[10px]"></i> Refresh Recipe
-                    </button>
-                </div>
-                <h3 class="font-extrabold text-slate-900 text-base">${recipe.name}</h3>
-                <p class="text-xs text-slate-600">${recipe.desc}</p>
-                <div class="space-y-1 text-xs text-slate-700">
-                    <p class="font-bold text-emerald-700">Ingredients:</p>
-                    <ul class="list-disc list-inside space-y-0.5 text-slate-600">
-                        ${recipe.ingredients.map(ing => `<li>${ing}</li>`).join('')}
-                    </ul>
+                <div class="h-full min-h-[220px] flex flex-col items-center justify-center space-y-3 text-emerald-600">
+                    <i class="fa-solid fa-circle-notch fa-spin text-3xl"></i>
+                    <p class="text-xs font-extrabold uppercase tracking-widest text-slate-600">AI Searching...</p>
                 </div>
             `;
-        }
 
-        function renderAllRecipes() {
-            ['pre', 'post', 'snack', 'dinner'].forEach(cat => renderRecipeCard(cat));
+            // Wait 1 second, then generate
+            setTimeout(() => {
+                recipeIndices[category] = (recipeIndices[category] + 1) % recipeDatabase[category].length;
+                const recipe = recipeDatabase[category][recipeIndices[category]];
+                
+                const categoryLabels = {
+                    pre: "Pre-Training Fuel",
+                    post: "Post-Training Recovery",
+                    snack: "Nutritious Daily Snack",
+                    dinner: "Recovery Dinner"
+                };
+
+                container.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-md border border-emerald-300">${categoryLabels[category]}</span>
+                        <button onclick="refreshRecipe('${category}')" class="text-xs text-emerald-700 hover:text-emerald-900 font-bold flex items-center gap-1 bg-white px-2.5 py-1 rounded-lg border border-slate-300 shadow-sm transition">
+                            <i class="fa-solid fa-arrows-rotate text-[10px]"></i> AI Refresh
+                        </button>
+                    </div>
+                    <h3 class="font-extrabold text-slate-900 text-base">${recipe.name}</h3>
+                    <p class="text-xs text-slate-600">${recipe.desc}</p>
+                    <div class="space-y-1 text-xs text-slate-700">
+                        <p class="font-bold text-emerald-700">Ingredients:</p>
+                        <ul class="list-disc list-inside space-y-0.5 text-slate-600">
+                            ${recipe.ingredients.map(ing => `<li>${ing}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }, 1000);
         }
 
         // Profile Storage Handler
@@ -807,16 +876,15 @@ INSTRUCTIONS FOR AI: Provide 3 study-backed recovery techniques (such as cold wa
         }
 
         function updateNavProfileHeader() {
-            const sport = localStorage.getItem('rebound_sport') || 'Basketball';
+            const sport = localStorage.getItem('rebound_sport') || 'Set Bio';
             const navSport = document.getElementById('navProfileSport');
             if (navSport) navSport.textContent = sport;
         }
 
-        // Initialize Page Components
+        // Initialize Page
         renderStretches('Quads');
         buildCalendar();
         renderUpcomingEventsList();
-        renderAllRecipes();
         loadProfile();
     </script>
 </body>
