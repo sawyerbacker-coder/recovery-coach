@@ -3,133 +3,81 @@ const cors = require('cors');
 const path = require('path');
 
 const app = express();
+
+// Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.static(__dirname));
 
-// Serve static frontend files
-app.use(express.static(path.join(__dirname, '/')));
+// Serve main web app
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'recovery-coach-improved.html'));
+});
 
-const API_KEY = process.env.GEMINI_API_KEY;
+// Gemini AI Recovery Plan Endpoint
+app.post('/api/recovery-plan', async (req, res) => {
+    const { activity, sleep, sore, area, stress, effort, score, event } = req.body;
 
-// Fallback sequence for Google Gemini API models
-const MODELS_TO_TRY = [
-    'gemini-2.5-flash',
-    'gemini-2.0-flash',
-    'gemini-1.5-flash'
-];
+    const prompt = `You are an elite sports recovery coach. An athlete checked in with:
+    - Activity Today: ${activity} (Effort level: ${effort}/3)
+    - Sleep last night: ${sleep} hours
+    - Soreness level: ${sore}/3 (Location: ${area})
+    - Stress level: ${stress}/2
+    - Calculated Readiness Score: ${score}/100
+    - Next Scheduled Event: ${event}
 
-async function callGeminiFallback(promptText) {
-    if (!API_KEY) {
-        throw new Error("GEMINI_API_KEY environment variable is missing.");
-    }
+    CRITICAL INSTRUCTION: Step 1 of your plan MUST directly reference and target the specific physical demands of "${activity}". Start directly with a 3-step recovery plan. Keep it encouraging, actionable, and under 120 words.`;
+
+    const apiKey = process.env.AI_API_KEY;
+    
+    // Active Gemini 3 series models
+    const modelsToTry = [
+        'gemini-3.6-flash',
+        'gemini-3.5-flash',
+        'gemini-3.5-flash-lite'
+    ];
 
     let lastError = null;
 
-    for (const model of MODELS_TO_TRY) {
+    for (const model of modelsToTry) {
         try {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${API_KEY}`;
+            // v1beta endpoint for Gemini 3 generation models
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+
             const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: promptText }] }]
+                    contents: [{
+                        parts: [{ text: prompt }]
+                    }]
                 })
             });
 
-            if (response.ok) {
-                const data = await response.json();
-                const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-                if (text) return text;
-            } else {
-                const errText = await response.text();
-                console.warn(`Model ${model} failed (${response.status}): ${errText}`);
+            const data = await response.json();
+
+            if (data.error) {
+                console.warn(`Model ${model} returned error (${data.error.code}): ${data.error.message}`);
+                lastError = data.error;
+                continue; // Fall through to next model if unavailable
+            }
+
+            const plan = data.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (plan) {
+                console.log(`Success using model: ${model}`);
+                return res.json({ plan });
             }
         } catch (err) {
-            console.warn(`Attempt with ${model} threw error:`, err.message);
+            console.error(`Exception trying ${model}:`, err);
             lastError = err;
         }
     }
 
-    throw lastError || new Error("All Gemini models failed to respond.");
-}
-
-// ================= API ENDPOINT 1: RECOVERY PLAN GENERATOR =================
-app.post('/api/recovery-plan', async (req, res) => {
-    try {
-        const { activity, effort, sleep, sore, area, stress, sport, secondarySports, age, gender, season } = req.body;
-
-        const prompt = `
-You are an elite sports science recovery specialist. Generate a evidence-based, study-backed recovery plan for an athlete with the following profile:
-
-ATHLETE PROFILE:
-- Primary In-Season Sport: ${sport || 'Not specified'}
-- Off-Season / Secondary Sports: ${secondarySports || 'None'}
-- Age: ${age || '20'} | Gender: ${gender || 'Unspecified'}
-- Current Season Phase: ${season || 'In-Season'}
-
-TODAY'S METRICS:
-- Workout/Activity: ${activity}
-- Effort Level (1-3): ${effort}
-- Sleep Last Night: ${sleep} hours
-- Soreness Level (1-3): ${sore} | Focus Area: ${area}
-- Stress Level (1-3): ${stress}
-
-INSTRUCTIONS:
-1. Consider the athlete's multi-sport demands (e.g. balancing basketball court-impact with cross-country aerobic volume).
-2. Recommend 3 concrete, evidence-based recovery interventions (e.g., Cold Water Immersion for acute in-season soreness [Machado et al.], Sauna/Heat for vascular adaptation, Foam Rolling for DOMS [Behm et al.], Active recovery walks at <50% HRmax).
-3. Include short scientific rationale for why these work for their current season phase.
-4. Keep the output clean, highly structured, encouraging, and easy to read with bullet points.
-`;
-
-        const planText = await callGeminiFallback(prompt);
-        res.json({ plan: planText });
-
-    } catch (error) {
-        console.error('Error generating recovery plan:', error);
-        res.status(500).json({ plan: "Unable to generate plan right now. Please check server logs and try again." });
-    }
-});
-
-// ================= API ENDPOINT 2: AI RECIPE GENERATOR =================
-app.post('/api/generate-recipe', async (req, res) => {
-    try {
-        const { category, sport, season } = req.body;
-
-        const prompt = `
-Create a single performance nutrition recipe for an athlete playing ${sport || 'competitive sports'} (${season || 'In-Season'}).
-Category: ${category} (options: Pre-Training Fuel, Post-Training Recovery, Nutritious Snack, Recovery Dinner).
-
-Requirements:
-- Short, actionable title.
-- Brief explanation of why it supports athletic performance/recovery.
-- 3 to 5 simple ingredients with measurements.
-- Preparation time under 25 minutes.
-
-Format output as plain text formatted like this:
-Title: [Recipe Name]
-Prep Time: [Time]
-Why it Works: [1 sentence]
-Ingredients:
-- [Item 1]
-- [Item 2]
-- [Item 3]
-`;
-
-        const recipeText = await callGeminiFallback(prompt);
-        res.json({ recipe: recipeText });
-
-    } catch (error) {
-        console.error('Error generating recipe:', error);
-        res.status(500).json({ error: "Failed to fetch AI recipe." });
-    }
-});
-
-// Serve frontend route
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'recovery-coach-improved.html'));
+    console.error('All Gemini API attempts failed:', lastError);
+    return res.status(500).json({ plan: "Error connecting to AI service. Please check your API key." });
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`🚀 Recovery Coach server live on port ${PORT}`);
 });
