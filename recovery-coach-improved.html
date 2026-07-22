@@ -13,95 +13,112 @@
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #f8fafc;
+            background: linear-gradient(135deg, #f0fdf4 0%, #f8fafc 50%, #ecfdf5 100%);
             color: #0f172a;
+            min-h: 100vh;
         }
-        .green-glow {
-            box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.25);
+        .fluid-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+            box-shadow: 0 10px 30px -5px rgba(16, 185, 129, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
+            border-radius: 1.75rem;
         }
-        .light-card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
-        }
-        .light-input {
-            background: #f1f5f9;
-            border: 1px solid #cbd5e1;
+        .fluid-input {
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
             color: #0f172a;
+            border-radius: 1rem;
+            transition: all 0.2s ease;
         }
-        .light-input:focus {
+        .fluid-input:focus {
             background: #ffffff;
             border-color: #059669;
-            ring: 2px #059669;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
             outline: none;
         }
+        .tab-btn {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 1rem;
+        }
         .tab-btn.active {
-            background-color: #059669;
+            background: #059669;
             color: #ffffff;
-            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+            box-shadow: 0 8px 20px -4px rgba(5, 150, 105, 0.4);
+        }
+        .sticker-badge {
+            animation: float 4s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-6px) rotate(3deg); }
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-start p-4 md:p-8">
+<body class="min-h-screen flex flex-col items-center justify-start p-4 md:p-8 relative overflow-x-hidden">
 
-    <div class="max-w-4xl w-full space-y-6">
+    <!-- Background Decorative Sports Stickers -->
+    <div class="fixed top-12 left-6 text-emerald-300/40 text-6xl pointer-events-none sticker-badge"><i class="fa-solid fa-basketball"></i></div>
+    <div class="fixed bottom-12 right-8 text-teal-300/40 text-6xl pointer-events-none sticker-badge" style="animation-delay: 2s;"><i class="fa-solid fa-person-running"></i></div>
+    <div class="fixed top-1/2 -left-8 text-emerald-200/30 text-7xl pointer-events-none sticker-badge" style="animation-delay: 1s;"><i class="fa-solid fa-trophy"></i></div>
+
+    <div class="max-w-4xl w-full space-y-6 relative z-10">
         
-        <!-- Header Section -->
-        <header class="text-center space-y-2">
-            <div class="inline-flex items-center space-x-2 bg-emerald-100 border border-emerald-300 px-4 py-1.5 rounded-full text-emerald-800 text-xs md:text-sm font-bold tracking-wide uppercase">
-                <i class="fa-solid fa-trophy text-emerald-600"></i>
-                <span>Pro Athlete Recovery System</span>
+        <!-- Header Section with Top-Right Profile Trigger -->
+        <header class="flex items-center justify-between pb-2">
+            <div class="space-y-1">
+                <div class="inline-flex items-center space-x-2 bg-emerald-100/80 border border-emerald-300/60 px-3.5 py-1 rounded-full text-emerald-800 text-xs font-extrabold tracking-wide uppercase">
+                    <i class="fa-solid fa-bolt text-emerald-600"></i>
+                    <span>AI Performance Hub</span>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
+                    REBOUND <span class="text-emerald-600">COACH</span>
+                </h1>
             </div>
-            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">
-                REBOUND <span class="text-emerald-600">COACH</span>
-            </h1>
-            <p class="text-slate-500 text-sm md:text-base max-w-md mx-auto font-medium">
-                Smarter recovery, tailored stretches, and athletic nutrition.
-            </p>
+
+            <!-- Top Right Profile Button -->
+            <button onclick="toggleProfileModal()" class="flex items-center space-x-2 bg-white hover:bg-emerald-50 border border-emerald-200 p-2 md:px-4 md:py-2.5 rounded-2xl shadow-sm hover:shadow-md transition duration-200 text-slate-700">
+                <div class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xs">
+                    <i class="fa-solid fa-user-gear"></i>
+                </div>
+                <div class="hidden md:block text-left">
+                    <p id="navProfileName" class="text-xs font-extrabold text-slate-900">Athlete Profile</p>
+                    <p id="navProfileSport" class="text-[10px] text-emerald-600 font-bold">Configure Bio</p>
+                </div>
+            </button>
         </header>
 
-        <!-- Tab Navigation Bar -->
-        <nav class="grid grid-cols-2 md:grid-cols-5 gap-2 bg-slate-200/80 p-1.5 rounded-2xl border border-slate-300">
-            <button onclick="switchTab('checkin')" id="tab-btn-checkin" class="tab-btn active flex items-center justify-center space-x-2 py-3 px-3 rounded-xl text-xs md:text-sm font-bold transition duration-200">
+        <!-- Main Tab Navigation Bar -->
+        <nav class="grid grid-cols-2 md:grid-cols-4 gap-2 bg-slate-200/60 backdrop-blur-md p-1.5 rounded-2xl border border-slate-300/50">
+            <button onclick="switchTab('checkin')" id="tab-btn-checkin" class="tab-btn active flex items-center justify-center space-x-2 py-3 px-3 text-xs md:text-sm font-bold">
                 <i class="fa-solid fa-clipboard-check"></i>
-                <span>Check-In</span>
+                <span>Daily Check-In</span>
             </button>
-            <button onclick="switchTab('protocol')" id="tab-btn-protocol" class="tab-btn flex items-center justify-center space-x-2 py-3 px-3 rounded-xl text-xs md:text-sm font-bold text-slate-600 hover:text-slate-900 transition duration-200">
+            <button onclick="switchTab('protocol')" id="tab-btn-protocol" class="tab-btn flex items-center justify-center space-x-2 py-3 px-3 text-xs md:text-sm font-bold text-slate-600 hover:text-slate-900">
                 <i class="fa-solid fa-person-stretching"></i>
                 <span>Plan & Stretches</span>
             </button>
-            <button onclick="switchTab('schedule')" id="tab-btn-schedule" class="tab-btn flex items-center justify-center space-x-2 py-3 px-3 rounded-xl text-xs md:text-sm font-bold text-slate-600 hover:text-slate-900 transition duration-200">
+            <button onclick="switchTab('schedule')" id="tab-btn-schedule" class="tab-btn flex items-center justify-center space-x-2 py-3 px-3 text-xs md:text-sm font-bold text-slate-600 hover:text-slate-900">
                 <i class="fa-solid fa-calendar-days"></i>
                 <span>Schedule</span>
             </button>
-            <button onclick="switchTab('nutrition')" id="tab-btn-nutrition" class="tab-btn flex items-center justify-center space-x-2 py-3 px-3 rounded-xl text-xs md:text-sm font-bold text-slate-600 hover:text-slate-900 transition duration-200">
+            <button onclick="switchTab('nutrition')" id="tab-btn-nutrition" class="tab-btn flex items-center justify-center space-x-2 py-3 px-3 text-xs md:text-sm font-bold text-slate-600 hover:text-slate-900">
                 <i class="fa-solid fa-utensils"></i>
                 <span>Nutrition</span>
-            </button>
-            <button onclick="switchTab('profile')" id="tab-btn-profile" class="tab-btn flex items-center justify-center space-x-2 py-3 px-3 rounded-xl text-xs md:text-sm font-bold text-slate-600 hover:text-slate-900 transition duration-200">
-                <i class="fa-solid fa-id-card"></i>
-                <span>Profile</span>
             </button>
         </nav>
 
         <!-- ================= TAB 1: DAILY CHECK-IN ================= -->
         <section id="tab-checkin" class="tab-content space-y-6">
-            <div class="light-card rounded-2xl p-6 md:p-8 space-y-6">
+            <div class="fluid-card p-6 md:p-8 space-y-6">
                 
-                <!-- Dynamic Readiness Header -->
-                <div class="flex flex-col sm:flex-row items-center justify-between p-4 rounded-xl bg-emerald-50 border border-emerald-200 green-glow gap-4">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-11 h-11 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-md">
-                            <i class="fa-solid fa-heart-pulse text-xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-slate-900 text-sm">Estimated Readiness Score</h3>
-                            <p class="text-xs text-slate-500">Dynamically computed from today's inputs</p>
-                        </div>
+                <div class="flex items-center space-x-3 pb-2 border-b border-slate-200/60">
+                    <div class="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center shadow-md shadow-emerald-600/30">
+                        <i class="fa-solid fa-heart-pulse text-lg"></i>
                     </div>
-                    <div class="flex items-baseline space-x-1">
-                        <span id="scoreDisplay" class="text-4xl font-extrabold text-emerald-600">85</span>
-                        <span class="text-slate-400 text-sm font-bold">/100</span>
+                    <div>
+                        <h2 class="text-xl font-extrabold text-slate-900">Daily Training Check-In</h2>
+                        <p class="text-xs text-slate-500 font-medium">Log your activity and strain to tailor your recovery plan.</p>
                     </div>
                 </div>
 
@@ -111,46 +128,46 @@
                         
                         <!-- Activity Input -->
                         <div class="space-y-2">
-                            <label class="text-xs font-bold tracking-wider uppercase text-slate-700 flex items-center gap-2">
-                                <i class="fa-solid fa-dumbbell text-emerald-600"></i> Activity / Workout Today
+                            <label class="text-xs font-extrabold tracking-wider uppercase text-slate-700 flex items-center gap-2">
+                                <i class="fa-solid fa-dumbbell text-emerald-600"></i> Activity / Workout
                             </label>
-                            <input type="text" id="activity" required placeholder="e.g., Heavy Squats, Soccer Match, 5k Run" 
-                                class="light-input w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition">
+                            <input type="text" id="activity" required placeholder="e.g. Heavy Legs, 5k Tempo Run, Soccer Match" 
+                                class="fluid-input w-full px-4 py-3 text-sm">
                         </div>
 
                         <!-- Effort Level -->
                         <div class="space-y-2">
-                            <label class="text-xs font-bold tracking-wider uppercase text-slate-700 flex items-center gap-2">
+                            <label class="text-xs font-extrabold tracking-wider uppercase text-slate-700 flex items-center gap-2">
                                 <i class="fa-solid fa-gauge-high text-emerald-600"></i> Effort Level
                             </label>
-                            <select id="effort" class="light-input w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition">
-                                <option value="1">1 - Light / Low Intensity</option>
+                            <select id="effort" class="fluid-input w-full px-4 py-3 text-sm">
+                                <option value="1">1 - Light / Recovery Pace</option>
                                 <option value="2" selected>2 - Moderate Effort</option>
-                                <option value="3">3 - High Intensity / Max Effort</option>
+                                <option value="3">3 - All-Out High Intensity</option>
                             </select>
                         </div>
 
                         <!-- Sleep Hours -->
                         <div class="space-y-2">
-                            <label class="text-xs font-bold tracking-wider uppercase text-slate-700 flex items-center gap-2">
+                            <label class="text-xs font-extrabold tracking-wider uppercase text-slate-700 flex items-center gap-2">
                                 <i class="fa-solid fa-bed text-emerald-600"></i> Sleep Last Night (Hours)
                             </label>
                             <input type="number" id="sleep" value="7.5" step="0.5" min="2" max="14" required 
-                                class="light-input w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition">
+                                class="fluid-input w-full px-4 py-3 text-sm">
                         </div>
 
                         <!-- Soreness Level & Area -->
                         <div class="space-y-2">
-                            <label class="text-xs font-bold tracking-wider uppercase text-slate-700 flex items-center gap-2">
-                                <i class="fa-solid fa-person-dots-from-line text-emerald-600"></i> Soreness & Muscle Area
+                            <label class="text-xs font-extrabold tracking-wider uppercase text-slate-700 flex items-center gap-2">
+                                <i class="fa-solid fa-person-dots-from-line text-emerald-600"></i> Soreness & Focus Area
                             </label>
                             <div class="grid grid-cols-2 gap-2">
-                                <select id="sore" class="light-input rounded-xl px-3 py-3 text-sm focus:outline-none transition">
+                                <select id="sore" class="fluid-input px-3 py-3 text-sm">
                                     <option value="1">1 - Mild</option>
                                     <option value="2" selected>2 - Moderate</option>
                                     <option value="3">3 - Severe</option>
                                 </select>
-                                <select id="area" class="light-input rounded-xl px-3 py-3 text-sm focus:outline-none transition">
+                                <select id="area" class="fluid-input px-3 py-3 text-sm">
                                     <option value="Quads">Quads</option>
                                     <option value="Hamstrings">Hamstrings</option>
                                     <option value="Calves">Calves</option>
@@ -161,132 +178,121 @@
                             </div>
                         </div>
 
-                        <!-- Stress Level -->
-                        <div class="space-y-2">
-                            <label class="text-xs font-bold tracking-wider uppercase text-slate-700 flex items-center gap-2">
+                        <!-- Stress Level (3-Point Scale) -->
+                        <div class="space-y-2 md:col-span-2">
+                            <label class="text-xs font-extrabold tracking-wider uppercase text-slate-700 flex items-center gap-2">
                                 <i class="fa-solid fa-brain text-emerald-600"></i> Stress Level
                             </label>
-                            <select id="stress" class="light-input w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition">
-                                <option value="1">1 - Low Stress</option>
-                                <option value="2">2 - High / Elevated Stress</option>
+                            <select id="stress" class="fluid-input w-full px-4 py-3 text-sm">
+                                <option value="1">1 - Low / Chill & Relaxed</option>
+                                <option value="2" selected>2 - Moderate / Busy Day</option>
+                                <option value="3">3 - High / Overwhelmed & Fatigued</option>
                             </select>
-                        </div>
-
-                        <!-- Next Scheduled Event -->
-                        <div class="space-y-2">
-                            <label class="text-xs font-bold tracking-wider uppercase text-slate-700 flex items-center gap-2">
-                                <i class="fa-solid fa-calendar-day text-emerald-600"></i> Next Event / Workout
-                            </label>
-                            <input type="text" id="event" required placeholder="e.g. Game Tomorrow, Sprint Workout" 
-                                class="light-input w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition">
                         </div>
 
                     </div>
 
                     <!-- Submit Button -->
                     <button type="submit" id="submitBtn" 
-                        class="w-full py-4 rounded-xl font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition duration-200 green-glow flex items-center justify-center space-x-2 text-base uppercase tracking-wider cursor-pointer">
+                        class="w-full py-4 rounded-2xl font-extrabold text-white bg-emerald-600 hover:bg-emerald-700 transition duration-200 shadow-lg shadow-emerald-600/30 flex items-center justify-center space-x-2 text-base uppercase tracking-wider cursor-pointer">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        <span>Generate Recovery Plan & Stretches</span>
+                        <span>Generate Custom Recovery Protocol</span>
                     </button>
                 </form>
             </div>
         </section>
 
-        <!-- ================= TAB 2: TODAY'S PLAN & STRETCHES ================= -->
+        <!-- ================= TAB 2: PLAN & STRETCHES ================= -->
         <section id="tab-protocol" class="tab-content hidden space-y-6">
             
-            <!-- AI Protocol -->
-            <div class="light-card rounded-2xl p-6 md:p-8 space-y-4 border-l-4 border-emerald-600">
+            <!-- AI Protocol Container -->
+            <div class="fluid-card p-6 md:p-8 space-y-4 border-l-4 border-emerald-600">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
-                            <i class="fa-solid fa-shield-halved text-xl"></i>
+                        <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-shield-halved text-lg"></i>
                         </div>
                         <div>
-                            <h2 class="text-xl font-bold text-slate-900">Your Personal Recovery Protocol</h2>
-                            <p class="text-xs text-slate-500">AI-generated from check-in & athlete profile</p>
+                            <h2 class="text-xl font-extrabold text-slate-900">Personalized Recovery Protocol</h2>
+                            <p class="text-xs text-slate-500 font-medium">Adapted to your profile and current check-in metrics</p>
                         </div>
                     </div>
-                    <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full border border-emerald-300">AI Active</span>
+                    <span class="text-xs bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1 rounded-full border border-emerald-300">AI Active</span>
                 </div>
 
                 <hr class="border-slate-200">
 
-                <div id="planOutput" class="text-slate-700 leading-relaxed text-base space-y-4 whitespace-pre-line bg-slate-50 p-5 rounded-xl border border-slate-200 font-medium">
-                    Please submit a Daily Check-In to generate your custom recovery protocol!
+                <div id="planOutput" class="text-slate-700 leading-relaxed text-base space-y-4 whitespace-pre-line bg-slate-50/80 p-5 rounded-2xl border border-slate-200/80 font-medium">
+                    Submit your Daily Check-In to generate today's custom recovery plan!
                 </div>
             </div>
 
-            <!-- Targeted Stretching Routine Section -->
-            <div class="light-card rounded-2xl p-6 md:p-8 space-y-6">
+            <!-- Targeted Stretching Routine -->
+            <div class="fluid-card p-6 md:p-8 space-y-6">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-md">
-                            <i class="fa-solid fa-person-stretching text-xl"></i>
+                        <div class="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center shadow-md">
+                            <i class="fa-solid fa-person-stretching text-lg"></i>
                         </div>
                         <div>
-                            <h2 class="text-xl font-bold text-slate-900">Targeted Stretching Routine</h2>
-                            <p class="text-xs text-slate-500" id="stretchTargetText">Recommended stretches based on your soreness focus area</p>
+                            <h2 class="text-xl font-extrabold text-slate-900">Targeted Stretching Routine</h2>
+                            <p class="text-xs text-slate-500 font-medium" id="stretchTargetText">Recommended stretches for your sore muscle area</p>
                         </div>
                     </div>
-                    <span class="text-xs bg-slate-100 text-slate-700 font-bold px-3 py-1 rounded-full border border-slate-300">Visual Guide</span>
+                    <span class="text-xs bg-slate-100 text-slate-700 font-bold px-3 py-1 rounded-full border border-slate-200">Visual Guide</span>
                 </div>
 
                 <div id="stretchingCardsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <!-- Dynamic Stretch Cards populate here -->
+                    <!-- Dynamic Stretch Cards -->
                 </div>
             </div>
         </section>
 
         <!-- ================= TAB 3: SCHEDULE ================= -->
         <section id="tab-schedule" class="tab-content hidden space-y-6">
-            <div class="light-card rounded-2xl p-6 md:p-8 space-y-6">
+            <div class="fluid-card p-6 md:p-8 space-y-6">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
-                            <i class="fa-solid fa-calendar-days text-xl"></i>
+                        <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                            <i class="fa-solid fa-calendar-days text-lg"></i>
                         </div>
                         <div>
-                            <h2 class="text-xl font-bold text-slate-900">Training & Recovery Calendar</h2>
-                            <p class="text-xs text-slate-500">Schedule your sessions and balance rest days</p>
+                            <h2 class="text-xl font-extrabold text-slate-900">Training & Event Calendar</h2>
+                            <p class="text-xs text-slate-500 font-medium">Schedule workouts, games, or rest days directly on your calendar</p>
                         </div>
                     </div>
-                    <span id="currentMonthYear" class="text-sm font-bold text-emerald-700"></span>
+                    <span id="currentMonthYear" class="text-sm font-extrabold text-emerald-700"></span>
                 </div>
 
-                <!-- Calendar Grid -->
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-4">
-                    <div class="grid grid-cols-7 text-center text-xs font-bold uppercase tracking-wider text-emerald-700 py-2 border-b border-slate-200">
+                <!-- Interactive Calendar Grid -->
+                <div class="bg-slate-50/90 p-4 rounded-2xl border border-slate-200 space-y-4 shadow-inner">
+                    <div class="grid grid-cols-7 text-center text-xs font-extrabold uppercase tracking-wider text-emerald-700 py-2 border-b border-slate-200">
                         <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
                     </div>
-                    <div id="calendarDays" class="grid grid-cols-7 gap-1 text-center text-sm font-semibold">
-                        <!-- Calendar Days -->
+                    <div id="calendarDays" class="grid grid-cols-7 gap-1 text-center">
+                        <!-- Dynamic Calendar cells -->
                     </div>
                 </div>
 
                 <!-- Add Event Form -->
-                <div class="p-4 rounded-xl bg-slate-100 border border-slate-200 space-y-3">
-                    <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-plus text-emerald-600"></i> Add Event to Schedule
+                <div class="p-5 rounded-2xl bg-emerald-50/60 border border-emerald-200 space-y-3">
+                    <h4 class="text-xs font-extrabold text-emerald-900 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-plus-circle text-emerald-600"></i> Add Scheduled Event
                     </h4>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                        <input type="date" id="eventDate" class="light-input rounded-xl px-4 py-2 text-sm focus:outline-none">
-                        <input type="text" id="eventTitle" placeholder="e.g. Track Practice / Rest Day" class="light-input rounded-xl px-4 py-2 text-sm focus:outline-none">
-                        <button onclick="addScheduleEvent()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-xl transition text-sm">
-                            Add Event
+                        <input type="date" id="eventDate" class="fluid-input px-4 py-2.5 text-sm">
+                        <input type="text" id="eventTitle" placeholder="e.g. Championship Match, Sprint Session" class="fluid-input px-4 py-2.5 text-sm">
+                        <button onclick="addScheduleEvent()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-2.5 px-4 rounded-xl transition duration-200 text-sm shadow-md shadow-emerald-600/20">
+                            Add To Calendar
                         </button>
                     </div>
                 </div>
 
-                <!-- Upcoming Events List -->
+                <!-- Scheduled Events List -->
                 <div class="space-y-3">
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Upcoming Events</h3>
+                    <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Upcoming Scheduled Events</h3>
                     <div id="eventsList" class="space-y-2">
-                        <div class="p-3 bg-white rounded-xl border border-slate-200 flex justify-between items-center text-sm">
-                            <span class="font-bold text-slate-800">Today's Check-In & AI Recovery Protocol</span>
-                            <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-md">Today</span>
-                        </div>
+                        <!-- Dynamic event items list -->
                     </div>
                 </div>
             </div>
@@ -294,166 +300,105 @@
 
         <!-- ================= TAB 4: NUTRITION ================= -->
         <section id="tab-nutrition" class="tab-content hidden space-y-6">
-            <div class="light-card rounded-2xl p-6 md:p-8 space-y-6">
+            <div class="fluid-card p-6 md:p-8 space-y-6">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
-                        <i class="fa-solid fa-utensils text-xl"></i>
+                    <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                        <i class="fa-solid fa-utensils text-lg"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl font-bold text-slate-900">Performance Recovery Nutrition</h2>
-                        <p class="text-xs text-slate-500">Tailored recipes for pre-workout energy, post-workout repair, and dinner</p>
+                        <h2 class="text-xl font-extrabold text-slate-900">Athletic Recovery Nutrition</h2>
+                        <p class="text-xs text-slate-500 font-medium">Fresh, targeted recipes. Click refresh on any meal to discover new options!</p>
                     </div>
                 </div>
 
                 <!-- Recipe Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     
-                    <!-- Pre-Training Snack -->
-                    <div class="bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-md border border-emerald-300">Pre-Training Snack</span>
-                            <span class="text-xs text-slate-500"><i class="fa-regular fa-clock"></i> 5 mins</span>
-                        </div>
-                        <h3 class="font-bold text-slate-900 text-base">Banana Rice Cakes with Peanut Butter & Honey</h3>
-                        <p class="text-xs text-slate-600">Quick-digesting carbohydrates for immediate muscle glycogen fuel.</p>
-                        <div class="space-y-1 text-xs text-slate-700">
-                            <p class="font-bold text-emerald-700">Ingredients:</p>
-                            <ul class="list-disc list-inside space-y-0.5 text-slate-600">
-                                <li>2 whole grain rice cakes</li>
-                                <li>2 tbsp natural peanut butter</li>
-                                <li>1 sliced banana & drizzle of honey</li>
-                            </ul>
-                        </div>
+                    <!-- Pre-Training Snack Card -->
+                    <div id="card-pre" class="bg-slate-50 rounded-2xl p-5 border border-slate-200/80 space-y-3 hover:border-emerald-400 transition duration-300">
+                        <!-- Dynamic Content -->
                     </div>
 
-                    <!-- Post-Training Snack -->
-                    <div class="bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-md border border-emerald-300">Post-Training Snack</span>
-                            <span class="text-xs text-slate-500"><i class="fa-regular fa-clock"></i> 5 mins</span>
-                        </div>
-                        <h3 class="font-bold text-slate-900 text-base">Tart Cherry & Whey Recovery Smoothie</h3>
-                        <p class="text-xs text-slate-600">Rapid protein synthesis paired with tart cherry antioxidants for soreness.</p>
-                        <div class="space-y-1 text-xs text-slate-700">
-                            <p class="font-bold text-emerald-700">Ingredients:</p>
-                            <ul class="list-disc list-inside space-y-0.5 text-slate-600">
-                                <li>1 scoop Whey / Plant protein</li>
-                                <li>1/2 cup tart cherry juice & almond milk</li>
-                                <li>1/2 cup frozen blueberries & chia seeds</li>
-                            </ul>
-                        </div>
+                    <!-- Post-Training Snack Card -->
+                    <div id="card-post" class="bg-slate-50 rounded-2xl p-5 border border-slate-200/80 space-y-3 hover:border-emerald-400 transition duration-300">
+                        <!-- Dynamic Content -->
                     </div>
 
-                    <!-- Nutritious Snack -->
-                    <div class="bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-md border border-emerald-300">Nutritious Daily Snack</span>
-                            <span class="text-xs text-slate-500"><i class="fa-regular fa-clock"></i> 3 mins</span>
-                        </div>
-                        <h3 class="font-bold text-slate-900 text-base">Greek Yogurt Parfait with Pumpkin Seeds</h3>
-                        <p class="text-xs text-slate-600">Slow-digesting casein protein, zinc, and magnesium for deep tissue repair.</p>
-                        <div class="space-y-1 text-xs text-slate-700">
-                            <p class="font-bold text-emerald-700">Ingredients:</p>
-                            <ul class="list-disc list-inside space-y-0.5 text-slate-600">
-                                <li>3/4 cup plain Greek yogurt</li>
-                                <li>2 tbsp pumpkin seeds (pepitas)</li>
-                                <li>1/2 cup fresh berries & honey</li>
-                            </ul>
-                        </div>
+                    <!-- Daily Snack Card -->
+                    <div id="card-snack" class="bg-slate-50 rounded-2xl p-5 border border-slate-200/80 space-y-3 hover:border-emerald-400 transition duration-300">
+                        <!-- Dynamic Content -->
                     </div>
 
-                    <!-- Nutritious Dinner -->
-                    <div class="bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-md border border-emerald-300">Nutritious Dinner</span>
-                            <span class="text-xs text-slate-500"><i class="fa-regular fa-clock"></i> 20 mins</span>
-                        </div>
-                        <h3 class="font-bold text-slate-900 text-base">Salmon Power Bowl with Quinoa & Asparagus</h3>
-                        <p class="text-xs text-slate-600">Omega-3 anti-inflammatory healthy fats paired with complex recovery grains.</p>
-                        <div class="space-y-1 text-xs text-slate-700">
-                            <p class="font-bold text-emerald-700">Ingredients:</p>
-                            <ul class="list-disc list-inside space-y-0.5 text-slate-600">
-                                <li>6 oz wild salmon fillet</li>
-                                <li>1 cup cooked quinoa & sweet potato</li>
-                                <li>1 cup roasted asparagus, olive oil & lemon</li>
-                            </ul>
-                        </div>
+                    <!-- Dinner Card -->
+                    <div id="card-dinner" class="bg-slate-50 rounded-2xl p-5 border border-slate-200/80 space-y-3 hover:border-emerald-400 transition duration-300">
+                        <!-- Dynamic Content -->
                     </div>
 
                 </div>
             </div>
         </section>
 
-        <!-- ================= TAB 5: ATHLETE PROFILE ================= -->
-        <section id="tab-profile" class="tab-content hidden space-y-6">
-            <div class="light-card rounded-2xl p-6 md:p-8 space-y-6">
+    </div>
+
+    <!-- ================= TOP-RIGHT PROFILE MODAL ================= -->
+    <div id="profileModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="fluid-card w-full max-w-lg p-6 md:p-8 space-y-6 bg-white relative shadow-2xl">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
-                        <i class="fa-solid fa-id-card text-xl"></i>
+                    <div class="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center shadow-md">
+                        <i class="fa-solid fa-id-card text-lg"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl font-bold text-slate-900">Personalized Athlete Profile</h2>
-                        <p class="text-xs text-slate-500">Your bio info helps the AI fine-tune recovery protocols</p>
+                        <h3 class="text-lg font-extrabold text-slate-900">Athlete Profile</h3>
+                        <p class="text-xs text-slate-500">Configured once, incorporated into all AI recovery protocols.</p>
                     </div>
                 </div>
+                <button onclick="toggleProfileModal()" class="text-slate-400 hover:text-slate-700 p-2 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
 
-                <form id="profileForm" class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        
-                        <!-- Sport(s) Played -->
-                        <div class="space-y-2">
-                            <label class="text-xs font-bold tracking-wider uppercase text-slate-700 flex items-center gap-2">
-                                <i class="fa-solid fa-volleyball text-emerald-600"></i> Primary Sport(s)
-                            </label>
-                            <input type="text" id="profSport" placeholder="e.g. Basketball, Track & Field, Swimming" 
-                                class="light-input w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition">
-                        </div>
-
-                        <!-- Age -->
-                        <div class="space-y-2">
-                            <label class="text-xs font-bold tracking-wider uppercase text-slate-700 flex items-center gap-2">
-                                <i class="fa-solid fa-cake-candles text-emerald-600"></i> Age
-                            </label>
-                            <input type="number" id="profAge" value="20" min="10" max="99" 
-                                class="light-input w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition">
-                        </div>
-
-                        <!-- Gender -->
-                        <div class="space-y-2">
-                            <label class="text-xs font-bold tracking-wider uppercase text-slate-700 flex items-center gap-2">
-                                <i class="fa-solid fa-user text-emerald-600"></i> Gender / Identity
-                            </label>
-                            <select id="profGender" class="light-input w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition">
-                                <option value="Female">Female</option>
-                                <option value="Male" selected>Male</option>
-                                <option value="Non-Binary">Non-Binary</option>
-                                <option value="Prefer not to say">Prefer not to say</option>
-                            </select>
-                        </div>
-
-                        <!-- Sport Season -->
-                        <div class="space-y-2">
-                            <label class="text-xs font-bold tracking-wider uppercase text-slate-700 flex items-center gap-2">
-                                <i class="fa-solid fa-stopwatch text-emerald-600"></i> Current Sport Season
-                            </label>
-                            <select id="profSeason" class="light-input w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition">
-                                <option value="In-Season (Peak Competition)">In-Season (Peak Competition)</option>
-                                <option value="Pre-Season (High Volume)">Pre-Season (High Volume)</option>
-                                <option value="Off-Season (Hypertrophy / Base Build)">Off-Season (Hypertrophy / Base Build)</option>
-                                <option value="Transition / Deload / Rest">Transition / Deload / Rest</option>
-                            </select>
-                        </div>
-
+            <form id="profileForm" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-extrabold uppercase text-slate-700">Primary Sport(s)</label>
+                        <input type="text" id="profSport" placeholder="e.g. Basketball, Track, Soccer" class="fluid-input w-full px-3.5 py-2.5 text-sm">
                     </div>
 
-                    <button type="button" onclick="saveProfile()" class="w-full py-3.5 rounded-xl font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition duration-200 green-glow flex items-center justify-center space-x-2 text-sm uppercase tracking-wider">
-                        <i class="fa-solid fa-floppy-disk"></i>
-                        <span>Save Athlete Profile</span>
-                    </button>
-                </form>
-            </div>
-        </section>
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-extrabold uppercase text-slate-700">Age</label>
+                        <input type="number" id="profAge" value="20" min="10" max="99" class="fluid-input w-full px-3.5 py-2.5 text-sm">
+                    </div>
 
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-extrabold uppercase text-slate-700">Gender / Identity</label>
+                        <select id="profGender" class="fluid-input w-full px-3.5 py-2.5 text-sm">
+                            <option value="Female">Female</option>
+                            <option value="Male" selected>Male</option>
+                            <option value="Non-Binary">Non-Binary</option>
+                            <option value="Prefer not to say">Prefer not to say</option>
+                        </select>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-extrabold uppercase text-slate-700">Current Season</label>
+                        <select id="profSeason" class="fluid-input w-full px-3.5 py-2.5 text-sm">
+                            <option value="In-Season (Peak Competition)">In-Season (Peak Competition)</option>
+                            <option value="Pre-Season (High Volume)">Pre-Season (High Volume)</option>
+                            <option value="Off-Season (Base Build)">Off-Season (Base Build)</option>
+                            <option value="Transition / Rest">Transition / Rest</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="pt-2 flex justify-end space-x-3">
+                    <button type="button" onclick="toggleProfileModal()" class="px-4 py-2.5 rounded-xl font-bold text-slate-600 hover:bg-slate-100 text-sm">Cancel</button>
+                    <button type="button" onclick="saveProfile()" class="px-5 py-2.5 rounded-xl font-extrabold text-white bg-emerald-600 hover:bg-emerald-700 text-sm shadow-md shadow-emerald-600/20">Save Profile</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- Application Script -->
@@ -472,60 +417,43 @@
             activeBtn.classList.remove('text-slate-600');
         }
 
-        // Dynamic Readiness Score Calculator
-        const scoreDisplay = document.getElementById('scoreDisplay');
-        function updateScore() {
-            const sleep = parseFloat(document.getElementById('sleep').value) || 7;
-            const sore = parseInt(document.getElementById('sore').value) || 1;
-            const stress = parseInt(document.getElementById('stress').value) || 1;
-            const effort = parseInt(document.getElementById('effort').value) || 2;
-
-            let score = Math.round((sleep * 8.5) + (100 - (sore * 15)) - (stress * 10) - (effort * 5));
-            score = Math.max(15, Math.min(99, score));
-            
-            scoreDisplay.textContent = score;
-            return score;
+        // Profile Modal Toggle
+        function toggleProfileModal() {
+            const modal = document.getElementById('profileModal');
+            modal.classList.toggle('hidden');
         }
 
-        ['sleep', 'sore', 'stress', 'effort'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
-                el.addEventListener('change', updateScore);
-                el.addEventListener('input', updateScore);
-            }
-        });
-
-        // Stretch Library mapped to sore muscle focus areas
+        // Stretch Library
         const stretchLibrary = {
             'Quads': [
-                { name: 'Standing Quad Stretch', duration: '45 sec / side', icon: 'fa-child-reaching', desc: 'Pull heel toward glutes while keeping knees aligned and standing tall.' },
-                { name: 'Kneeling Couch Stretch', duration: '60 sec / side', icon: 'fa-person-praying', desc: 'Place back foot against a wall or bench while kneeling to open deep hip flexors.' },
-                { name: 'Foam Roll Quads', duration: '90 sec total', icon: 'fa-mattress-pillow', desc: 'Roll slowly down from hip crease to upper knee, pausing on tight spots.' }
+                { name: 'Standing Quad Pull', duration: '45 sec / leg', icon: 'fa-child-reaching', desc: 'Pull heel to glute keeping knees close and core engaged.' },
+                { name: 'Kneeling Couch Stretch', duration: '60 sec / leg', icon: 'fa-person-praying', desc: 'Back foot against wall while kneeling upright to open hip flexors.' },
+                { name: 'Foam Roll Quads', duration: '90 sec', icon: 'fa-mattress-pillow', desc: 'Roll from hip crest down to above kneecap, pausing on tight spots.' }
             ],
             'Hamstrings': [
-                { name: 'Single-Leg Standing Hamstring Stretch', duration: '45 sec / side', icon: 'fa-person-walking', desc: 'Hinge forward at hips with heel flexed on a slightly elevated surface.' },
-                { name: 'Seated Single-Leg Reach', duration: '60 sec / side', icon: 'fa-child', desc: 'Sit with one leg extended, reach smoothly toward toes keeping spine long.' },
-                { name: 'Dynamic Leg Swings', duration: '15 swings / leg', icon: 'fa-person-running', desc: 'Swing leg gently forward and back with control to release hamstring tension.' }
+                { name: 'Standing Elevated Hamstring Reach', duration: '45 sec / leg', icon: 'fa-person-walking', desc: 'Place heel on low step, hinge at hips keeping back flat.' },
+                { name: 'Seated Single-Leg Stretch', duration: '60 sec / leg', icon: 'fa-child', desc: 'Extend one leg, gently reach towards toes without rounding spine.' },
+                { name: 'Leg Swings', duration: '15 swings / leg', icon: 'fa-person-running', desc: 'Swing leg smoothly forward and back to release tension dynamically.' }
             ],
             'Calves': [
-                { name: 'Wall Calf / Achilles Stretch', duration: '45 sec / side', icon: 'fa-person-walking-luggage', desc: 'Press rear heel into ground with back leg straight, then slightly bend knee.' },
-                { name: 'Downward Dog Pedal', duration: '60 sec', icon: 'fa-mountain', desc: 'Press hips high and alternate pressing each heel toward the ground.' },
-                { name: 'Foam Roll Calves', duration: '90 sec', icon: 'fa-mattress-pillow', desc: 'Cross one ankle over the other and roll slowly from ankle to upper calf.' }
+                { name: 'Wall Calf Press', duration: '45 sec / leg', icon: 'fa-person-walking-luggage', desc: 'Press rear heel into floor with back leg straight, then slightly bend.' },
+                { name: 'Downward Dog Pedal', duration: '60 sec', icon: 'fa-mountain', desc: 'Push hips up high and alternate pressing each heel to the floor.' },
+                { name: 'Foam Roll Calves', duration: '90 sec', icon: 'fa-mattress-pillow', desc: 'Slowly roll from Achilles tendon up to upper calf muscle.' }
             ],
             'Glutes & Hips': [
-                { name: 'Pigeon Pose', duration: '60 sec / side', icon: 'fa-person-praying', desc: 'Bring shin forward across mat and extend back leg straight behind hips.' },
-                { name: 'Figure-4 Glute Stretch', duration: '45 sec / side', icon: 'fa-child-reaching', desc: 'Lie on back, cross ankle over opposite knee, pull thigh gently toward chest.' },
-                { name: '90/90 Hip Mobility Switch', duration: '10 switches', icon: 'fa-arrows-rotate', desc: 'Sit with knees bent at 90° angles and rotate smoothly side to side.' }
+                { name: 'Pigeon Pose Hold', duration: '60 sec / side', icon: 'fa-person-praying', desc: 'Front leg bent across floor, back leg extended straight behind.' },
+                { name: 'Figure-4 Glute Stretch', duration: '45 sec / side', icon: 'fa-child-reaching', desc: 'Lie down, cross ankle over opposite knee, pull thigh gently toward chest.' },
+                { name: '90/90 Hip Switches', duration: '10 reps', icon: 'fa-arrows-rotate', desc: 'Sit with legs bent at 90 degrees and rotate hips side to side.' }
             ],
             'Lower Back': [
-                { name: 'Child’s Pose with Reach', duration: '60 sec', icon: 'fa-person-praying', desc: 'Sit hips back onto heels, reach arms far forward and walk hands slightly to sides.' },
-                { name: 'Cat-Cow Flow', duration: '10 slow reps', icon: 'fa-shield-cat', desc: 'Inhale to arch back softly, exhale to round spine and tuck chin to chest.' },
-                { name: 'Supine Spinal Twist', duration: '45 sec / side', icon: 'fa-child', desc: 'Lie flat, bring one knee across body towards the floor with shoulders flat.' }
+                { name: 'Extended Child’s Pose', duration: '60 sec', icon: 'fa-person-praying', desc: 'Hips back to heels, extend arms forward and breathe deeply into low back.' },
+                { name: 'Cat-Cow Flow', duration: '10 slow reps', icon: 'fa-shield-cat', desc: 'Inhale to arch gently, exhale to round spine and tuck chin.' },
+                { name: 'Supine Twist', duration: '45 sec / side', icon: 'fa-child', desc: 'Lie flat, draw one knee across torso to floor keeping shoulders down.' }
             ],
             'Shoulders & Chest': [
-                { name: 'Doorway Chest Opener', duration: '45 sec', icon: 'fa-door-open', desc: 'Place forearms on door frame and step gently forward until chest stretches.' },
-                { name: 'Cross-Body Shoulder Hold', duration: '45 sec / side', icon: 'fa-person-rays', desc: 'Pull arm straight across chest using opposite forearm to hug arm close.' },
-                { name: 'Thread the Needle', duration: '45 sec / side', icon: 'fa-hands-holding-circle', desc: 'From hands and knees, slide arm under torso to rest shoulder gently on floor.' }
+                { name: 'Doorway Chest Stretch', duration: '45 sec', icon: 'fa-door-open', desc: 'Forearms on door frame, step through lightly until chest stretches.' },
+                { name: 'Cross-Body Shoulder Hold', duration: '45 sec / side', icon: 'fa-person-rays', desc: 'Pull arm across chest with opposite arm for upper back and delts.' },
+                { name: 'Thread the Needle', duration: '45 sec / side', icon: 'fa-hands-holding-circle', desc: 'Slide arm beneath torso from quadruped to rest shoulder on mat.' }
             ]
         };
 
@@ -535,19 +463,19 @@
             if (!container) return;
 
             const stretches = stretchLibrary[area] || stretchLibrary['Quads'];
-            targetText.textContent = `Targeted routine optimized for: ${area}`;
+            targetText.textContent = `Optimized for focus area: ${area}`;
             container.innerHTML = '';
 
             stretches.forEach(item => {
                 container.innerHTML += `
-                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-3 hover:border-emerald-500 transition">
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-2.5 hover:border-emerald-500 transition">
                         <div class="flex justify-between items-center">
-                            <div class="w-9 h-9 rounded-lg bg-emerald-600 text-white flex items-center justify-center">
-                                <i class="fa-solid ${item.icon} text-lg"></i>
+                            <div class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold">
+                                <i class="fa-solid ${item.icon} text-sm"></i>
                             </div>
-                            <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-md border border-emerald-300">${item.duration}</span>
+                            <span class="text-[10px] bg-emerald-100 text-emerald-800 font-extrabold px-2.5 py-1 rounded-md border border-emerald-300">${item.duration}</span>
                         </div>
-                        <h4 class="font-bold text-slate-900 text-sm">${item.name}</h4>
+                        <h4 class="font-extrabold text-slate-900 text-sm">${item.name}</h4>
                         <p class="text-xs text-slate-600 leading-relaxed">${item.desc}</p>
                     </div>
                 `;
@@ -561,31 +489,33 @@
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const calculatedScore = updateScore();
 
             const areaVal = document.getElementById('area').value;
 
-            // Retrieve profile data if saved
-            const profSport = localStorage.getItem('rebound_sport') || 'Athlete';
+            // Load Saved Athlete Profile
+            const profSport = localStorage.getItem('rebound_sport') || 'General Athlete';
+            const profAge = localStorage.getItem('rebound_age') || '20';
+            const profGender = localStorage.getItem('rebound_gender') || 'Unspecified';
             const profSeason = localStorage.getItem('rebound_season') || 'In-Season';
 
             const payload = {
-                activity: `${document.getElementById('activity').value} (Sport: ${profSport}, Season: ${profSeason})`,
+                activity: document.getElementById('activity').value,
                 effort: document.getElementById('effort').value,
                 sleep: document.getElementById('sleep').value,
                 sore: document.getElementById('sore').value,
                 area: areaVal,
                 stress: document.getElementById('stress').value,
-                event: document.getElementById('event').value,
-                score: calculatedScore
+                // Passing Profile Details to AI Prompt Payload
+                sport: profSport,
+                age: profAge,
+                gender: profGender,
+                season: profSeason
             };
 
-            // Update UI stretches
             renderStretches(areaVal);
 
-            // Loading state
             submitBtn.disabled = true;
-            submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i><span>Analyzing Recovery Data...</span>`;
+            submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i><span>Analyzing Profile & Training...</span>`;
 
             try {
                 const response = await fetch('/api/recovery-plan', {
@@ -597,20 +527,22 @@
                 const data = await response.json();
                 
                 planOutput.textContent = data.plan;
-                
-                // Automatically switch to Plan & Stretches tab
                 switchTab('protocol');
 
             } catch (err) {
-                planOutput.textContent = "Unable to generate plan right now. Please check your network connection and try again.";
+                planOutput.textContent = "Unable to generate plan right now. Please check your connection and try again.";
                 switchTab('protocol');
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i><span>Generate Recovery Plan & Stretches</span>`;
+                submitBtn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i><span>Generate Custom Recovery Protocol</span>`;
             }
         });
 
-        // Calendar Builder
+        // ================= CALENDAR & EVENTS STATE =================
+        let scheduledEvents = JSON.parse(localStorage.getItem('rebound_events')) || {
+            "2026-07-22": ["Check-In Session"]
+        };
+
         function buildCalendar() {
             const calGrid = document.getElementById('calendarDays');
             const monthHeader = document.getElementById('currentMonthYear');
@@ -629,40 +561,145 @@
 
             calGrid.innerHTML = '';
 
+            // Empty padding slots
             for (let i = 0; i < firstDay; i++) {
                 calGrid.innerHTML += `<div class="p-2 text-slate-300"></div>`;
             }
 
+            // Days rendering
             for (let day = 1; day <= daysInMonth; day++) {
+                const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const hasEvents = scheduledEvents[dateKey] && scheduledEvents[dateKey].length > 0;
                 const isToday = day === todayDate;
-                const activeClass = isToday 
-                    ? 'bg-emerald-600 text-white font-bold rounded-lg green-glow' 
-                    : 'text-slate-700 hover:bg-slate-200 rounded-lg transition';
 
-                calGrid.innerHTML += `<div class="p-2 ${activeClass}">${day}</div>`;
+                let eventBadge = '';
+                if (hasEvents) {
+                    eventBadge = `<div class="mt-1 flex flex-col gap-0.5">${scheduledEvents[dateKey].map(evt => 
+                        `<span class="text-[9px] truncate bg-emerald-600 text-white font-bold rounded px-1 py-0.5 leading-tight">${evt}</span>`
+                    ).join('')}</div>`;
+                }
+
+                const dayBoxClass = isToday 
+                    ? 'bg-emerald-100 border-2 border-emerald-600 text-emerald-950 font-bold rounded-xl p-1 min-h-[52px]' 
+                    : 'bg-white border border-slate-200 hover:bg-slate-100 rounded-xl p-1 text-slate-800 font-semibold min-h-[52px]';
+
+                calGrid.innerHTML += `
+                    <div class="${dayBoxClass}">
+                        <div class="text-xs ${isToday ? 'font-extrabold text-emerald-800' : ''}">${day}</div>
+                        ${eventBadge}
+                    </div>
+                `;
             }
         }
 
-        // Add Schedule Event Handler
         function addScheduleEvent() {
             const dateVal = document.getElementById('eventDate').value;
             const titleVal = document.getElementById('eventTitle').value;
-            const eventsList = document.getElementById('eventsList');
 
             if (!dateVal || !titleVal) {
-                alert('Please select a date and enter an event title.');
+                alert('Please select a date and enter an event name.');
                 return;
             }
 
-            const eventItem = document.createElement('div');
-            eventItem.className = 'p-3 bg-white rounded-xl border border-slate-200 flex justify-between items-center text-sm';
-            eventItem.innerHTML = `
-                <span class="font-bold text-slate-800">${titleVal}</span>
-                <span class="text-xs bg-emerald-100 text-emerald-800 font-bold border border-emerald-300 px-2.5 py-1 rounded-md">${dateVal}</span>
-            `;
+            if (!scheduledEvents[dateVal]) {
+                scheduledEvents[dateVal] = [];
+            }
 
-            eventsList.prepend(eventItem);
+            scheduledEvents[dateVal].push(titleVal);
+            localStorage.setItem('rebound_events', JSON.stringify(scheduledEvents));
+
+            buildCalendar();
+            renderUpcomingEventsList();
             document.getElementById('eventTitle').value = '';
+        }
+
+        function renderUpcomingEventsList() {
+            const eventsList = document.getElementById('eventsList');
+            if (!eventsList) return;
+
+            eventsList.innerHTML = '';
+            
+            const keys = Object.keys(scheduledEvents).sort();
+            if (keys.length === 0) {
+                eventsList.innerHTML = `<p class="text-xs text-slate-400">No upcoming events scheduled.</p>`;
+                return;
+            }
+
+            keys.forEach(dateKey => {
+                scheduledEvents[dateKey].forEach(title => {
+                    eventsList.innerHTML += `
+                        <div class="p-3 bg-white rounded-xl border border-slate-200 flex justify-between items-center text-sm shadow-sm">
+                            <span class="font-extrabold text-slate-800">${title}</span>
+                            <span class="text-xs bg-emerald-100 text-emerald-800 font-bold border border-emerald-300 px-2.5 py-1 rounded-md">${dateKey}</span>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        // ================= NUTRITION RECIPE REFRESH ENGINE =================
+        const recipeDatabase = {
+            pre: [
+                { name: "Banana Rice Cakes with Peanut Butter", time: "5 mins", desc: "Quick-digesting carbs for fast muscle glycogen fuel.", ingredients: ["2 whole grain rice cakes", "2 tbsp natural peanut butter", "1 sliced banana & honey drizzle"] },
+                { name: "Oatmeal with Blueberries & Honey", time: "7 mins", desc: "Sustained glucose release for long endurance sessions.", ingredients: ["1/2 cup rolled oats", "1/2 cup fresh blueberries", "1 tbsp chia seeds & maple syrup"] },
+                { name: "Apple Slices & Almond Butter", time: "3 mins", desc: "Light, easy-on-the-stomach energy booster.", ingredients: ["1 crisp Honeycrisp apple", "2 tbsp raw almond butter", "Dash of cinnamon"] }
+            ],
+            post: [
+                { name: "Tart Cherry & Whey Recovery Smoothie", time: "5 mins", desc: "Protein synthesis + tart cherry antioxidants for soreness.", ingredients: ["1 scoop Whey or Plant protein", "1/2 cup tart cherry juice", "1/2 cup almond milk & blueberries"] },
+                { name: "Chocolate Protein Milk & Rice Bowl", time: "4 mins", desc: "Optimal 3:1 carb-to-protein ratio for rapid recovery.", ingredients: ["1 cup cooked white rice", "1 cup chocolate protein milk", "1 pinch sea salt"] },
+                { name: "Greek Yogurt & Honey Berry Bowl", time: "5 mins", desc: "High leucine content to kickstart muscle repair.", ingredients: ["1 cup 2% Greek Yogurt", "1/2 cup raspberries", "2 tbsp raw honey & sliced almonds"] }
+            ],
+            snack: [
+                { name: "Greek Yogurt Parfait with Pumpkin Seeds", time: "3 mins", desc: "Rich in casein, zinc, and magnesium for tissue repair.", ingredients: ["3/4 cup plain Greek yogurt", "2 tbsp pumpkin seeds (pepitas)", "1/2 cup fresh berries"] },
+                { name: "Hard-Boiled Eggs & Avocado Toast", time: "8 mins", desc: "Healthy fats and complete bioavailable proteins.", ingredients: ["2 pasture-raised eggs", "1 slice sourdough toast", "1/2 mashed avocado & sea salt"] },
+                { name: "Edamame with Sea Salt & Sesame", time: "5 mins", desc: "Plant-based complete protein packed with electrolytes.", ingredients: ["1.5 cups steamed edamame in pods", "Coarse sea salt", "1 tsp sesame oil"] }
+            ],
+            dinner: [
+                { name: "Salmon Bowl with Quinoa & Asparagus", time: "20 mins", desc: "Omega-3 anti-inflammatory fats paired with recovery grains.", ingredients: ["6 oz wild salmon fillet", "1 cup cooked quinoa", "1 cup roasted asparagus & olive oil"] },
+                { name: "Grilled Chicken Breast & Sweet Potato Mash", time: "25 mins", desc: "Lean protein with complex carbs to replenish glycogen.", ingredients: ["7 oz chicken breast", "1 medium baked sweet potato", "Steamed broccoli florets"] },
+                { name: "Grass-Fed Beef Sirloin & Roasted Vegetables", time: "20 mins", desc: "Heme iron and zinc for cellular recovery and oxygen transport.", ingredients: ["6 oz lean sirloin steak", "1 cup roasted zucchini & bell peppers", "1/2 cup jasmine rice"] }
+            ]
+        };
+
+        const recipeIndices = { pre: 0, post: 0, snack: 0, dinner: 0 };
+
+        function refreshRecipe(category) {
+            recipeIndices[category] = (recipeIndices[category] + 1) % recipeDatabase[category].length;
+            renderRecipeCard(category);
+        }
+
+        function renderRecipeCard(category) {
+            const container = document.getElementById(`card-${category}`);
+            if (!container) return;
+
+            const recipe = recipeDatabase[category][recipeIndices[category]];
+            const categoryLabels = {
+                pre: "Pre-Training Fuel",
+                post: "Post-Training Recovery",
+                snack: "Nutritious Daily Snack",
+                dinner: "Recovery Dinner"
+            };
+
+            container.innerHTML = `
+                <div class="flex justify-between items-center">
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-md border border-emerald-300">${categoryLabels[category]}</span>
+                    <button onclick="refreshRecipe('${category}')" class="text-xs text-emerald-700 hover:text-emerald-900 font-bold flex items-center gap-1 bg-white px-2 py-1 rounded-lg border border-slate-200 shadow-sm transition">
+                        <i class="fa-solid fa-arrows-rotate text-[10px]"></i> Refresh
+                    </button>
+                </div>
+                <h3 class="font-extrabold text-slate-900 text-base">${recipe.name}</h3>
+                <p class="text-xs text-slate-600">${recipe.desc}</p>
+                <div class="space-y-1 text-xs text-slate-700">
+                    <p class="font-bold text-emerald-700">Ingredients:</p>
+                    <ul class="list-disc list-inside space-y-0.5 text-slate-600">
+                        ${recipe.ingredients.map(ing => `<li>${ing}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+
+        function renderAllRecipes() {
+            ['pre', 'post', 'snack', 'dinner'].forEach(cat => renderRecipeCard(cat));
         }
 
         // Profile Storage Handler
@@ -677,7 +714,8 @@
             localStorage.setItem('rebound_gender', gender);
             localStorage.setItem('rebound_season', season);
 
-            alert('Profile saved successfully! Your AI protocols will now incorporate your sport and season status.');
+            updateNavProfileHeader();
+            toggleProfileModal();
         }
 
         function loadProfile() {
@@ -685,12 +723,21 @@
             if (localStorage.getItem('rebound_age')) document.getElementById('profAge').value = localStorage.getItem('rebound_age');
             if (localStorage.getItem('rebound_gender')) document.getElementById('profGender').value = localStorage.getItem('rebound_gender');
             if (localStorage.getItem('rebound_season')) document.getElementById('profSeason').value = localStorage.getItem('rebound_season');
+
+            updateNavProfileHeader();
+        }
+
+        function updateNavProfileHeader() {
+            const sport = localStorage.getItem('rebound_sport') || 'Set Bio';
+            const navSport = document.getElementById('navProfileSport');
+            if (navSport) navSport.textContent = sport;
         }
 
         // Initializations
-        updateScore();
         renderStretches('Quads');
         buildCalendar();
+        renderUpcomingEventsList();
+        renderAllRecipes();
         loadProfile();
     </script>
 </body>
