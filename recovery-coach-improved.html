@@ -13,84 +13,95 @@
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #0b0f17;
+            background-color: #f8fafc;
+            color: #0f172a;
         }
         .green-glow {
-            box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.25);
         }
-        .glass-card {
-            background: rgba(17, 24, 39, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+        .light-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
         }
-        .glass-input {
-            background: rgba(31, 41, 55, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .light-input {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            color: #0f172a;
         }
-        .glass-input:focus {
-            border-color: #10b981;
-            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+        .light-input:focus {
+            background: #ffffff;
+            border-color: #059669;
+            ring: 2px #059669;
+            outline: none;
         }
         .tab-btn.active {
-            background-color: rgba(16, 185, 129, 0.15);
-            color: #10b981;
-            border-color: rgba(16, 185, 129, 0.4);
+            background-color: #059669;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
         }
     </style>
 </head>
-<body class="text-gray-100 min-h-screen flex flex-col items-center justify-start p-4 md:p-8">
+<body class="min-h-screen flex flex-col items-center justify-start p-4 md:p-8">
 
     <div class="max-w-4xl w-full space-y-6">
         
         <!-- Header Section -->
         <header class="text-center space-y-2">
-            <div class="inline-flex items-center space-x-2 bg-emerald-950/60 border border-emerald-500/30 px-4 py-1.5 rounded-full text-emerald-400 text-xs md:text-sm font-semibold tracking-wide uppercase">
-                <i class="fa-solid fa-bolt text-emerald-400"></i>
-                <span>AI Performance Recovery Hub</span>
+            <div class="inline-flex items-center space-x-2 bg-emerald-100 border border-emerald-300 px-4 py-1.5 rounded-full text-emerald-800 text-xs md:text-sm font-bold tracking-wide uppercase">
+                <i class="fa-solid fa-trophy text-emerald-600"></i>
+                <span>Pro Athlete Recovery System</span>
             </div>
-            <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white">
-                REBOUND <span class="text-emerald-400">COACH</span>
+            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">
+                REBOUND <span class="text-emerald-600">COACH</span>
             </h1>
+            <p class="text-slate-500 text-sm md:text-base max-w-md mx-auto font-medium">
+                Smarter recovery, tailored stretches, and athletic nutrition.
+            </p>
         </header>
 
         <!-- Tab Navigation Bar -->
-        <nav class="grid grid-cols-2 md:grid-cols-4 gap-2 bg-gray-900/90 p-1.5 rounded-2xl border border-gray-800">
-            <button onclick="switchTab('checkin')" id="tab-btn-checkin" class="tab-btn active flex items-center justify-center space-x-2 py-3 px-4 rounded-xl text-xs md:text-sm font-bold border border-transparent transition duration-200">
+        <nav class="grid grid-cols-2 md:grid-cols-5 gap-2 bg-slate-200/80 p-1.5 rounded-2xl border border-slate-300">
+            <button onclick="switchTab('checkin')" id="tab-btn-checkin" class="tab-btn active flex items-center justify-center space-x-2 py-3 px-3 rounded-xl text-xs md:text-sm font-bold transition duration-200">
                 <i class="fa-solid fa-clipboard-check"></i>
-                <span>Daily Check-In</span>
+                <span>Check-In</span>
             </button>
-            <button onclick="switchTab('protocol')" id="tab-btn-protocol" class="tab-btn flex items-center justify-center space-x-2 py-3 px-4 rounded-xl text-xs md:text-sm font-bold text-gray-400 border border-transparent hover:text-white transition duration-200">
-                <i class="fa-solid fa-list-check"></i>
-                <span>Today's Plan</span>
+            <button onclick="switchTab('protocol')" id="tab-btn-protocol" class="tab-btn flex items-center justify-center space-x-2 py-3 px-3 rounded-xl text-xs md:text-sm font-bold text-slate-600 hover:text-slate-900 transition duration-200">
+                <i class="fa-solid fa-person-stretching"></i>
+                <span>Plan & Stretches</span>
             </button>
-            <button onclick="switchTab('schedule')" id="tab-btn-schedule" class="tab-btn flex items-center justify-center space-x-2 py-3 px-4 rounded-xl text-xs md:text-sm font-bold text-gray-400 border border-transparent hover:text-white transition duration-200">
+            <button onclick="switchTab('schedule')" id="tab-btn-schedule" class="tab-btn flex items-center justify-center space-x-2 py-3 px-3 rounded-xl text-xs md:text-sm font-bold text-slate-600 hover:text-slate-900 transition duration-200">
                 <i class="fa-solid fa-calendar-days"></i>
                 <span>Schedule</span>
             </button>
-            <button onclick="switchTab('nutrition')" id="tab-btn-nutrition" class="tab-btn flex items-center justify-center space-x-2 py-3 px-4 rounded-xl text-xs md:text-sm font-bold text-gray-400 border border-transparent hover:text-white transition duration-200">
+            <button onclick="switchTab('nutrition')" id="tab-btn-nutrition" class="tab-btn flex items-center justify-center space-x-2 py-3 px-3 rounded-xl text-xs md:text-sm font-bold text-slate-600 hover:text-slate-900 transition duration-200">
                 <i class="fa-solid fa-utensils"></i>
                 <span>Nutrition</span>
+            </button>
+            <button onclick="switchTab('profile')" id="tab-btn-profile" class="tab-btn flex items-center justify-center space-x-2 py-3 px-3 rounded-xl text-xs md:text-sm font-bold text-slate-600 hover:text-slate-900 transition duration-200">
+                <i class="fa-solid fa-id-card"></i>
+                <span>Profile</span>
             </button>
         </nav>
 
         <!-- ================= TAB 1: DAILY CHECK-IN ================= -->
         <section id="tab-checkin" class="tab-content space-y-6">
-            <div class="glass-card rounded-2xl p-6 md:p-8 space-y-6 shadow-2xl">
+            <div class="light-card rounded-2xl p-6 md:p-8 space-y-6">
                 
                 <!-- Dynamic Readiness Header -->
-                <div class="flex flex-col sm:flex-row items-center justify-between p-4 rounded-xl bg-gray-900/80 border border-emerald-500/20 green-glow gap-4">
+                <div class="flex flex-col sm:flex-row items-center justify-between p-4 rounded-xl bg-emerald-50 border border-emerald-200 green-glow gap-4">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+                        <div class="w-11 h-11 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-md">
                             <i class="fa-solid fa-heart-pulse text-xl"></i>
                         </div>
                         <div>
-                            <h3 class="font-bold text-white text-sm">Estimated Readiness Score</h3>
-                            <p class="text-xs text-gray-400">Calculated dynamically from metrics</p>
+                            <h3 class="font-bold text-slate-900 text-sm">Estimated Readiness Score</h3>
+                            <p class="text-xs text-slate-500">Dynamically computed from today's inputs</p>
                         </div>
                     </div>
                     <div class="flex items-baseline space-x-1">
-                        <span id="scoreDisplay" class="text-3xl font-extrabold text-emerald-400">85</span>
-                        <span class="text-gray-500 text-sm font-bold">/100</span>
+                        <span id="scoreDisplay" class="text-4xl font-extrabold text-emerald-600">85</span>
+                        <span class="text-slate-400 text-sm font-bold">/100</span>
                     </div>
                 </div>
 
@@ -100,153 +111,181 @@
                         
                         <!-- Activity Input -->
                         <div class="space-y-2">
-                            <label class="text-xs font-bold tracking-wider uppercase text-gray-300 flex items-center gap-2">
-                                <i class="fa-solid fa-dumbbell text-emerald-400"></i> Activity Today
+                            <label class="text-xs font-bold tracking-wider uppercase text-slate-700 flex items-center gap-2">
+                                <i class="fa-solid fa-dumbbell text-emerald-600"></i> Activity / Workout Today
                             </label>
-                            <input type="text" id="activity" required placeholder="e.g. Heavy Squat Session, 5k Run" 
-                                class="glass-input w-full rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none transition">
+                            <input type="text" id="activity" required placeholder="e.g., Heavy Squats, Soccer Match, 5k Run" 
+                                class="light-input w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition">
                         </div>
 
                         <!-- Effort Level -->
                         <div class="space-y-2">
-                            <label class="text-xs font-bold tracking-wider uppercase text-gray-300 flex items-center gap-2">
-                                <i class="fa-solid fa-gauge-high text-emerald-400"></i> Effort Level
+                            <label class="text-xs font-bold tracking-wider uppercase text-slate-700 flex items-center gap-2">
+                                <i class="fa-solid fa-gauge-high text-emerald-600"></i> Effort Level
                             </label>
-                            <select id="effort" class="glass-input w-full rounded-xl px-4 py-3 text-sm text-white focus:outline-none transition">
-                                <option value="1" class="bg-gray-900">1 - Light / Recovery</option>
-                                <option value="2" selected class="bg-gray-900">2 - Moderate Effort</option>
-                                <option value="3" class="bg-gray-900">3 - All-Out High Intensity</option>
+                            <select id="effort" class="light-input w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition">
+                                <option value="1">1 - Light / Low Intensity</option>
+                                <option value="2" selected>2 - Moderate Effort</option>
+                                <option value="3">3 - High Intensity / Max Effort</option>
                             </select>
                         </div>
 
                         <!-- Sleep Hours -->
                         <div class="space-y-2">
-                            <label class="text-xs font-bold tracking-wider uppercase text-gray-300 flex items-center gap-2">
-                                <i class="fa-solid fa-bed text-emerald-400"></i> Sleep Last Night (Hours)
+                            <label class="text-xs font-bold tracking-wider uppercase text-slate-700 flex items-center gap-2">
+                                <i class="fa-solid fa-bed text-emerald-600"></i> Sleep Last Night (Hours)
                             </label>
                             <input type="number" id="sleep" value="7.5" step="0.5" min="2" max="14" required 
-                                class="glass-input w-full rounded-xl px-4 py-3 text-sm text-white focus:outline-none transition">
+                                class="light-input w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition">
                         </div>
 
                         <!-- Soreness Level & Area -->
                         <div class="space-y-2">
-                            <label class="text-xs font-bold tracking-wider uppercase text-gray-300 flex items-center gap-2">
-                                <i class="fa-solid fa-person-dots-from-line text-emerald-400"></i> Soreness & Focus Area
+                            <label class="text-xs font-bold tracking-wider uppercase text-slate-700 flex items-center gap-2">
+                                <i class="fa-solid fa-person-dots-from-line text-emerald-600"></i> Soreness & Muscle Area
                             </label>
                             <div class="grid grid-cols-2 gap-2">
-                                <select id="sore" class="glass-input rounded-xl px-3 py-3 text-sm text-white focus:outline-none transition">
-                                    <option value="1" class="bg-gray-900">1 - Low</option>
-                                    <option value="2" selected class="bg-gray-900">2 - Moderate</option>
-                                    <option value="3" class="bg-gray-900">3 - Severe</option>
+                                <select id="sore" class="light-input rounded-xl px-3 py-3 text-sm focus:outline-none transition">
+                                    <option value="1">1 - Mild</option>
+                                    <option value="2" selected>2 - Moderate</option>
+                                    <option value="3">3 - Severe</option>
                                 </select>
-                                <input type="text" id="area" required placeholder="Target area (e.g., Quads)" 
-                                    class="glass-input rounded-xl px-3 py-3 text-sm text-white placeholder-gray-500 focus:outline-none transition">
+                                <select id="area" class="light-input rounded-xl px-3 py-3 text-sm focus:outline-none transition">
+                                    <option value="Quads">Quads</option>
+                                    <option value="Hamstrings">Hamstrings</option>
+                                    <option value="Calves">Calves</option>
+                                    <option value="Glutes & Hips">Glutes & Hips</option>
+                                    <option value="Lower Back">Lower Back</option>
+                                    <option value="Shoulders & Chest">Shoulders & Chest</option>
+                                </select>
                             </div>
                         </div>
 
                         <!-- Stress Level -->
                         <div class="space-y-2">
-                            <label class="text-xs font-bold tracking-wider uppercase text-gray-300 flex items-center gap-2">
-                                <i class="fa-solid fa-brain text-emerald-400"></i> Stress Level
+                            <label class="text-xs font-bold tracking-wider uppercase text-slate-700 flex items-center gap-2">
+                                <i class="fa-solid fa-brain text-emerald-600"></i> Stress Level
                             </label>
-                            <select id="stress" class="glass-input w-full rounded-xl px-4 py-3 text-sm text-white focus:outline-none transition">
-                                <option value="1" class="bg-gray-900">1 - Chill / Low Stress</option>
-                                <option value="2" class="bg-gray-900">2 - Elevated / High Stress</option>
+                            <select id="stress" class="light-input w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition">
+                                <option value="1">1 - Low Stress</option>
+                                <option value="2">2 - High / Elevated Stress</option>
                             </select>
                         </div>
 
                         <!-- Next Scheduled Event -->
                         <div class="space-y-2">
-                            <label class="text-xs font-bold tracking-wider uppercase text-gray-300 flex items-center gap-2">
-                                <i class="fa-solid fa-calendar-day text-emerald-400"></i> Next Event / Workout
+                            <label class="text-xs font-bold tracking-wider uppercase text-slate-700 flex items-center gap-2">
+                                <i class="fa-solid fa-calendar-day text-emerald-600"></i> Next Event / Workout
                             </label>
-                            <input type="text" id="event" required placeholder="e.g. Match Tomorrow, Rest Day" 
-                                class="glass-input w-full rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none transition">
+                            <input type="text" id="event" required placeholder="e.g. Game Tomorrow, Sprint Workout" 
+                                class="light-input w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition">
                         </div>
 
                     </div>
 
                     <!-- Submit Button -->
                     <button type="submit" id="submitBtn" 
-                        class="w-full py-4 rounded-xl font-bold text-gray-950 bg-emerald-400 hover:bg-emerald-300 transition duration-200 green-glow flex items-center justify-center space-x-2 text-base uppercase tracking-wider cursor-pointer">
+                        class="w-full py-4 rounded-xl font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition duration-200 green-glow flex items-center justify-center space-x-2 text-base uppercase tracking-wider cursor-pointer">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        <span>Generate Live Recovery Plan</span>
+                        <span>Generate Recovery Plan & Stretches</span>
                     </button>
                 </form>
             </div>
         </section>
 
-        <!-- ================= TAB 2: TODAY'S PROTOCOL ================= -->
+        <!-- ================= TAB 2: TODAY'S PLAN & STRETCHES ================= -->
         <section id="tab-protocol" class="tab-content hidden space-y-6">
-            <div class="glass-card rounded-2xl p-6 md:p-8 space-y-6 border-l-4 border-emerald-400 shadow-2xl">
+            
+            <!-- AI Protocol -->
+            <div class="light-card rounded-2xl p-6 md:p-8 space-y-4 border-l-4 border-emerald-600">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
                             <i class="fa-solid fa-shield-halved text-xl"></i>
                         </div>
                         <div>
-                            <h2 class="text-xl font-bold text-white">Today's Personalized Recovery Protocol</h2>
-                            <p class="text-xs text-gray-400">Tailored AI guidance based on your check-in</p>
+                            <h2 class="text-xl font-bold text-slate-900">Your Personal Recovery Protocol</h2>
+                            <p class="text-xs text-slate-500">AI-generated from check-in & athlete profile</p>
                         </div>
                     </div>
-                    <span class="text-xs bg-emerald-500/10 text-emerald-400 font-semibold px-3 py-1 rounded-full border border-emerald-500/20">AI Active</span>
+                    <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full border border-emerald-300">AI Active</span>
                 </div>
 
-                <hr class="border-gray-800">
+                <hr class="border-slate-200">
 
-                <div id="planOutput" class="text-gray-300 leading-relaxed text-base space-y-4 whitespace-pre-line bg-gray-900/60 p-6 rounded-xl border border-gray-800">
-                    Submit your Daily Check-In to generate today's live recovery protocol!
+                <div id="planOutput" class="text-slate-700 leading-relaxed text-base space-y-4 whitespace-pre-line bg-slate-50 p-5 rounded-xl border border-slate-200 font-medium">
+                    Please submit a Daily Check-In to generate your custom recovery protocol!
+                </div>
+            </div>
+
+            <!-- Targeted Stretching Routine Section -->
+            <div class="light-card rounded-2xl p-6 md:p-8 space-y-6">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-md">
+                            <i class="fa-solid fa-person-stretching text-xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-900">Targeted Stretching Routine</h2>
+                            <p class="text-xs text-slate-500" id="stretchTargetText">Recommended stretches based on your soreness focus area</p>
+                        </div>
+                    </div>
+                    <span class="text-xs bg-slate-100 text-slate-700 font-bold px-3 py-1 rounded-full border border-slate-300">Visual Guide</span>
+                </div>
+
+                <div id="stretchingCardsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Dynamic Stretch Cards populate here -->
                 </div>
             </div>
         </section>
 
-        <!-- ================= TAB 3: SCHEDULE & CALENDAR ================= -->
+        <!-- ================= TAB 3: SCHEDULE ================= -->
         <section id="tab-schedule" class="tab-content hidden space-y-6">
-            <div class="glass-card rounded-2xl p-6 md:p-8 space-y-6 shadow-2xl">
+            <div class="light-card rounded-2xl p-6 md:p-8 space-y-6">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
                             <i class="fa-solid fa-calendar-days text-xl"></i>
                         </div>
                         <div>
-                            <h2 class="text-xl font-bold text-white">Training & Recovery Calendar</h2>
-                            <p class="text-xs text-gray-400">Schedule sessions and balance recovery days</p>
+                            <h2 class="text-xl font-bold text-slate-900">Training & Recovery Calendar</h2>
+                            <p class="text-xs text-slate-500">Schedule your sessions and balance rest days</p>
                         </div>
                     </div>
-                    <span id="currentMonthYear" class="text-sm font-bold text-emerald-400"></span>
+                    <span id="currentMonthYear" class="text-sm font-bold text-emerald-700"></span>
                 </div>
 
-                <!-- Built-In Interactive Calendar Grid -->
-                <div class="bg-gray-900/80 p-4 rounded-xl border border-gray-800 space-y-4">
-                    <div class="grid grid-cols-7 text-center text-xs font-bold uppercase tracking-wider text-emerald-400 py-2 border-b border-gray-800">
+                <!-- Calendar Grid -->
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-4">
+                    <div class="grid grid-cols-7 text-center text-xs font-bold uppercase tracking-wider text-emerald-700 py-2 border-b border-slate-200">
                         <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
                     </div>
                     <div id="calendarDays" class="grid grid-cols-7 gap-1 text-center text-sm font-semibold">
-                        <!-- Calendar Days dynamically generated by JS -->
+                        <!-- Calendar Days -->
                     </div>
                 </div>
 
-                <!-- Event Planner Input -->
-                <div class="p-4 rounded-xl bg-gray-900/50 border border-gray-800 space-y-3">
-                    <h4 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-plus text-emerald-400"></i> Add Event to Schedule
+                <!-- Add Event Form -->
+                <div class="p-4 rounded-xl bg-slate-100 border border-slate-200 space-y-3">
+                    <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-plus text-emerald-600"></i> Add Event to Schedule
                     </h4>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                        <input type="date" id="eventDate" class="glass-input rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
-                        <input type="text" id="eventTitle" placeholder="e.g. Endurance Run / Rest Day" class="glass-input rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none">
-                        <button onclick="addScheduleEvent()" class="bg-emerald-400 hover:bg-emerald-300 text-gray-950 font-bold py-2.5 px-4 rounded-xl transition duration-200 text-sm">
+                        <input type="date" id="eventDate" class="light-input rounded-xl px-4 py-2 text-sm focus:outline-none">
+                        <input type="text" id="eventTitle" placeholder="e.g. Track Practice / Rest Day" class="light-input rounded-xl px-4 py-2 text-sm focus:outline-none">
+                        <button onclick="addScheduleEvent()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-xl transition text-sm">
                             Add Event
                         </button>
                     </div>
                 </div>
 
-                <!-- Upcoming Scheduled Events -->
+                <!-- Upcoming Events List -->
                 <div class="space-y-3">
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-gray-300">Upcoming Events</h3>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Upcoming Events</h3>
                     <div id="eventsList" class="space-y-2">
-                        <div class="p-3 bg-gray-900/60 rounded-xl border border-gray-800 flex justify-between items-center text-sm">
-                            <span class="font-semibold text-white">Today's Check-In Session</span>
-                            <span class="text-xs bg-emerald-500/20 text-emerald-400 px-2.5 py-1 rounded-md">Active</span>
+                        <div class="p-3 bg-white rounded-xl border border-slate-200 flex justify-between items-center text-sm">
+                            <span class="font-bold text-slate-800">Today's Check-In & AI Recovery Protocol</span>
+                            <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-md">Today</span>
                         </div>
                     </div>
                 </div>
@@ -255,92 +294,88 @@
 
         <!-- ================= TAB 4: NUTRITION ================= -->
         <section id="tab-nutrition" class="tab-content hidden space-y-6">
-            <div class="glass-card rounded-2xl p-6 md:p-8 space-y-6 shadow-2xl">
+            <div class="light-card rounded-2xl p-6 md:p-8 space-y-6">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
                         <i class="fa-solid fa-utensils text-xl"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl font-bold text-white">Athletic Recovery Nutrition</h2>
-                        <p class="text-xs text-gray-400">Targeted recipes for energy, muscle repair, and inflammation control</p>
+                        <h2 class="text-xl font-bold text-slate-900">Performance Recovery Nutrition</h2>
+                        <p class="text-xs text-slate-500">Tailored recipes for pre-workout energy, post-workout repair, and dinner</p>
                     </div>
                 </div>
 
                 <!-- Recipe Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     
-                    <!-- Recipe 1: Pre-Training Snack -->
-                    <div class="bg-gray-900/80 rounded-xl p-5 border border-gray-800 space-y-3 hover:border-emerald-500/40 transition">
+                    <!-- Pre-Training Snack -->
+                    <div class="bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition">
                         <div class="flex justify-between items-center">
-                            <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-md border border-emerald-500/20">Pre-Training Snack</span>
-                            <span class="text-xs text-gray-400"><i class="fa-regular fa-clock"></i> 5 mins</span>
+                            <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-md border border-emerald-300">Pre-Training Snack</span>
+                            <span class="text-xs text-slate-500"><i class="fa-regular fa-clock"></i> 5 mins</span>
                         </div>
-                        <h3 class="font-bold text-white text-base">Banana Rice Cakes with Peanut Butter & Honey</h3>
-                        <p class="text-xs text-gray-400">Quick-digesting carbs for immediate muscle glycogen before training.</p>
-                        <div class="space-y-1 text-xs text-gray-300">
-                            <p class="font-semibold text-emerald-400">Ingredients:</p>
-                            <ul class="list-disc list-inside space-y-0.5 text-gray-400">
+                        <h3 class="font-bold text-slate-900 text-base">Banana Rice Cakes with Peanut Butter & Honey</h3>
+                        <p class="text-xs text-slate-600">Quick-digesting carbohydrates for immediate muscle glycogen fuel.</p>
+                        <div class="space-y-1 text-xs text-slate-700">
+                            <p class="font-bold text-emerald-700">Ingredients:</p>
+                            <ul class="list-disc list-inside space-y-0.5 text-slate-600">
                                 <li>2 whole grain rice cakes</li>
                                 <li>2 tbsp natural peanut butter</li>
-                                <li>1 sliced ripe banana</li>
-                                <li>1 tsp raw honey & dash of cinnamon</li>
+                                <li>1 sliced banana & drizzle of honey</li>
                             </ul>
                         </div>
                     </div>
 
-                    <!-- Recipe 2: Post-Training Snack -->
-                    <div class="bg-gray-900/80 rounded-xl p-5 border border-gray-800 space-y-3 hover:border-emerald-500/40 transition">
+                    <!-- Post-Training Snack -->
+                    <div class="bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition">
                         <div class="flex justify-between items-center">
-                            <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-md border border-emerald-500/20">Post-Training Snack</span>
-                            <span class="text-xs text-gray-400"><i class="fa-regular fa-clock"></i> 5 mins</span>
+                            <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-md border border-emerald-300">Post-Training Snack</span>
+                            <span class="text-xs text-slate-500"><i class="fa-regular fa-clock"></i> 5 mins</span>
                         </div>
-                        <h3 class="font-bold text-white text-base">Tart Cherry & Whey Recovery Smoothie</h3>
-                        <p class="text-xs text-gray-400">High protein for muscle synthesis plus tart cherry for soreness reduction.</p>
-                        <div class="space-y-1 text-xs text-gray-300">
-                            <p class="font-semibold text-emerald-400">Ingredients:</p>
-                            <ul class="list-disc list-inside space-y-0.5 text-gray-400">
-                                <li>1 scoop Whey / Plant Protein</li>
-                                <li>1/2 cup tart cherry juice</li>
-                                <li>1/2 cup frozen blueberries & almond milk</li>
-                                <li>1 tbsp chia seeds</li>
+                        <h3 class="font-bold text-slate-900 text-base">Tart Cherry & Whey Recovery Smoothie</h3>
+                        <p class="text-xs text-slate-600">Rapid protein synthesis paired with tart cherry antioxidants for soreness.</p>
+                        <div class="space-y-1 text-xs text-slate-700">
+                            <p class="font-bold text-emerald-700">Ingredients:</p>
+                            <ul class="list-disc list-inside space-y-0.5 text-slate-600">
+                                <li>1 scoop Whey / Plant protein</li>
+                                <li>1/2 cup tart cherry juice & almond milk</li>
+                                <li>1/2 cup frozen blueberries & chia seeds</li>
                             </ul>
                         </div>
                     </div>
 
-                    <!-- Recipe 3: Nutritious Daily Snack -->
-                    <div class="bg-gray-900/80 rounded-xl p-5 border border-gray-800 space-y-3 hover:border-emerald-500/40 transition">
+                    <!-- Nutritious Snack -->
+                    <div class="bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition">
                         <div class="flex justify-between items-center">
-                            <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-md border border-emerald-500/20">Nutritious Daily Snack</span>
-                            <span class="text-xs text-gray-400"><i class="fa-regular fa-clock"></i> 3 mins</span>
+                            <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-md border border-emerald-300">Nutritious Daily Snack</span>
+                            <span class="text-xs text-slate-500"><i class="fa-regular fa-clock"></i> 3 mins</span>
                         </div>
-                        <h3 class="font-bold text-white text-base">Greek Yogurt Parfait with Pumpkin Seeds</h3>
-                        <p class="text-xs text-gray-400">Rich in casein protein, zinc, and magnesium for muscle recovery.</p>
-                        <div class="space-y-1 text-xs text-gray-300">
-                            <p class="font-semibold text-emerald-400">Ingredients:</p>
-                            <ul class="list-disc list-inside space-y-0.5 text-gray-400">
-                                <li>3/4 cup plain 2% Greek yogurt</li>
-                                <li>2 tbsp roasted pumpkin seeds (pepitas)</li>
-                                <li>1/2 cup fresh berries</li>
-                                <li>1 drizzle maple syrup</li>
+                        <h3 class="font-bold text-slate-900 text-base">Greek Yogurt Parfait with Pumpkin Seeds</h3>
+                        <p class="text-xs text-slate-600">Slow-digesting casein protein, zinc, and magnesium for deep tissue repair.</p>
+                        <div class="space-y-1 text-xs text-slate-700">
+                            <p class="font-bold text-emerald-700">Ingredients:</p>
+                            <ul class="list-disc list-inside space-y-0.5 text-slate-600">
+                                <li>3/4 cup plain Greek yogurt</li>
+                                <li>2 tbsp pumpkin seeds (pepitas)</li>
+                                <li>1/2 cup fresh berries & honey</li>
                             </ul>
                         </div>
                     </div>
 
-                    <!-- Recipe 4: Nutritious Recovery Dinner -->
-                    <div class="bg-gray-900/80 rounded-xl p-5 border border-gray-800 space-y-3 hover:border-emerald-500/40 transition">
+                    <!-- Nutritious Dinner -->
+                    <div class="bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition">
                         <div class="flex justify-between items-center">
-                            <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-md border border-emerald-500/20">Nutritious Dinner</span>
-                            <span class="text-xs text-gray-400"><i class="fa-regular fa-clock"></i> 20 mins</span>
+                            <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-md border border-emerald-300">Nutritious Dinner</span>
+                            <span class="text-xs text-slate-500"><i class="fa-regular fa-clock"></i> 20 mins</span>
                         </div>
-                        <h3 class="font-bold text-white text-base">Salmon Power Bowl with Quinoa & Asparagus</h3>
-                        <p class="text-xs text-gray-400">Omega-3 anti-inflammatory fats paired with complex recovery carbohydrates.</p>
-                        <div class="space-y-1 text-xs text-gray-300">
-                            <p class="font-semibold text-emerald-400">Ingredients:</p>
-                            <ul class="list-disc list-inside space-y-0.5 text-gray-400">
-                                <li>6 oz grilled or baked salmon fillet</li>
-                                <li>1 cup cooked quinoa</li>
-                                <li>1 cup roasted asparagus & sweet potato</li>
-                                <li>Olive oil, lemon & sea salt</li>
+                        <h3 class="font-bold text-slate-900 text-base">Salmon Power Bowl with Quinoa & Asparagus</h3>
+                        <p class="text-xs text-slate-600">Omega-3 anti-inflammatory healthy fats paired with complex recovery grains.</p>
+                        <div class="space-y-1 text-xs text-slate-700">
+                            <p class="font-bold text-emerald-700">Ingredients:</p>
+                            <ul class="list-disc list-inside space-y-0.5 text-slate-600">
+                                <li>6 oz wild salmon fillet</li>
+                                <li>1 cup cooked quinoa & sweet potato</li>
+                                <li>1 cup roasted asparagus, olive oil & lemon</li>
                             </ul>
                         </div>
                     </div>
@@ -349,22 +384,92 @@
             </div>
         </section>
 
+        <!-- ================= TAB 5: ATHLETE PROFILE ================= -->
+        <section id="tab-profile" class="tab-content hidden space-y-6">
+            <div class="light-card rounded-2xl p-6 md:p-8 space-y-6">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                        <i class="fa-solid fa-id-card text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900">Personalized Athlete Profile</h2>
+                        <p class="text-xs text-slate-500">Your bio info helps the AI fine-tune recovery protocols</p>
+                    </div>
+                </div>
+
+                <form id="profileForm" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        
+                        <!-- Sport(s) Played -->
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold tracking-wider uppercase text-slate-700 flex items-center gap-2">
+                                <i class="fa-solid fa-volleyball text-emerald-600"></i> Primary Sport(s)
+                            </label>
+                            <input type="text" id="profSport" placeholder="e.g. Basketball, Track & Field, Swimming" 
+                                class="light-input w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition">
+                        </div>
+
+                        <!-- Age -->
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold tracking-wider uppercase text-slate-700 flex items-center gap-2">
+                                <i class="fa-solid fa-cake-candles text-emerald-600"></i> Age
+                            </label>
+                            <input type="number" id="profAge" value="20" min="10" max="99" 
+                                class="light-input w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition">
+                        </div>
+
+                        <!-- Gender -->
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold tracking-wider uppercase text-slate-700 flex items-center gap-2">
+                                <i class="fa-solid fa-user text-emerald-600"></i> Gender / Identity
+                            </label>
+                            <select id="profGender" class="light-input w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition">
+                                <option value="Female">Female</option>
+                                <option value="Male" selected>Male</option>
+                                <option value="Non-Binary">Non-Binary</option>
+                                <option value="Prefer not to say">Prefer not to say</option>
+                            </select>
+                        </div>
+
+                        <!-- Sport Season -->
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold tracking-wider uppercase text-slate-700 flex items-center gap-2">
+                                <i class="fa-solid fa-stopwatch text-emerald-600"></i> Current Sport Season
+                            </label>
+                            <select id="profSeason" class="light-input w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition">
+                                <option value="In-Season (Peak Competition)">In-Season (Peak Competition)</option>
+                                <option value="Pre-Season (High Volume)">Pre-Season (High Volume)</option>
+                                <option value="Off-Season (Hypertrophy / Base Build)">Off-Season (Hypertrophy / Base Build)</option>
+                                <option value="Transition / Deload / Rest">Transition / Deload / Rest</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <button type="button" onclick="saveProfile()" class="w-full py-3.5 rounded-xl font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition duration-200 green-glow flex items-center justify-center space-x-2 text-sm uppercase tracking-wider">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        <span>Save Athlete Profile</span>
+                    </button>
+                </form>
+            </div>
+        </section>
+
     </div>
 
     <!-- Application Script -->
     <script>
-        // Tab Switcher Logic
+        // Tab Navigation Switcher
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('active');
-                btn.classList.add('text-gray-400');
+                btn.classList.add('text-slate-600');
             });
 
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
             const activeBtn = document.getElementById(`tab-btn-${tabId}`);
             activeBtn.classList.add('active');
-            activeBtn.classList.remove('text-gray-400');
+            activeBtn.classList.remove('text-slate-600');
         }
 
         // Dynamic Readiness Score Calculator
@@ -390,6 +495,65 @@
             }
         });
 
+        // Stretch Library mapped to sore muscle focus areas
+        const stretchLibrary = {
+            'Quads': [
+                { name: 'Standing Quad Stretch', duration: '45 sec / side', icon: 'fa-child-reaching', desc: 'Pull heel toward glutes while keeping knees aligned and standing tall.' },
+                { name: 'Kneeling Couch Stretch', duration: '60 sec / side', icon: 'fa-person-praying', desc: 'Place back foot against a wall or bench while kneeling to open deep hip flexors.' },
+                { name: 'Foam Roll Quads', duration: '90 sec total', icon: 'fa-mattress-pillow', desc: 'Roll slowly down from hip crease to upper knee, pausing on tight spots.' }
+            ],
+            'Hamstrings': [
+                { name: 'Single-Leg Standing Hamstring Stretch', duration: '45 sec / side', icon: 'fa-person-walking', desc: 'Hinge forward at hips with heel flexed on a slightly elevated surface.' },
+                { name: 'Seated Single-Leg Reach', duration: '60 sec / side', icon: 'fa-child', desc: 'Sit with one leg extended, reach smoothly toward toes keeping spine long.' },
+                { name: 'Dynamic Leg Swings', duration: '15 swings / leg', icon: 'fa-person-running', desc: 'Swing leg gently forward and back with control to release hamstring tension.' }
+            ],
+            'Calves': [
+                { name: 'Wall Calf / Achilles Stretch', duration: '45 sec / side', icon: 'fa-person-walking-luggage', desc: 'Press rear heel into ground with back leg straight, then slightly bend knee.' },
+                { name: 'Downward Dog Pedal', duration: '60 sec', icon: 'fa-mountain', desc: 'Press hips high and alternate pressing each heel toward the ground.' },
+                { name: 'Foam Roll Calves', duration: '90 sec', icon: 'fa-mattress-pillow', desc: 'Cross one ankle over the other and roll slowly from ankle to upper calf.' }
+            ],
+            'Glutes & Hips': [
+                { name: 'Pigeon Pose', duration: '60 sec / side', icon: 'fa-person-praying', desc: 'Bring shin forward across mat and extend back leg straight behind hips.' },
+                { name: 'Figure-4 Glute Stretch', duration: '45 sec / side', icon: 'fa-child-reaching', desc: 'Lie on back, cross ankle over opposite knee, pull thigh gently toward chest.' },
+                { name: '90/90 Hip Mobility Switch', duration: '10 switches', icon: 'fa-arrows-rotate', desc: 'Sit with knees bent at 90° angles and rotate smoothly side to side.' }
+            ],
+            'Lower Back': [
+                { name: 'Child’s Pose with Reach', duration: '60 sec', icon: 'fa-person-praying', desc: 'Sit hips back onto heels, reach arms far forward and walk hands slightly to sides.' },
+                { name: 'Cat-Cow Flow', duration: '10 slow reps', icon: 'fa-shield-cat', desc: 'Inhale to arch back softly, exhale to round spine and tuck chin to chest.' },
+                { name: 'Supine Spinal Twist', duration: '45 sec / side', icon: 'fa-child', desc: 'Lie flat, bring one knee across body towards the floor with shoulders flat.' }
+            ],
+            'Shoulders & Chest': [
+                { name: 'Doorway Chest Opener', duration: '45 sec', icon: 'fa-door-open', desc: 'Place forearms on door frame and step gently forward until chest stretches.' },
+                { name: 'Cross-Body Shoulder Hold', duration: '45 sec / side', icon: 'fa-person-rays', desc: 'Pull arm straight across chest using opposite forearm to hug arm close.' },
+                { name: 'Thread the Needle', duration: '45 sec / side', icon: 'fa-hands-holding-circle', desc: 'From hands and knees, slide arm under torso to rest shoulder gently on floor.' }
+            ]
+        };
+
+        function renderStretches(area) {
+            const container = document.getElementById('stretchingCardsContainer');
+            const targetText = document.getElementById('stretchTargetText');
+            if (!container) return;
+
+            const stretches = stretchLibrary[area] || stretchLibrary['Quads'];
+            targetText.textContent = `Targeted routine optimized for: ${area}`;
+            container.innerHTML = '';
+
+            stretches.forEach(item => {
+                container.innerHTML += `
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-3 hover:border-emerald-500 transition">
+                        <div class="flex justify-between items-center">
+                            <div class="w-9 h-9 rounded-lg bg-emerald-600 text-white flex items-center justify-center">
+                                <i class="fa-solid ${item.icon} text-lg"></i>
+                            </div>
+                            <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-md border border-emerald-300">${item.duration}</span>
+                        </div>
+                        <h4 class="font-bold text-slate-900 text-sm">${item.name}</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">${item.desc}</p>
+                    </div>
+                `;
+            });
+        }
+
         // Form Submit Handler
         const form = document.getElementById('recoveryForm');
         const submitBtn = document.getElementById('submitBtn');
@@ -399,16 +563,25 @@
             e.preventDefault();
             const calculatedScore = updateScore();
 
+            const areaVal = document.getElementById('area').value;
+
+            // Retrieve profile data if saved
+            const profSport = localStorage.getItem('rebound_sport') || 'Athlete';
+            const profSeason = localStorage.getItem('rebound_season') || 'In-Season';
+
             const payload = {
-                activity: document.getElementById('activity').value,
+                activity: `${document.getElementById('activity').value} (Sport: ${profSport}, Season: ${profSeason})`,
                 effort: document.getElementById('effort').value,
                 sleep: document.getElementById('sleep').value,
                 sore: document.getElementById('sore').value,
-                area: document.getElementById('area').value,
+                area: areaVal,
                 stress: document.getElementById('stress').value,
                 event: document.getElementById('event').value,
                 score: calculatedScore
             };
+
+            // Update UI stretches
+            renderStretches(areaVal);
 
             // Loading state
             submitBtn.disabled = true;
@@ -425,7 +598,7 @@
                 
                 planOutput.textContent = data.plan;
                 
-                // Automatically switch to Today's Plan tab to display protocol
+                // Automatically switch to Plan & Stretches tab
                 switchTab('protocol');
 
             } catch (err) {
@@ -433,11 +606,11 @@
                 switchTab('protocol');
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i><span>Generate Live Recovery Plan</span>`;
+                submitBtn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i><span>Generate Recovery Plan & Stretches</span>`;
             }
         });
 
-        // Interactive Calendar Renderer
+        // Calendar Builder
         function buildCalendar() {
             const calGrid = document.getElementById('calendarDays');
             const monthHeader = document.getElementById('currentMonthYear');
@@ -456,17 +629,15 @@
 
             calGrid.innerHTML = '';
 
-            // Empty slots for alignment
             for (let i = 0; i < firstDay; i++) {
-                calGrid.innerHTML += `<div class="p-2 text-gray-700"></div>`;
+                calGrid.innerHTML += `<div class="p-2 text-slate-300"></div>`;
             }
 
-            // Days of the month
             for (let day = 1; day <= daysInMonth; day++) {
                 const isToday = day === todayDate;
                 const activeClass = isToday 
-                    ? 'bg-emerald-400 text-gray-950 font-bold rounded-lg green-glow' 
-                    : 'text-gray-300 hover:bg-gray-800 rounded-lg transition';
+                    ? 'bg-emerald-600 text-white font-bold rounded-lg green-glow' 
+                    : 'text-slate-700 hover:bg-slate-200 rounded-lg transition';
 
                 calGrid.innerHTML += `<div class="p-2 ${activeClass}">${day}</div>`;
             }
@@ -479,24 +650,48 @@
             const eventsList = document.getElementById('eventsList');
 
             if (!dateVal || !titleVal) {
-                alert('Please select a date and enter an event name.');
+                alert('Please select a date and enter an event title.');
                 return;
             }
 
             const eventItem = document.createElement('div');
-            eventItem.className = 'p-3 bg-gray-900/60 rounded-xl border border-gray-800 flex justify-between items-center text-sm';
+            eventItem.className = 'p-3 bg-white rounded-xl border border-slate-200 flex justify-between items-center text-sm';
             eventItem.innerHTML = `
-                <span class="font-semibold text-white">${titleVal}</span>
-                <span class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-md">${dateVal}</span>
+                <span class="font-bold text-slate-800">${titleVal}</span>
+                <span class="text-xs bg-emerald-100 text-emerald-800 font-bold border border-emerald-300 px-2.5 py-1 rounded-md">${dateVal}</span>
             `;
 
             eventsList.prepend(eventItem);
             document.getElementById('eventTitle').value = '';
         }
 
-        // Init page functions
+        // Profile Storage Handler
+        function saveProfile() {
+            const sport = document.getElementById('profSport').value;
+            const age = document.getElementById('profAge').value;
+            const gender = document.getElementById('profGender').value;
+            const season = document.getElementById('profSeason').value;
+
+            localStorage.setItem('rebound_sport', sport);
+            localStorage.setItem('rebound_age', age);
+            localStorage.setItem('rebound_gender', gender);
+            localStorage.setItem('rebound_season', season);
+
+            alert('Profile saved successfully! Your AI protocols will now incorporate your sport and season status.');
+        }
+
+        function loadProfile() {
+            if (localStorage.getItem('rebound_sport')) document.getElementById('profSport').value = localStorage.getItem('rebound_sport');
+            if (localStorage.getItem('rebound_age')) document.getElementById('profAge').value = localStorage.getItem('rebound_age');
+            if (localStorage.getItem('rebound_gender')) document.getElementById('profGender').value = localStorage.getItem('rebound_gender');
+            if (localStorage.getItem('rebound_season')) document.getElementById('profSeason').value = localStorage.getItem('rebound_season');
+        }
+
+        // Initializations
         updateScore();
+        renderStretches('Quads');
         buildCalendar();
+        loadProfile();
     </script>
 </body>
 </html>
