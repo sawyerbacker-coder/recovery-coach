@@ -443,7 +443,7 @@
 
     <!-- Application Script -->
     <script>
-        // YOUR FIREBASE KEYS
+        // YOUR EXACT FIREBASE KEYS
         const firebaseConfig = {
             apiKey: "AIzaSyBoUAlsqAR3vAdFzFYRcZBKjy6FwI400xI",
             authDomain: "rebound-recovery-coach.firebaseapp.com",
@@ -721,7 +721,6 @@
                 let trimmed = line.trim();
                 if (!trimmed) return;
 
-                // Check for Headers or Numbered Titles (e.g. 1. Cold Water Immersion, ### Protocol, **1. Title**)
                 if (trimmed.startsWith('#') || trimmed.match(/^(1|2|3|4|5)\./) || trimmed.startsWith('**1.') || trimmed.startsWith('**2.') || trimmed.startsWith('**3.')) {
                     let cleanTitle = trimmed.replace(/^[#\*\d\.\s]+/, '').replace(/\*+/g, '');
                     html += `
@@ -731,7 +730,6 @@
                         </h3>
                     `;
                 } else {
-                    // Regular Description Text
                     let cleanDesc = trimmed.replace(/\*\*(.*?)\*\*/g, '<strong class="font-extrabold text-slate-900">$1</strong>');
                     html += `<p class="text-sm text-slate-600 leading-relaxed font-normal mb-2">${cleanDesc}</p>`;
                 }
@@ -757,7 +755,6 @@
             const profGender = localStorage.getItem('rebound_gender') || 'Male';
             const profSeason = localStorage.getItem('rebound_season') || 'In-Season';
 
-            // NO CITATIONS INSTRUCTION ADDED
             const multiSportContext = `Workout: ${rawActivity}. 
 [ATHLETE BIO: Primary In-Season Sport: ${profSport} | Off-Season/Secondary: ${profSecondary} | Age: ${profAge} | Gender: ${profGender} | Phase: ${profSeason}]. 
 INSTRUCTIONS: Provide 3 study-backed recovery techniques (e.g., Cold Water Immersion, Heat Therapy/Sauna, Active Recovery Walk <50% HRmax). DO NOT INCLUDE ANY FORMAL CITATIONS, PAPER TITLES, AUTHOR NAMES, OR IN-TEXT REFERENCES. State the practical reason why it helps. Format each strategy title on its own line like "1. Strategy Name" so it stands out.`;
