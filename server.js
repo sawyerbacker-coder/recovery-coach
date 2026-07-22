@@ -28,35 +28,53 @@ app.post('/api/recovery-plan', async (req, res) => {
 
     CRITICAL INSTRUCTION: Step 1 of your plan MUST directly reference and target the specific physical demands of "${activity}". Start directly with a 3-step recovery plan. Keep it encouraging, actionable, and under 120 words.`;
 
-    try {
-        const apiKey = process.env.AI_API_KEY;
-        // Standard production-ready model endpoint
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const apiKey = process.env.AI_API_KEY;
+    
+    // Stable v1 models to attempt in order
+    const modelsToTry = [
+        'gemini-2.5-flash',
+        'gemini-2.0-flash',
+        'gemini-1.5-flash'
+    ];
 
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [{ text: prompt }]
-                }]
-            })
-        });
+    let lastError = null;
 
-        const data = await response.json();
+    for (const model of modelsToTry) {
+        try {
+            // Updated to standard production /v1/ API endpoint
+            const url = `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${apiKey}`;
 
-        if (data.error) {
-            console.error('Gemini API Error:', data.error);
-            return res.status(500).json({ plan: "Error connecting to AI service. Please check your API key." });
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{ text: prompt }]
+                    }]
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                console.warn(`Model ${model} returned error (${data.error.code}): ${data.error.message}`);
+                lastError = data.error;
+                continue; // Automatically try next model if one is unavailable
+            }
+
+            const plan = data.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (plan) {
+                console.log(` success using model: ${model}`);
+                return res.json({ plan });
+            }
+        } catch (err) {
+            console.error(`Exception trying ${model}:`, err);
+            lastError = err;
         }
-
-        const plan = data.candidates?.[0]?.content?.parts?.[0]?.text || "Focus on hydration, light mobility, and adequate sleep tonight.";
-        res.json({ plan });
-
-    } catch (error) {
-        console.error('Server Exception:', error);
-        res.status(500).json({ plan: "Server error generating recovery plan." });
     }
+
+    console.error('All Gemini API attempts failed:', lastError);
+    return res.status(500).json({ plan: "Error connecting to AI service. Please check your API key." });
 });
 
 const PORT = process.env.PORT || 3000;
