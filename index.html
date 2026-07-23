@@ -452,7 +452,7 @@
                 <div class="pt-2 flex flex-col gap-2">
                     <button type="button" onclick="handleAuth('login')" class="w-full py-3.5 rounded-xl font-extrabold text-white bg-emerald-600 hover:bg-emerald-700 text-sm shadow-md flex items-center justify-center space-x-2">
                         <i class="fa-solid fa-right-to-bracket"></i>
-                        <span>Log In & Merge Local Data</span>
+                        <span>Log In & Restore Profile Data</span>
                     </button>
                     <button type="button" onclick="handleAuth('signup')" class="w-full py-3 rounded-xl font-bold text-emerald-900 bg-emerald-100 hover:bg-emerald-200 text-sm">
                         Create New Email Account
@@ -547,6 +547,16 @@
 
         let auth, db, currentUser = null;
         let activeModalEventId = null;
+        let scheduledEvents = {};
+
+        // Date helper: returns YYYY-MM-DD in local time
+        function getTodayDateString() {
+            const d = new Date();
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
 
         // Visual Cloud Sync State Controller
         function setSyncStatus(state) {
@@ -571,20 +581,37 @@
             }
         }
 
-        // Date helper: returns YYYY-MM-DD in local time
-        function getTodayDateString() {
-            const d = new Date();
-            const year = d.getFullYear();
-            const month = String(d.getMonth() + 1).padStart(2, '0');
-            const day = String(d.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
+        // Completely reset all local variables, storage, and forms to an empty state
+        function resetToCleanSlate() {
+            localStorage.clear();
+            scheduledEvents = {};
 
-        let scheduledEvents = {};
-        try {
-            const saved = localStorage.getItem('rebound_events');
-            if (saved) scheduledEvents = JSON.parse(saved);
-        } catch(e) { scheduledEvents = {}; }
+            // Clear Check-In form
+            if (document.getElementById('activity')) document.getElementById('activity').value = '';
+            if (document.getElementById('effort')) document.getElementById('effort').value = '2';
+            if (document.getElementById('sleep')) document.getElementById('sleep').value = '7.5';
+            if (document.getElementById('sore')) document.getElementById('sore').value = '2';
+            if (document.getElementById('area')) document.getElementById('area').value = 'Quads';
+            if (document.getElementById('stress')) document.getElementById('stress').value = '2';
+
+            // Reset plan container
+            if (document.getElementById('planOutput')) {
+                document.getElementById('planOutput').innerHTML = `
+                    <p class="text-slate-500 text-sm font-medium">Complete your Daily Check-In to generate today's customized protocol!</p>
+                `;
+            }
+
+            // Clear Profile Bio
+            if (document.getElementById('profSport')) document.getElementById('profSport').value = '';
+            if (document.getElementById('profSecondarySports')) document.getElementById('profSecondarySports').value = '';
+            if (document.getElementById('profAge')) document.getElementById('profAge').value = '18';
+            if (document.getElementById('profGender')) document.getElementById('profGender').value = 'Male';
+            if (document.getElementById('profSeason')) document.getElementById('profSeason').value = 'In-Season Competition Phase';
+
+            buildCalendar();
+            renderUpcomingEventsList();
+            renderStretches('Quads');
+        }
 
         function createEventObject(title, date, type, startTime, endTime, intensity) {
             return {
@@ -612,15 +639,11 @@
                 if (user) {
                     authBtnText.textContent = user.email.split('@')[0];
                     accountBanner.classList.remove('hidden');
-                    setSyncStatus('synced');
                     loadCloudData();
                 } else {
                     authBtnText.textContent = "Account Login";
                     accountBanner.classList.add('hidden');
-                    loadProfile();
-                    buildCalendar();
-                    renderUpcomingEventsList();
-                    checkAndApplyDailyCheckIn();
+                    resetToCleanSlate();
                 }
             });
         } catch (e) { console.log('Firebase init error:', e); }
@@ -657,7 +680,7 @@
                     alert(`Account created for ${email}! Calendar, Bio & Memory synced.`);
                 } else {
                     await auth.signInWithEmailAndPassword(email, password);
-                    alert(`Signed in as ${email}. Your data has been merged to your account!`);
+                    alert(`Signed in as ${email}. Restoring your saved data!`);
                 }
                 toggleAuthModal();
             } catch (err) {
@@ -668,6 +691,7 @@
         async function handleSignOut() {
             if (auth) {
                 await auth.signOut();
+                resetToCleanSlate();
                 alert('Signed out.');
             }
         }
@@ -731,9 +755,7 @@
                 });
             });
 
-            localStorage.setItem('rebound_events', JSON.stringify(scheduledEvents));
             saveCloudData();
-
             closeStatusModal();
             buildCalendar();
             renderUpcomingEventsList();
@@ -886,47 +908,6 @@
             return html;
         }
 
-        // ================= MIDNIGHT RESET & CHECK-IN PERSISTENCE =================
-        function checkAndApplyDailyCheckIn() {
-            const todayStr = getTodayDateString();
-            const savedDate = localStorage.getItem('rebound_checkin_date');
-
-            if (savedDate === todayStr) {
-                try {
-                    const checkInData = JSON.parse(localStorage.getItem('rebound_checkin_data'));
-                    if (checkInData) {
-                        if (checkInData.activity) document.getElementById('activity').value = checkInData.activity;
-                        if (checkInData.effort) document.getElementById('effort').value = checkInData.effort;
-                        if (checkInData.sleep) document.getElementById('sleep').value = checkInData.sleep;
-                        if (checkInData.sore) document.getElementById('sore').value = checkInData.sore;
-                        if (checkInData.area) document.getElementById('area').value = checkInData.area;
-                        if (checkInData.stress) document.getElementById('stress').value = checkInData.stress;
-                        renderStretches(checkInData.area || 'Quads');
-                    }
-                } catch(e) {}
-
-                const savedPlan = localStorage.getItem('rebound_generated_plan');
-                if (savedPlan) {
-                    document.getElementById('planOutput').innerHTML = formatRecoveryPlan(savedPlan);
-                }
-            } else {
-                localStorage.removeItem('rebound_checkin_date');
-                localStorage.removeItem('rebound_checkin_data');
-                localStorage.removeItem('rebound_generated_plan');
-
-                document.getElementById('activity').value = '';
-                document.getElementById('effort').value = '2';
-                document.getElementById('sleep').value = '7.5';
-                document.getElementById('sore').value = '2';
-                document.getElementById('area').value = 'Quads';
-                document.getElementById('stress').value = '2';
-
-                document.getElementById('planOutput').innerHTML = `
-                    <p class="text-slate-500 text-sm font-medium">Complete your Daily Check-In to generate today's customized protocol!</p>
-                `;
-            }
-        }
-
         // ================= FORM SUBMIT & AI INTEGRATION =================
         const form = document.getElementById('recoveryForm');
         const submitBtn = document.getElementById('submitBtn');
@@ -947,11 +928,11 @@
                 stress: document.getElementById('stress').value
             };
 
-            const profSport = localStorage.getItem('rebound_sport') || 'Athlete';
-            const profSecondary = localStorage.getItem('rebound_secondary') || 'None';
-            const profAge = localStorage.getItem('rebound_age') || '18';
-            const profGender = localStorage.getItem('rebound_gender') || 'Male';
-            const profSeason = localStorage.getItem('rebound_season') || 'In-Season';
+            const profSport = document.getElementById('profSport').value || 'Athlete';
+            const profSecondary = document.getElementById('profSecondarySports').value || 'None';
+            const profAge = document.getElementById('profAge').value || '18';
+            const profGender = document.getElementById('profGender').value || 'Male';
+            const profSeason = document.getElementById('profSeason').value || 'In-Season';
 
             const todayStr = getTodayDateString();
             const upcomingList = [];
@@ -1089,7 +1070,6 @@ INSTRUCTIONS: Provide 3 highly specific, actionable, high-value athletic recover
             if (!scheduledEvents[dateVal]) scheduledEvents[dateVal] = [];
             scheduledEvents[dateVal].push(newEvt);
 
-            localStorage.setItem('rebound_events', JSON.stringify(scheduledEvents));
             saveCloudData();
 
             buildCalendar();
@@ -1104,7 +1084,6 @@ INSTRUCTIONS: Provide 3 highly specific, actionable, high-value athletic recover
                 if (scheduledEvents[dateKey].length === 0) {
                     delete scheduledEvents[dateKey];
                 }
-                localStorage.setItem('rebound_events', JSON.stringify(scheduledEvents));
                 saveCloudData();
                 buildCalendar();
                 renderUpcomingEventsList();
@@ -1391,24 +1370,15 @@ INSTRUCTIONS: Provide 3 highly specific, actionable, high-value athletic recover
             ['pre', 'post', 'snack', 'dinner'].forEach(c => renderRecipeCard(c));
         }
 
-        // ================= CLOUD STORAGE & MERGE WITH VISUAL INDICATORS =================
+        // ================= CLOUD STORAGE PERSISTENCE =================
         function saveProfile() {
-            localStorage.setItem('rebound_sport', document.getElementById('profSport').value);
-            localStorage.setItem('rebound_secondary', document.getElementById('profSecondarySports').value);
-            localStorage.setItem('rebound_age', document.getElementById('profAge').value);
-            localStorage.setItem('rebound_gender', document.getElementById('profGender').value);
-            localStorage.setItem('rebound_season', document.getElementById('profSeason').value);
-
+            if (!currentUser) {
+                alert('Please log in with your email account to save your Athlete Bio!');
+                toggleAuthModal();
+                return;
+            }
             saveCloudData();
             toggleProfileModal();
-        }
-
-        function loadProfile() {
-            if (localStorage.getItem('rebound_sport')) document.getElementById('profSport').value = localStorage.getItem('rebound_sport');
-            if (localStorage.getItem('rebound_secondary')) document.getElementById('profSecondarySports').value = localStorage.getItem('rebound_secondary');
-            if (localStorage.getItem('rebound_age')) document.getElementById('profAge').value = localStorage.getItem('rebound_age');
-            if (localStorage.getItem('rebound_gender')) document.getElementById('profGender').value = localStorage.getItem('rebound_gender');
-            if (localStorage.getItem('rebound_season')) document.getElementById('profSeason').value = localStorage.getItem('rebound_season');
         }
 
         async function saveCloudData() {
@@ -1421,19 +1391,20 @@ INSTRUCTIONS: Provide 3 highly specific, actionable, high-value athletic recover
                     parsedCheckIn = JSON.parse(localStorage.getItem('rebound_checkin_data'));
                 } catch(e){}
 
-                await db.collection('users').doc(currentUser.uid).set({
-                    sport: localStorage.getItem('rebound_sport') || '',
-                    secondary: localStorage.getItem('rebound_secondary') || '',
-                    age: localStorage.getItem('rebound_age') || '18',
-                    gender: localStorage.getItem('rebound_gender') || 'Male',
-                    season: localStorage.getItem('rebound_season') || 'In-Season Competition Phase',
-                    events: scheduledEvents,
+                const userDoc = {
+                    sport: document.getElementById('profSport').value || '',
+                    secondary: document.getElementById('profSecondarySports').value || '',
+                    age: document.getElementById('profAge').value || '18',
+                    gender: document.getElementById('profGender').value || 'Male',
+                    season: document.getElementById('profSeason').value || 'In-Season Competition Phase',
+                    events: scheduledEvents || {},
                     checkInDate: localStorage.getItem('rebound_checkin_date') || '',
                     checkInData: parsedCheckIn,
                     generatedPlan: localStorage.getItem('rebound_generated_plan') || ''
-                }, { merge: true });
+                };
 
-                setTimeout(() => setSyncStatus('synced'), 600);
+                await db.collection('users').doc(currentUser.uid).set(userDoc, { merge: true });
+                setTimeout(() => setSyncStatus('synced'), 500);
             } catch (e) {
                 console.log('Cloud sync error:', e);
                 setSyncStatus('error');
@@ -1446,59 +1417,55 @@ INSTRUCTIONS: Provide 3 highly specific, actionable, high-value athletic recover
 
             try {
                 const doc = await db.collection('users').doc(currentUser.uid).get();
-                let cloudEvents = {};
 
                 if (doc.exists) {
                     const data = doc.data();
 
-                    if (data.sport !== undefined) localStorage.setItem('rebound_sport', data.sport);
-                    if (data.secondary !== undefined) localStorage.setItem('rebound_secondary', data.secondary);
-                    if (data.age !== undefined) localStorage.setItem('rebound_age', data.age);
-                    if (data.gender !== undefined) localStorage.setItem('rebound_gender', data.gender);
-                    if (data.season !== undefined) localStorage.setItem('rebound_season', data.season);
+                    // Restore Athlete Bio
+                    if (data.sport !== undefined) document.getElementById('profSport').value = data.sport;
+                    if (data.secondary !== undefined) document.getElementById('profSecondarySports').value = data.secondary;
+                    if (data.age !== undefined) document.getElementById('profAge').value = data.age;
+                    if (data.gender !== undefined) document.getElementById('profGender').value = data.gender;
+                    if (data.season !== undefined) document.getElementById('profSeason').value = data.season;
 
-                    if (data.events) cloudEvents = data.events;
+                    // Restore Scheduled Events
+                    scheduledEvents = data.events || {};
 
+                    // Restore Today's Check-In & Generated Plan (If logged on today's date)
                     const todayStr = getTodayDateString();
                     if (data.checkInDate === todayStr) {
-                        if (data.checkInDate) localStorage.setItem('rebound_checkin_date', data.checkInDate);
-                        if (data.checkInData) localStorage.setItem('rebound_checkin_data', JSON.stringify(data.checkInData));
-                        if (data.generatedPlan) localStorage.setItem('rebound_generated_plan', data.generatedPlan);
+                        localStorage.setItem('rebound_checkin_date', data.checkInDate);
+                        if (data.checkInData) {
+                            localStorage.setItem('rebound_checkin_data', JSON.stringify(data.checkInData));
+                            const c = data.checkInData;
+                            if (c.activity) document.getElementById('activity').value = c.activity;
+                            if (c.effort) document.getElementById('effort').value = c.effort;
+                            if (c.sleep) document.getElementById('sleep').value = c.sleep;
+                            if (c.sore) document.getElementById('sore').value = c.sore;
+                            if (c.area) document.getElementById('area').value = c.area;
+                            if (c.stress) document.getElementById('stress').value = c.stress;
+                            renderStretches(c.area || 'Quads');
+                        }
+                        if (data.generatedPlan) {
+                            localStorage.setItem('rebound_generated_plan', data.generatedPlan);
+                            document.getElementById('planOutput').innerHTML = formatRecoveryPlan(data.generatedPlan);
+                        }
+                    } else {
+                        // Reset if it's a new day after midnight
+                        document.getElementById('activity').value = '';
+                        document.getElementById('planOutput').innerHTML = `
+                            <p class="text-slate-500 text-sm font-medium">Complete your Daily Check-In to generate today's customized protocol!</p>
+                        `;
                     }
+                } else {
+                    // New user document setup
+                    await saveCloudData();
                 }
 
-                Object.keys(scheduledEvents).forEach(dateKey => {
-                    if (!cloudEvents[dateKey]) cloudEvents[dateKey] = [];
-                    scheduledEvents[dateKey].forEach(localEvt => {
-                        const exists = cloudEvents[dateKey].some(cloudEvt => 
-                            (cloudEvt.id && localEvt.id && cloudEvt.id === localEvt.id) ||
-                            (cloudEvt.title === localEvt.title && cloudEvt.startTime === localEvt.startTime)
-                        );
-                        if (!exists) cloudEvents[dateKey].push(localEvt);
-                    });
-                });
-
-                scheduledEvents = cloudEvents;
-                localStorage.setItem('rebound_events', JSON.stringify(scheduledEvents));
-
-                await db.collection('users').doc(currentUser.uid).set({
-                    sport: localStorage.getItem('rebound_sport') || '',
-                    secondary: localStorage.getItem('rebound_secondary') || '',
-                    age: localStorage.getItem('rebound_age') || '18',
-                    gender: localStorage.getItem('rebound_gender') || 'Male',
-                    season: localStorage.getItem('rebound_season') || 'In-Season Competition Phase',
-                    events: scheduledEvents,
-                    checkInDate: localStorage.getItem('rebound_checkin_date') || '',
-                    checkInData: localStorage.getItem('rebound_checkin_data') ? JSON.parse(localStorage.getItem('rebound_checkin_data')) : null,
-                    generatedPlan: localStorage.getItem('rebound_generated_plan') || ''
-                }, { merge: true });
-
-                loadProfile();
                 buildCalendar();
                 renderUpcomingEventsList();
-                checkAndApplyDailyCheckIn();
+                setTimeout(() => setSyncStatus('synced'), 500);
 
-                setTimeout(() => setSyncStatus('synced'), 600);
             } catch (e) {
                 console.log('Cloud load error:', e);
                 setSyncStatus('error');
@@ -1506,12 +1473,8 @@ INSTRUCTIONS: Provide 3 highly specific, actionable, high-value athletic recover
         }
 
         // Initialize Page Components
-        renderStretches('Quads');
-        buildCalendar();
-        renderUpcomingEventsList();
+        resetToCleanSlate();
         renderAllRecipes();
-        loadProfile();
-        checkAndApplyDailyCheckIn();
     </script>
 </body>
 </html>
