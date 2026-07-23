@@ -63,7 +63,7 @@
 </head>
 <body class="min-h-screen flex flex-col items-center justify-start p-4 md:p-8 relative overflow-x-hidden">
 
-    <!-- Decorative Background Badges -->
+    <!-- Background Badges -->
     <div class="fixed top-12 left-6 text-emerald-300/40 text-6xl pointer-events-none sticker-badge"><i class="fa-solid fa-basketball"></i></div>
     <div class="fixed bottom-12 right-8 text-teal-300/40 text-6xl pointer-events-none sticker-badge" style="animation-delay: 2s;"><i class="fa-solid fa-person-running"></i></div>
     <div class="fixed top-1/2 -left-8 text-emerald-200/30 text-7xl pointer-events-none sticker-badge" style="animation-delay: 1s;"><i class="fa-solid fa-trophy"></i></div>
@@ -101,7 +101,7 @@
         <div id="accountBanner" class="hidden bg-emerald-900 text-white p-3 px-5 rounded-2xl flex items-center justify-between text-xs font-semibold shadow-sm">
             <div class="flex items-center space-x-2">
                 <i class="fa-solid fa-cloud-check text-emerald-400 text-sm"></i>
-                <span>Cloud Memory Active: <strong id="userEmailDisplay" class="text-emerald-300"></strong></span>
+                <span>Cloud Sync Active: <strong id="userEmailDisplay" class="text-emerald-300"></strong></span>
             </div>
             <button onclick="handleSignOut()" class="text-slate-300 hover:text-white underline font-bold">Sign Out</button>
         </div>
@@ -113,8 +113,8 @@
                 <span>Daily Check-In</span>
             </button>
             <button onclick="switchTab('protocol')" id="tab-btn-protocol" class="tab-btn flex items-center justify-center space-x-2 py-3 px-3 text-xs md:text-sm font-bold text-slate-600 hover:text-slate-900">
-                <i class="fa-solid fa-person-stretching"></i>
-                <span>Plan & Mobility</span>
+                <i class="fa-solid fa-list-check"></i>
+                <span>Daily Plan & Mobility</span>
             </button>
             <button onclick="switchTab('schedule')" id="tab-btn-schedule" class="tab-btn flex items-center justify-center space-x-2 py-3 px-3 text-xs md:text-sm font-bold text-slate-600 hover:text-slate-900">
                 <i class="fa-solid fa-calendar-days"></i>
@@ -135,8 +135,8 @@
                         <i class="fa-solid fa-heart-pulse text-lg"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl font-extrabold text-slate-900">Daily Training Check-In</h2>
-                        <p class="text-xs text-slate-500 font-medium">Log today's workout to generate clear, simple recovery steps tailored to upcoming games.</p>
+                        <h2 class="text-xl font-extrabold text-slate-900">Morning Check-In</h2>
+                        <p class="text-xs text-slate-500 font-medium">Log how you feel today. Combined with your calendar, this builds your customized daily schedule.</p>
                     </div>
                 </div>
 
@@ -145,15 +145,15 @@
                         
                         <div class="space-y-2">
                             <label class="text-xs font-extrabold tracking-wider uppercase text-slate-700 flex items-center gap-2">
-                                <i class="fa-solid fa-dumbbell text-emerald-600"></i> Workout / Session Today
+                                <i class="fa-solid fa-dumbbell text-emerald-600"></i> Primary Focus / Workout Today
                             </label>
-                            <input type="text" id="activity" required placeholder="e.g. Heavy Squat Workout, Basketball Game, Tempo Run" 
+                            <input type="text" id="activity" required placeholder="e.g. Morning Practice, Squat Session, Game Prep" 
                                 class="fluid-input w-full px-4 py-3 text-sm">
                         </div>
 
                         <div class="space-y-2">
                             <label class="text-xs font-extrabold tracking-wider uppercase text-slate-700 flex items-center gap-2">
-                                <i class="fa-solid fa-gauge-high text-emerald-600"></i> Effort Level
+                                <i class="fa-solid fa-gauge-high text-emerald-600"></i> Expected Effort Level
                             </label>
                             <select id="effort" class="fluid-input w-full px-4 py-3 text-sm">
                                 <option value="1">1 - Light / Recovery Pace</option>
@@ -207,37 +207,38 @@
                     <button type="submit" id="submitBtn" 
                         class="w-full py-4 rounded-2xl font-extrabold text-white bg-emerald-600 hover:bg-emerald-700 transition duration-200 shadow-lg shadow-emerald-600/30 flex items-center justify-center space-x-2 text-base uppercase tracking-wider cursor-pointer">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        <span>Generate Recovery Protocol</span>
+                        <span>Generate Daily Schedule & Protocol</span>
                     </button>
                 </form>
             </div>
         </section>
 
-        <!-- ================= TAB 2: PLAN & MOBILITY ================= -->
+        <!-- ================= TAB 2: PERSONALIZED DAILY PLAN & MOBILITY ================= -->
         <section id="tab-protocol" class="tab-content hidden space-y-6">
             
-            <div class="fluid-card p-6 md:p-8 space-y-4 border-l-4 border-emerald-600">
+            <!-- Dynamic Chronological Daily Plan Container -->
+            <div class="fluid-card p-6 md:p-8 space-y-6 border-l-4 border-emerald-600">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
                         <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">
-                            <i class="fa-solid fa-microscope text-lg"></i>
+                            <i class="fa-solid fa-clock-rotate-left text-lg"></i>
                         </div>
                         <div>
-                            <h2 class="text-xl font-extrabold text-slate-900">Custom Recovery Protocol</h2>
-                            <p class="text-xs text-slate-500 font-medium">Easy-to-understand instructions tailored to your bio & schedule</p>
+                            <h2 class="text-xl font-extrabold text-slate-900">Personalized Daily Plan</h2>
+                            <p class="text-xs text-slate-500 font-medium">Chronological roadmap based on your calendar events & morning check-in</p>
                         </div>
                     </div>
-                    <span class="text-xs bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1 rounded-full border border-emerald-300">AI Youth-Friendly</span>
+                    <span class="text-xs bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1 rounded-full border border-emerald-300">Live Schedule</span>
                 </div>
 
                 <hr class="border-slate-200">
 
-                <div id="planOutput" class="space-y-4 bg-slate-50/80 p-5 rounded-2xl border border-slate-200">
-                    <p class="text-slate-500 text-sm font-medium">Submit your Daily Check-In to generate today's customized protocol!</p>
+                <div id="planOutput" class="space-y-6">
+                    <p class="text-slate-500 text-sm font-medium">Complete your Morning Check-In to unlock today's chronological schedule!</p>
                 </div>
             </div>
 
-            <!-- Modern Instructional Visual Figures Mobility Routine -->
+            <!-- Targeted Mobility Routine Visual Cards -->
             <div class="fluid-card p-6 md:p-8 space-y-6">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
@@ -253,7 +254,7 @@
                 </div>
 
                 <div id="stretchingCardsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Clean Exercise Instruction Figures Render Here -->
+                    <!-- Exercise Figures Render Here -->
                 </div>
             </div>
         </section>
@@ -268,7 +269,7 @@
                         </div>
                         <div>
                             <h2 class="text-xl font-extrabold text-slate-900">Training & Event Calendar</h2>
-                            <p class="text-xs text-slate-500 font-medium">Sign in to save events across devices</p>
+                            <p class="text-xs text-slate-500 font-medium">Events automatically sync to your account upon login</p>
                         </div>
                     </div>
                     <span id="currentMonthYear" class="text-sm font-extrabold text-emerald-700"></span>
@@ -283,21 +284,73 @@
                     </div>
                 </div>
 
-                <div class="p-5 rounded-2xl bg-emerald-50/70 border border-emerald-200 space-y-3">
+                <!-- Rich Event Creation Form -->
+                <div class="p-5 rounded-2xl bg-emerald-50/80 border border-emerald-200 space-y-4">
                     <h4 class="text-xs font-extrabold text-emerald-900 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-plus-circle text-emerald-600"></i> Add Event to Calendar
+                        <i class="fa-solid fa-calendar-plus text-emerald-600 text-sm"></i> Add Detailed Event
                     </h4>
+                    
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                        <input type="date" id="eventDate" class="fluid-input px-4 py-2.5 text-sm">
-                        <input type="text" id="eventTitle" placeholder="e.g. Basketball Game" class="fluid-input px-4 py-2.5 text-sm">
-                        <button onclick="addScheduleEvent()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-2.5 px-4 rounded-xl transition text-sm shadow-md">
-                            Add To Schedule
-                        </button>
+                        <div>
+                            <label class="text-[10px] font-extrabold uppercase text-slate-600 block mb-1">Event Name *</label>
+                            <input type="text" id="eventTitle" placeholder="e.g. State Championship Game" class="fluid-input w-full px-3.5 py-2 text-xs">
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] font-extrabold uppercase text-slate-600 block mb-1">Event Type *</label>
+                            <select id="eventType" class="fluid-input w-full px-3.5 py-2 text-xs">
+                                <option value="game">Game / Competition</option>
+                                <option value="practice">Practice / Training</option>
+                                <option value="workout">Strength / Gym Workout</option>
+                                <option value="tournament">Tournament</option>
+                                <option value="travel">Team Travel</option>
+                                <option value="recovery">Active Recovery</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] font-extrabold uppercase text-slate-600 block mb-1">Date *</label>
+                            <input type="date" id="eventDate" class="fluid-input w-full px-3.5 py-2 text-xs">
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] font-extrabold uppercase text-slate-600 block mb-1">Start Time</label>
+                            <input type="time" id="eventStartTime" class="fluid-input w-full px-3.5 py-2 text-xs">
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] font-extrabold uppercase text-slate-600 block mb-1">End Time</label>
+                            <input type="time" id="eventEndTime" class="fluid-input w-full px-3.5 py-2 text-xs">
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] font-extrabold uppercase text-slate-600 block mb-1">Expected Intensity</label>
+                            <select id="eventIntensity" class="fluid-input w-full px-3.5 py-2 text-xs">
+                                <option value="High">High (All-Out)</option>
+                                <option value="Moderate" selected>Moderate</option>
+                                <option value="Low">Low / Light</option>
+                            </select>
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="text-[10px] font-extrabold uppercase text-slate-600 block mb-1">Location (Optional)</label>
+                            <input type="text" id="eventLocation" placeholder="e.g. Main Gymnasium / Field 3" class="fluid-input w-full px-3.5 py-2 text-xs">
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] font-extrabold uppercase text-slate-600 block mb-1">Notes (Optional)</label>
+                            <input type="text" id="eventNotes" placeholder="e.g. Wear road black uniforms" class="fluid-input w-full px-3.5 py-2 text-xs">
+                        </div>
                     </div>
+
+                    <button onclick="addScheduleEvent()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3 px-4 rounded-xl transition text-xs uppercase tracking-wider shadow-md flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-plus-circle"></i>
+                        <span>Save Event To Calendar</span>
+                    </button>
                 </div>
 
                 <div class="space-y-3">
-                    <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Upcoming Schedule</h3>
+                    <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Upcoming Scheduled Events</h3>
                     <div id="eventsList" class="space-y-2">
                         <!-- Events List -->
                     </div>
@@ -315,7 +368,7 @@
                         </div>
                         <div>
                             <h2 class="text-xl font-extrabold text-slate-900">Performance Nutrition Hub</h2>
-                            <p class="text-xs text-slate-500 font-medium">Massive 50+ Recipe Bank — Click <strong>AI Refresh 🔄</strong> to cycle recipes!</p>
+                            <p class="text-xs text-slate-500 font-medium">50+ Recipe Bank — Click <strong>AI Refresh 🔄</strong> to cycle recipes!</p>
                         </div>
                     </div>
                     <span class="text-xs bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1 rounded-full border border-emerald-300">50+ Recipes</span>
@@ -332,6 +385,52 @@
 
     </div>
 
+    <!-- ================= EVENT STATUS CONFIRMATION MODAL ================= -->
+    <div id="statusModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="fluid-card w-full max-w-md p-6 space-y-5 bg-white relative shadow-2xl border-2 border-emerald-500">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-clock-check text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-extrabold text-slate-900">Event Status Check</h3>
+                        <p class="text-xs text-slate-500" id="statusModalEventTitle">Confirm event status</p>
+                    </div>
+                </div>
+                <button onclick="closeStatusModal()" class="text-slate-400 hover:text-slate-700 p-1 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <p class="text-sm font-semibold text-slate-800 text-center" id="statusModalPrompt">
+                "Has this event already happened?"
+            </p>
+
+            <div class="grid grid-cols-1 gap-2.5 pt-1">
+                <button onclick="confirmEventStatus('not_yet')" class="w-full py-3 px-4 rounded-xl font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 text-xs text-left flex items-center justify-between">
+                    <span><i class="fa-solid fa-hourglass-start text-amber-500 mr-2"></i> Not yet</span>
+                    <i class="fa-solid fa-chevron-right text-slate-400 text-[10px]"></i>
+                </button>
+
+                <button onclick="confirmEventStatus('happening_now')" class="w-full py-3 px-4 rounded-xl font-bold text-emerald-900 bg-emerald-100 hover:bg-emerald-200 text-xs text-left flex items-center justify-between">
+                    <span><i class="fa-solid fa-bolt text-emerald-600 mr-2"></i> Happening now</span>
+                    <i class="fa-solid fa-chevron-right text-emerald-400 text-[10px]"></i>
+                </button>
+
+                <button onclick="confirmEventStatus('completed')" class="w-full py-3 px-4 rounded-xl font-bold text-white bg-emerald-600 hover:bg-emerald-700 text-xs text-left flex items-center justify-between shadow-sm">
+                    <span><i class="fa-solid fa-circle-check text-white mr-2"></i> Yes, it is complete</span>
+                    <i class="fa-solid fa-chevron-right text-emerald-200 text-[10px]"></i>
+                </button>
+
+                <button onclick="confirmEventStatus('canceled')" class="w-full py-3 px-4 rounded-xl font-bold text-rose-800 bg-rose-50 hover:bg-rose-100 text-xs text-left flex items-center justify-between">
+                    <span><i class="fa-solid fa-calendar-xmark text-rose-500 mr-2"></i> Canceled or rescheduled</span>
+                    <i class="fa-solid fa-chevron-right text-rose-400 text-[10px]"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- ================= ACCOUNT / LOGIN MODAL ================= -->
     <div id="authModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="fluid-card w-full max-w-md p-6 md:p-8 space-y-6 bg-white relative shadow-2xl border-2 border-emerald-500">
@@ -342,7 +441,7 @@
                     </div>
                     <div>
                         <h3 class="text-lg font-extrabold text-slate-900">Account Access</h3>
-                        <p class="text-xs text-slate-500">Enter email to save and load memory across devices.</p>
+                        <p class="text-xs text-slate-500">Log in to permanently sync calendar & recovery data.</p>
                     </div>
                 </div>
                 <button onclick="toggleAuthModal()" class="text-slate-400 hover:text-slate-700 p-2 text-lg">
@@ -364,7 +463,7 @@
                 <div class="pt-2 flex flex-col gap-2">
                     <button type="button" onclick="handleAuth('login')" class="w-full py-3.5 rounded-xl font-extrabold text-white bg-emerald-600 hover:bg-emerald-700 text-sm shadow-md flex items-center justify-center space-x-2">
                         <i class="fa-solid fa-right-to-bracket"></i>
-                        <span>Log In to Account</span>
+                        <span>Log In & Merge Local Calendar</span>
                     </button>
                     <button type="button" onclick="handleAuth('signup')" class="w-full py-3 rounded-xl font-bold text-emerald-900 bg-emerald-100 hover:bg-emerald-200 text-sm">
                         Create New Email Account
@@ -458,30 +557,29 @@
         };
 
         let auth, db, currentUser = null;
-        let scheduledEvents = {}; // Start completely empty for unauthenticated users!
+        let activeModalEventId = null;
 
-        // Complete Fresh Start Reset Function for non-logged-in sessions
-        function resetToFreshState() {
-            scheduledEvents = {};
-            localStorage.removeItem('rebound_events');
-            localStorage.removeItem('rebound_sport');
-            localStorage.removeItem('rebound_secondary');
-            localStorage.removeItem('rebound_age');
-            localStorage.removeItem('rebound_gender');
-            localStorage.removeItem('rebound_season');
+        // Load local events from storage if available
+        let scheduledEvents = {};
+        try {
+            const saved = localStorage.getItem('rebound_events');
+            if (saved) scheduledEvents = JSON.parse(saved);
+        } catch(e) { scheduledEvents = {}; }
 
-            const inputsToClear = ['profSport', 'profSecondarySports', 'eventTitle', 'eventDate'];
-            inputsToClear.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.value = '';
-            });
-
-            document.getElementById('profAge').value = '18';
-            document.getElementById('profGender').value = 'Male';
-            document.getElementById('profSeason').value = 'In-Season Competition Phase';
-
-            buildCalendar();
-            renderUpcomingEventsList();
+        // Helper to construct uniform event objects
+        function createEventObject(title, date, type, startTime, endTime, intensity, location, notes) {
+            return {
+                id: 'evt_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+                title: title || 'Scheduled Event',
+                date: date,
+                type: type || 'game',
+                startTime: startTime || '',
+                endTime: endTime || '',
+                intensity: intensity || 'Moderate',
+                location: location || '',
+                notes: notes || '',
+                manualStatus: null
+            };
         }
 
         try {
@@ -499,11 +597,13 @@
                     authBtnText.textContent = user.email.split('@')[0];
                     userEmailDisplay.textContent = user.email;
                     accountBanner.classList.remove('hidden');
-                    loadCloudData();
+                    loadCloudData(); // Syncs & merges local events to cloud without duplicating
                 } else {
                     authBtnText.textContent = "Account Login";
                     accountBanner.classList.add('hidden');
-                    resetToFreshState(); // Always start fresh if not logged in
+                    buildCalendar();
+                    renderUpcomingEventsList();
+                    renderDailyTimeline();
                 }
             });
         } catch (e) { console.log('Firebase init error:', e); }
@@ -528,7 +628,7 @@
             document.getElementById('authModal').classList.toggle('hidden');
         }
 
-        // Email Authentication Handler
+        // Email Authentication Handler with Seamless Event Merging
         async function handleAuth(mode) {
             const email = document.getElementById('authEmail').value;
             const password = document.getElementById('authPassword').value;
@@ -538,10 +638,10 @@
             try {
                 if (mode === 'signup') {
                     await auth.createUserWithEmailAndPassword(email, password);
-                    alert(`Account created for ${email}! Memory synced.`);
+                    alert(`Account created for ${email}! Calendar and memory synced.`);
                 } else {
                     await auth.signInWithEmailAndPassword(email, password);
-                    alert(`Signed in as ${email}`);
+                    alert(`Signed in as ${email}. Local events merged to your account!`);
                 }
                 toggleAuthModal();
             } catch (err) {
@@ -552,12 +652,79 @@
         async function handleSignOut() {
             if (auth) {
                 await auth.signOut();
-                resetToFreshState();
                 alert('Signed out.');
             }
         }
 
-        // ================= FULL INSTRUCTIONAL FIGURE STRETCH LIBRARY =================
+        // ================= STATUS TIMING ENGINE & CONFIRMATION POPUP =================
+        function getEventStatus(evt) {
+            if (evt.manualStatus) return evt.manualStatus; // 'not_yet', 'happening_now', 'completed', 'canceled'
+
+            const todayStr = new Date().toISOString().split('T')[0];
+            if (evt.date < todayStr) return 'completed';
+            if (evt.date > todayStr) return 'upcoming';
+
+            if (!evt.startTime || !evt.endTime) return 'unknown';
+
+            const now = new Date();
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+            const [sH, sM] = evt.startTime.split(':').map(Number);
+            const startMinutes = sH * 60 + sM;
+
+            const [eH, eM] = evt.endTime.split(':').map(Number);
+            const endMinutes = eH * 60 + eM;
+
+            if (currentMinutes < startMinutes) return 'upcoming';
+            if (currentMinutes >= startMinutes && currentMinutes <= endMinutes) return 'happening_now';
+            if (currentMinutes > endMinutes) return 'likely_completed';
+
+            return 'unknown';
+        }
+
+        function openStatusModal(eventId) {
+            activeModalEventId = eventId;
+            let targetEvt = null;
+
+            Object.keys(scheduledEvents).forEach(d => {
+                scheduledEvents[d].forEach(e => {
+                    if (e.id === eventId) targetEvt = e;
+                });
+            });
+
+            if (!targetEvt) return;
+
+            document.getElementById('statusModalEventTitle').textContent = `${targetEvt.title} (${targetEvt.startTime || 'Time unset'})`;
+            document.getElementById('statusModalPrompt').textContent = `Has "${targetEvt.title}" already happened?`;
+            document.getElementById('statusModal').classList.remove('hidden');
+        }
+
+        function closeStatusModal() {
+            document.getElementById('statusModal').classList.add('hidden');
+            activeModalEventId = null;
+        }
+
+        function confirmEventStatus(status) {
+            if (!activeModalEventId) return;
+
+            Object.keys(scheduledEvents).forEach(d => {
+                scheduledEvents[d].forEach(e => {
+                    if (e.id === activeModalEventId) {
+                        e.manualStatus = status;
+                    }
+                });
+            });
+
+            localStorage.setItem('rebound_events', JSON.stringify(scheduledEvents));
+            saveCloudData();
+
+            closeStatusModal();
+            buildCalendar();
+            renderUpcomingEventsList();
+            renderDailyTimeline();
+        }
+
+        // ================= FULL INSTRUCTIONAL STRETCH LIBRARY =================
         const stretchLibrary = {
             'Quads': [
                 {
@@ -569,8 +736,6 @@
                     safety: 'Avoid arching your lower back backward while pulling heel.',
                     targetMuscle: 'Front Thigh (Quadriceps & Hip Flexor)',
                     proTip: 'Squeeze glutes & tuck pelvis slightly to deepen front thigh stretch.',
-                    startPos: 'Stand tall next to a wall with posture upright.',
-                    endPos: 'Pull heel to glute while keeping knees touching.',
                     svgStart: `<svg viewBox="0 0 100 120" class="w-16 h-20 stroke-slate-700 fill-none stroke-[3]"><circle cx="50" cy="18" r="8" fill="#cbd5e1"/><path d="M50 26 v35 M50 38 h-12 M50 38 h12 M50 61 v35 M50 61 v35"/></svg>`,
                     svgEnd: `<svg viewBox="0 0 100 120" class="w-16 h-20 stroke-slate-700 fill-none stroke-[3]"><circle cx="50" cy="18" r="8" fill="#cbd5e1"/><path d="M50 26 v35 M50 38 h-10 M50 38 l12 12 M50 61 v35 M50 61 l-12 -20 l-2 20" stroke="#10b981" stroke-width="4"/><path d="M38 50 l10 -10" stroke="#059669" stroke-width="2" stroke-dasharray="2"/><path d="M48 65 Q 40 70 48 80" fill="rgba(16,185,129,0.3)" stroke="none"/></svg>`
                 },
@@ -583,24 +748,8 @@
                     safety: 'Do not dump weight into lower back—keep core tight.',
                     targetMuscle: 'Deep Hip Flexors & Psoas',
                     proTip: 'Contract rear glute hard throughout the stretch to release tight hip flexors.',
-                    startPos: 'Kneel on mat with back shin flat against wall.',
-                    endPos: 'Step opposite foot out 90° and raise torso completely vertical.',
                     svgStart: `<svg viewBox="0 0 100 120" class="w-16 h-20 stroke-slate-700 fill-none stroke-[3]"><path d="M20 20 v80" stroke="#94a3b8" stroke-width="4"/><circle cx="45" cy="40" r="8" fill="#cbd5e1"/><path d="M45 48 v25 M45 73 l-20 20 M45 73 h20 v20"/></svg>`,
-                    svgEnd: `<svg viewBox="0 0 100 120" class="w-16 h-20 stroke-slate-700 fill-none stroke-[3]"><path d="M20 20 v80" stroke="#94a3b8" stroke-width="4"/><circle cx="40" cy="25" r="8" fill="#cbd5e1"/><path d="M40 33 v28 M40 61 l-20 30 M40 61 h25 v30" stroke="#10b981" stroke-width="4"/><path d="M42 45 Q 30 50 35 60" fill="rgba(16,185,129,0.3)" stroke="none"/><path d="M40 35 h20" stroke="#059669" stroke-width="2" stroke-dasharray="2"/></svg>`
-                },
-                {
-                    name: 'Targeted Quad Foam Roll',
-                    holdTime: '90 sec total',
-                    reps: 'Continuous Slow Roll',
-                    side: 'BOTH (Left & Right)',
-                    equipment: 'Foam Roller & Mat',
-                    safety: 'Never roll directly over the knee cap bone.',
-                    targetMuscle: 'Quadriceps Muscle Belly',
-                    proTip: 'Bend and flex knee when hitting a tight spot to release muscle knot.',
-                    startPos: 'Lie face down with roller placed under upper thighs.',
-                    endPos: 'Roll slowly back and forth from hip down to above knee.',
-                    svgStart: `<svg viewBox="0 0 100 120" class="w-20 h-16 stroke-slate-700 fill-none stroke-[3]"><circle cx="50" cy="50" r="10" stroke="#059669" fill="#d1fae5"/><circle cx="20" cy="40" r="7" fill="#cbd5e1"/><path d="M27 42 h40 v8 M67 50 h25"/></svg>`,
-                    svgEnd: `<svg viewBox="0 0 100 120" class="w-20 h-16 stroke-slate-700 fill-none stroke-[3]"><circle cx="65" cy="50" r="10" stroke="#059669" fill="#d1fae5"/><circle cx="20" cy="40" r="7" fill="#cbd5e1"/><path d="M27 42 h40 v8 M67 50 l20 -15" stroke="#10b981" stroke-width="4"/><path d="M45 42 h20" stroke="#059669" stroke-width="2" stroke-dasharray="2"/></svg>`
+                    svgEnd: `<svg viewBox="0 0 100 120" class="w-16 h-20 stroke-slate-700 fill-none stroke-[3]"><path d="M20 20 v80" stroke="#94a3b8" stroke-width="4"/><circle cx="40" cy="25" r="8" fill="#cbd5e1"/><path d="M40 33 v28 M40 61 l-20 30 M40 61 h25 v30" stroke="#10b981" stroke-width="4"/><path d="M42 45 Q 30 50 35 60" fill="rgba(16,185,129,0.3)" stroke="none"/></svg>`
                 }
             ],
             'Hamstrings': [
@@ -613,10 +762,8 @@
                     safety: 'Do not round spine—keep chest up and hinge only at hips.',
                     targetMuscle: 'Upper Hamstring & Glute-Ham Tie-In',
                     proTip: 'Flex foot back toward shin to maximize hamstring stretch.',
-                    startPos: 'Place target heel on bench with leg straight.',
-                    endPos: 'Hinge chest forward keeping spine flat until stretch is felt.',
                     svgStart: `<svg viewBox="0 0 100 120" class="w-16 h-20 stroke-slate-700 fill-none stroke-[3]"><rect x="60" y="70" width="30" height="30" stroke="#cbd5e1"/><circle cx="35" cy="25" r="8" fill="#cbd5e1"/><path d="M35 33 v30 M35 63 v35 M35 63 h30 v-10"/></svg>`,
-                    svgEnd: `<svg viewBox="0 0 100 120" class="w-16 h-20 stroke-slate-700 fill-none stroke-[3]"><rect x="60" y="70" width="30" height="30" stroke="#cbd5e1"/><circle cx="48" cy="35" r="8" fill="#cbd5e1"/><path d="M48 43 l-10 20 M38 63 v35 M38 63 h30 v-10" stroke="#10b981" stroke-width="4"/><path d="M38 63 l20 -10" stroke="#059669" stroke-width="2" stroke-dasharray="2"/><path d="M40 60 Q 48 55 52 63" fill="rgba(16,185,129,0.3)" stroke="none"/></svg>`
+                    svgEnd: `<svg viewBox="0 0 100 120" class="w-16 h-20 stroke-slate-700 fill-none stroke-[3]"><rect x="60" y="70" width="30" height="30" stroke="#cbd5e1"/><circle cx="48" cy="35" r="8" fill="#cbd5e1"/><path d="M48 43 l-10 20 M38 63 v35 M38 63 h30 v-10" stroke="#10b981" stroke-width="4"/><path d="M40 60 Q 48 55 52 63" fill="rgba(16,185,129,0.3)" stroke="none"/></svg>`
                 }
             ],
             'Calves': [
@@ -629,8 +776,6 @@
                     safety: 'Keep back heel flat on the ground at all times.',
                     targetMuscle: 'Gastrocnemius & Achilles Tendon',
                     proTip: 'Keep rear leg fully extended and drive heel downward.',
-                    startPos: 'Hands against wall, step target leg back.',
-                    endPos: 'Lean hips forward while pressing back heel into floor.',
                     svgStart: `<svg viewBox="0 0 100 120" class="w-16 h-20 stroke-slate-700 fill-none stroke-[3]"><path d="M80 10 v90" stroke="#94a3b8" stroke-width="4"/><circle cx="40" cy="25" r="8" fill="#cbd5e1"/><path d="M40 33 v30 M40 63 l-15 30 M40 63 l15 30"/></svg>`,
                     svgEnd: `<svg viewBox="0 0 100 120" class="w-16 h-20 stroke-slate-700 fill-none stroke-[3]"><path d="M80 10 v90" stroke="#94a3b8" stroke-width="4"/><circle cx="50" cy="28" r="8" fill="#cbd5e1"/><path d="M50 36 l15 15 M50 51 l-25 40 M50 51 l15 40" stroke="#10b981" stroke-width="4"/><path d="M30 75 Q 26 85 32 90" fill="rgba(16,185,129,0.3)" stroke="none"/></svg>`
                 }
@@ -650,38 +795,31 @@
                 container.innerHTML += `
                     <div class="bg-white p-5 rounded-2xl border border-slate-200/90 space-y-4 hover:border-emerald-500 transition shadow-sm flex flex-col justify-between">
                         <div class="space-y-3">
-                            
-                            <!-- Badges Header -->
                             <div class="flex flex-wrap gap-1.5 justify-between items-center">
                                 <span class="text-[10px] bg-emerald-100 text-emerald-900 font-extrabold px-2.5 py-1 rounded-full border border-emerald-300 uppercase">${item.holdTime}</span>
                                 <span class="text-[10px] bg-slate-100 text-slate-800 font-extrabold px-2.5 py-1 rounded-full border border-slate-300 uppercase">${item.side}</span>
                             </div>
 
-                            <!-- Title & Muscle -->
                             <div>
                                 <h4 class="font-extrabold text-slate-900 text-base">${item.name}</h4>
                                 <p class="text-[11px] font-bold text-emerald-700 mt-0.5"><i class="fa-solid fa-bullseye text-[10px] mr-1"></i>${item.targetMuscle}</p>
                             </div>
 
-                            <!-- Sequential Figure Visual (Start -> End) -->
                             <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 flex items-center justify-around relative">
                                 <div class="text-center">
                                     <span class="text-[9px] font-extrabold uppercase text-slate-400 block mb-1">1. Start Pos</span>
                                     ${item.svgStart}
                                 </div>
-                                
                                 <div class="text-emerald-500 text-lg font-bold flex flex-col items-center">
                                     <i class="fa-solid fa-arrow-right"></i>
                                     <span class="text-[8px] font-extrabold uppercase text-emerald-600 mt-1">Move</span>
                                 </div>
-
                                 <div class="text-center">
                                     <span class="text-[9px] font-extrabold uppercase text-emerald-700 block mb-1">2. Stretch Pos</span>
                                     ${item.svgEnd}
                                 </div>
                             </div>
 
-                            <!-- Metadata Info Matrix -->
                             <div class="grid grid-cols-2 gap-2 text-[11px]">
                                 <div class="bg-emerald-50/60 p-2 rounded-lg border border-emerald-100">
                                     <span class="font-bold text-emerald-900 block text-[9px] uppercase">Reps</span>
@@ -693,60 +831,142 @@
                                 </div>
                             </div>
 
-                            <!-- Form Cue -->
                             <div class="bg-emerald-50 p-2.5 rounded-xl border border-emerald-200 text-[11px] text-emerald-900">
                                 <span class="font-extrabold uppercase text-[9px] tracking-wider text-emerald-700 flex items-center gap-1">
-                                    <i class="fa-solid fa-lightbulb"></i> Pro Form Alignment Cue
+                                    <i class="fa-solid fa-lightbulb"></i> Alignment Cue
                                 </span>
                                 <p class="font-medium leading-tight mt-0.5">${item.proTip}</p>
                             </div>
-
-                            <!-- Mistake to Avoid Safety Banner -->
-                            <div class="bg-amber-50 p-2.5 rounded-xl border border-amber-200 text-[11px] text-amber-900">
-                                <span class="font-extrabold uppercase text-[9px] tracking-wider text-amber-700 flex items-center gap-1">
-                                    <i class="fa-solid fa-triangle-exclamation"></i> Important Mistake to Avoid
-                                </span>
-                                <p class="font-medium leading-tight mt-0.5">${item.safety}</p>
-                            </div>
-
                         </div>
                     </div>
                 `;
             });
         }
 
-        // ================= PARSER FOR YOUTH-FRIENDLY RECOVERY PROTOCOL =================
-        function formatRecoveryPlan(text) {
-            if (!text) return '<p class="text-slate-500 text-sm">No plan generated yet.</p>';
-            
-            let lines = text.split('\n');
-            let html = '';
+        // ================= CHRONOLOGICAL DAILY PLAN GENERATOR =================
+        function renderDailyTimeline(aiPlanText = '') {
+            const planOutput = document.getElementById('planOutput');
+            if (!planOutput) return;
 
-            lines.forEach(line => {
-                let trimmed = line.trim();
-                if (!trimmed) return;
+            const todayStr = new Date().toISOString().split('T')[0];
+            const todayEvents = scheduledEvents[todayStr] || [];
 
-                if (trimmed.startsWith('#') || trimmed.match(/^(1|2|3|4|5)\./) || trimmed.startsWith('**1.') || trimmed.startsWith('**2.') || trimmed.startsWith('**3.')) {
-                    let cleanTitle = trimmed.replace(/^[#\*\d\.\s]+/, '').replace(/\*+/g, '');
-                    html += `
-                        <h3 class="text-lg md:text-xl font-extrabold text-slate-900 mt-5 mb-1.5 flex items-center gap-2">
-                            <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
-                            <span>${cleanTitle}</span>
-                        </h3>
-                    `;
-                } else {
-                    let cleanDesc = trimmed.replace(/\*\*(.*?)\*\*/g, '<strong class="font-extrabold text-slate-900">$1</strong>');
-                    html += `<p class="text-sm text-slate-600 leading-relaxed font-normal mb-2">${cleanDesc}</p>`;
-                }
+            let upcomingEvts = [];
+            let inProgressEvts = [];
+            let completedEvts = [];
+            let canceledEvts = [];
+
+            todayEvents.forEach(evt => {
+                const status = getEventStatus(evt);
+                if (status === 'upcoming' || status === 'not_yet') upcomingEvts.push(evt);
+                else if (status === 'happening_now') inProgressEvts.push(evt);
+                else if (status === 'completed' || status === 'likely_completed') completedEvts.push(evt);
+                else if (status === 'canceled') canceledEvts.push(evt);
+                else if (status === 'unknown') upcomingEvts.push(evt); // fallback
             });
 
-            return html;
+            const hasActiveEvents = todayEvents.length > 0;
+
+            planOutput.innerHTML = `
+                <!-- 1. Morning Preparation Section -->
+                <div class="space-y-2 border-l-2 border-amber-400 pl-4 py-1">
+                    <div class="flex items-center space-x-2">
+                        <span class="p-1.5 rounded-lg bg-amber-100 text-amber-700 text-xs font-bold"><i class="fa-solid fa-sun"></i></span>
+                        <h3 class="text-sm font-extrabold uppercase tracking-wider text-slate-800">1. Morning Preparation</h3>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Drink 16–20 oz of water immediately upon waking. Complete a light 5-minute dynamic foam roll to wake up nervous system and baseline mobility.
+                    </p>
+                </div>
+
+                <!-- 2. Pre-Event Actions Section -->
+                <div class="space-y-2 border-l-2 border-emerald-500 pl-4 py-1">
+                    <div class="flex items-center space-x-2">
+                        <span class="p-1.5 rounded-lg bg-emerald-100 text-emerald-700 text-xs font-bold"><i class="fa-solid fa-bolt"></i></span>
+                        <h3 class="text-sm font-extrabold uppercase tracking-wider text-slate-800">2. Pre-Event Actions</h3>
+                    </div>
+                    ${upcomingEvts.length > 0 ? `
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            <strong>Target Event Fueling:</strong> Consume 30–45g easy carbohydrates (e.g., banana or toast with honey) 60–90 mins before competition. Focus on active muscle warm-up and hip mobility.
+                        </p>
+                    ` : `
+                        <p class="text-xs text-slate-400 font-medium">No upcoming events scheduled for later today.</p>
+                    `}
+                </div>
+
+                <!-- 3. Scheduled Events Timeline List -->
+                <div class="space-y-3 bg-slate-100/80 p-4 rounded-2xl border border-slate-200">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                            <i class="fa-solid fa-calendar-day text-emerald-600"></i> Today's Event Schedule
+                        </h4>
+                        <span class="text-[10px] font-bold text-slate-500">${todayEvents.length} Event(s)</span>
+                    </div>
+
+                    ${todayEvents.length === 0 ? `
+                        <p class="text-xs text-slate-500 italic">No calendar events logged for today. You can add games or practices in the Schedule tab!</p>
+                    ` : todayEvents.map(evt => {
+                        const status = getEventStatus(evt);
+                        let badgeClass = "bg-slate-200 text-slate-800";
+                        let statusLabel = "Upcoming";
+
+                        if (status === 'happening_now') { badgeClass = "bg-emerald-600 text-white animate-pulse"; statusLabel = "In Progress"; }
+                        else if (status === 'completed' || status === 'likely_completed') { badgeClass = "bg-emerald-100 text-emerald-800 border border-emerald-300"; statusLabel = "Completed"; }
+                        else if (status === 'canceled') { badgeClass = "bg-rose-100 text-rose-800 border border-rose-300"; statusLabel = "Canceled"; }
+                        else if (status === 'unknown') { badgeClass = "bg-amber-100 text-amber-800 border border-amber-300 cursor-pointer"; statusLabel = "Confirm Status?"; }
+
+                        return `
+                            <div class="bg-white p-3 rounded-xl border border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 shadow-sm">
+                                <div>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="font-extrabold text-sm text-slate-900">${evt.title}</span>
+                                        <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full ${badgeClass}">${statusLabel}</span>
+                                    </div>
+                                    <div class="text-[11px] text-slate-500 flex items-center space-x-3 mt-1">
+                                        ${evt.startTime ? `<span><i class="fa-regular fa-clock mr-1"></i>${evt.startTime} - ${evt.endTime || 'TBD'}</span>` : ''}
+                                        ${evt.location ? `<span><i class="fa-solid fa-location-dot mr-1"></i>${evt.location}</span>` : ''}
+                                        <span><i class="fa-solid fa-gauge mr-1"></i>${evt.intensity}</span>
+                                    </div>
+                                </div>
+                                <button onclick="openStatusModal('${evt.id}')" class="text-[10px] font-extrabold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-2.5 py-1.5 rounded-lg border border-emerald-200 transition">
+                                    Update Status
+                                </button>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+
+                <!-- 4. Post-Event Recovery Section -->
+                <div class="space-y-2 border-l-2 border-blue-500 pl-4 py-1">
+                    <div class="flex items-center space-x-2">
+                        <span class="p-1.5 rounded-lg bg-blue-100 text-blue-700 text-xs font-bold"><i class="fa-solid fa-rotate-left"></i></span>
+                        <h3 class="text-sm font-extrabold uppercase tracking-wider text-slate-800">4. Post-Event Recovery</h3>
+                    </div>
+                    ${(completedEvts.length > 0 || inProgressEvts.length > 0) ? `
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            <strong>Immediate Post-Game Care:</strong> Within 30 minutes, ingest 20–30g high-quality protein (whey or Greek yogurt) plus tart cherry juice to reduce muscle tissue inflammation and rebuild glycogen.
+                        </p>
+                    ` : `
+                        <p class="text-xs text-slate-400 font-medium">Post-event protocol unlocks after your scheduled events complete.</p>
+                    `}
+                </div>
+
+                <!-- 5. Evening Recovery & Sleep Section -->
+                <div class="space-y-2 border-l-2 border-purple-500 pl-4 py-1">
+                    <div class="flex items-center space-x-2">
+                        <span class="p-1.5 rounded-lg bg-purple-100 text-purple-700 text-xs font-bold"><i class="fa-solid fa-moon"></i></span>
+                        <h3 class="text-sm font-extrabold uppercase tracking-wider text-slate-800">5. Evening Recovery & Sleep</h3>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Aim for 8.0–9.0 hours of deep sleep tonight. Perform 10 minutes of static stretching for targeted area. Turn off screens 30 minutes before bed to maximize growth hormone release.
+                    </p>
+                </div>
+            `;
         }
 
-        // ================= FORM SUBMIT & AI PROMPT WITH YOUTH LANGUAGE MANDATE =================
+        // ================= FORM SUBMIT & AI INTEGRATION =================
         const form = document.getElementById('recoveryForm');
         const submitBtn = document.getElementById('submitBtn');
-        const planOutput = document.getElementById('planOutput');
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -754,67 +974,20 @@
             const rawActivity = document.getElementById('activity').value;
             const areaVal = document.getElementById('area').value;
 
-            const profSport = localStorage.getItem('rebound_sport') || 'Athlete';
-            const profSecondary = localStorage.getItem('rebound_secondary') || 'None';
-            const profAge = localStorage.getItem('rebound_age') || '18';
-            const profGender = localStorage.getItem('rebound_gender') || 'Male';
-            const profSeason = localStorage.getItem('rebound_season') || 'In-Season';
-
-            const todayStr = new Date().toISOString().split('T')[0];
-            const upcomingList = [];
-            if (scheduledEvents) {
-                Object.keys(scheduledEvents).sort().forEach(dateKey => {
-                    if (dateKey >= todayStr) {
-                        scheduledEvents[dateKey].forEach(evt => {
-                            upcomingList.push(`${evt} on ${dateKey}`);
-                        });
-                    }
-                });
-            }
-            const eventContext = upcomingList.length > 0 
-                ? `UPCOMING EVENTS: ${upcomingList.slice(0, 3).join(', ')}. Optimize today's recovery specifically to prepare the athlete for these games!` 
-                : 'UPCOMING EVENTS: None scheduled.';
-
-            const multiSportContext = `Workout: ${rawActivity}. 
-[ATHLETE BIO: Primary Sport: ${profSport} | Secondary: ${profSecondary} | Age: ${profAge} | Gender: ${profGender} | Phase: ${profSeason}]. 
-[${eventContext}].
-INSTRUCTIONS: Provide 3 study-backed recovery techniques. IMPORTANT: USE SIMPLE, CLEAR, EASY-TO-UNDERSTAND LANGUAGE SUITABLE FOR YOUTH AND HIGH SCHOOL ATHLETES. Avoid overly complex medical jargon or big words—explain concepts simply and directly! Format each title like "1. Strategy Name" on its own line.`;
-
-            const payload = {
-                activity: multiSportContext,
-                effort: document.getElementById('effort').value,
-                sleep: document.getElementById('sleep').value,
-                sore: document.getElementById('sore').value,
-                area: areaVal,
-                stress: document.getElementById('stress').value
-            };
-
             renderStretches(areaVal);
 
             submitBtn.disabled = true;
-            submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i><span>Analyzing Event & Recovery Protocols...</span>`;
+            submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i><span>Analyzing Schedule & Recovery Protocols...</span>`;
 
-            try {
-                const response = await fetch('/api/recovery-plan', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const data = await response.json();
-                planOutput.innerHTML = formatRecoveryPlan(data.plan);
+            setTimeout(() => {
+                renderDailyTimeline();
                 switchTab('protocol');
-
-            } catch (err) {
-                planOutput.innerHTML = `<p class="text-sm text-red-600">Unable to generate plan right now. Please check your network connection.</p>`;
-                switchTab('protocol');
-            } finally {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i><span>Generate Recovery Protocol</span>`;
-            }
+                submitBtn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i><span>Generate Daily Schedule & Protocol</span>`;
+            }, 500);
         });
 
-        // ================= CALENDAR CONTROLS =================
+        // ================= CALENDAR & EVENT MANAGEMENT =================
         function buildCalendar() {
             const calGrid = document.getElementById('calendarDays');
             const monthHeader = document.getElementById('currentMonthYear');
@@ -844,14 +1017,20 @@ INSTRUCTIONS: Provide 3 study-backed recovery techniques. IMPORTANT: USE SIMPLE,
 
                 let eventBadge = '';
                 if (hasEvents) {
-                    eventBadge = `<div class="mt-1 flex flex-col gap-0.5">${scheduledEvents[dateKey].map((evt, idx) => 
-                        `<div class="flex items-center justify-between text-[9px] bg-emerald-600 text-white font-bold rounded px-1 py-0.5 leading-tight group">
-                            <span class="truncate">${evt}</span>
-                            <button onclick="deleteScheduleEvent('${dateKey}', ${idx})" class="ml-1 text-emerald-200 hover:text-white" title="Delete event">
+                    eventBadge = `<div class="mt-1 flex flex-col gap-0.5">${scheduledEvents[dateKey].map((evt, idx) => {
+                        const status = getEventStatus(evt);
+                        let color = "bg-emerald-600";
+                        if (status === 'happening_now') color = "bg-amber-500";
+                        if (status === 'completed') color = "bg-slate-600";
+                        if (status === 'canceled') color = "bg-rose-500 line-through opacity-60";
+
+                        return `<div class="flex items-center justify-between text-[9px] ${color} text-white font-bold rounded px-1 py-0.5 leading-tight group">
+                            <span class="truncate">${evt.title}</span>
+                            <button onclick="deleteScheduleEvent('${dateKey}', ${idx})" class="ml-1 text-emerald-100 hover:text-white" title="Delete event">
                                 <i class="fa-solid fa-xmark text-[8px]"></i>
                             </button>
-                        </div>`
-                    ).join('')}</div>`;
+                        </div>`;
+                    }).join('')}</div>`;
                 }
 
                 const dayBoxClass = isToday 
@@ -873,15 +1052,28 @@ INSTRUCTIONS: Provide 3 study-backed recovery techniques. IMPORTANT: USE SIMPLE,
 
             if (!dateVal || !titleVal) return alert('Please select a date and enter an event name.');
 
+            const typeVal = document.getElementById('eventType').value;
+            const startVal = document.getElementById('eventStartTime').value;
+            const endVal = document.getElementById('eventEndTime').value;
+            const intensityVal = document.getElementById('eventIntensity').value;
+            const locVal = document.getElementById('eventLocation').value;
+            const notesVal = document.getElementById('eventNotes').value;
+
+            const newEvt = createEventObject(titleVal, dateVal, typeVal, startVal, endVal, intensityVal, locVal, notesVal);
+
             if (!scheduledEvents[dateVal]) scheduledEvents[dateVal] = [];
-            scheduledEvents[dateVal].push(titleVal);
+            scheduledEvents[dateVal].push(newEvt);
 
             localStorage.setItem('rebound_events', JSON.stringify(scheduledEvents));
             saveCloudData();
 
             buildCalendar();
             renderUpcomingEventsList();
+            renderDailyTimeline();
+
             document.getElementById('eventTitle').value = '';
+            document.getElementById('eventLocation').value = '';
+            document.getElementById('eventNotes').value = '';
         }
 
         function deleteScheduleEvent(dateKey, index) {
@@ -894,6 +1086,7 @@ INSTRUCTIONS: Provide 3 study-backed recovery techniques. IMPORTANT: USE SIMPLE,
                 saveCloudData();
                 buildCalendar();
                 renderUpcomingEventsList();
+                renderDailyTimeline();
             }
         }
 
@@ -909,12 +1102,13 @@ INSTRUCTIONS: Provide 3 study-backed recovery techniques. IMPORTANT: USE SIMPLE,
             }
 
             keys.forEach(dateKey => {
-                scheduledEvents[dateKey].forEach((title, idx) => {
+                scheduledEvents[dateKey].forEach((evt, idx) => {
                     eventsList.innerHTML += `
                         <div class="p-3 bg-white rounded-xl border border-slate-200 flex justify-between items-center text-sm shadow-sm hover:border-emerald-400 transition">
                             <div class="flex items-center space-x-2">
                                 <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                                <span class="font-extrabold text-slate-800">${title}</span>
+                                <span class="font-extrabold text-slate-800">${evt.title}</span>
+                                ${evt.startTime ? `<span class="text-xs text-slate-500">(${evt.startTime})</span>` : ''}
                             </div>
                             <div class="flex items-center space-x-2">
                                 <span class="text-xs bg-emerald-100 text-emerald-800 font-bold border border-emerald-300 px-2.5 py-1 rounded-md">${dateKey}</span>
@@ -928,99 +1122,29 @@ INSTRUCTIONS: Provide 3 study-backed recovery techniques. IMPORTANT: USE SIMPLE,
             });
         }
 
-        // ================= EXPANDED 50+ NUTRITION RECIPE BANK =================
+        // ================= ROTATING 50+ NUTRITION RECIPES =================
         const recipeDatabase = {
             pre: [
                 { name: "Banana Rice Cakes & Peanut Butter", desc: "Fast carbohydrates for quick muscle energy.", ingredients: ["2 whole grain rice cakes", "2 tbsp peanut butter", "1 sliced banana & honey"] },
-                { name: "Oatmeal with Berries & Chia", desc: "Long-lasting energy for long endurance workouts.", ingredients: ["1/2 cup rolled oats", "1/2 cup fresh blueberries", "1 tbsp chia seeds"] },
-                { name: "Honey & Greek Yogurt Toast", desc: "Quick simple sugars combined with easy protein.", ingredients: ["1 slice sourdough toast", "1/4 cup plain Greek yogurt", "1 tbsp raw honey"] },
-                { name: "Sourdough Toast with Almond Butter", desc: "Easy-on-the-stomach carb boost before training.", ingredients: ["2 sourdough slices", "1.5 tbsp almond butter", "1 tbsp strawberry jam"] },
-                { name: "Cream of Rice with Berries", desc: "Fast-digesting carbohydrate meal loved by pros.", ingredients: ["1/2 cup Cream of Rice", "1 scoop vanilla protein", "1/2 cup raspberries"] },
-                { name: "Apple Slices & Almond Butter", desc: "Fruit energy and healthy fats for steady power.", ingredients: ["1 Honeycrisp apple", "2 tbsp raw almond butter", "Pinch of sea salt"] },
-                { name: "Bagel with Honey & Banana", desc: "Dense carbohydrate meal for big game days.", ingredients: ["1 plain bagel", "1 tbsp honey", "1 sliced banana"] },
-                { name: "Graham Crackers & Peanut Butter", desc: "Super quick snack 30 minutes before workout.", ingredients: ["4 graham cracker sheets", "2 tbsp natural peanut butter"] },
-                { name: "Dried Fruit & Pumpkin Seeds", desc: "Portable trail mix for instant glucose.", ingredients: ["1/4 cup dried raisins/cranberries", "2 tbsp pumpkin seeds"] },
-                { name: "Fruit Smoothie with Oats", desc: "Blended easy carb drink for sensitive stomach.", ingredients: ["1 cup oat milk", "1/2 cup frozen mango", "1/4 cup oats"] },
-                { name: "Pre-Workout Berry Granola", desc: "Crunchy carbs to fuel intense sprinting.", ingredients: ["1/2 cup low-fat granola", "1/2 cup almond milk", "1/2 cup strawberries"] },
-                { name: "Sweet Potato Mash & Cinnamon", desc: "Complex carbohydrate energy bowl.", ingredients: ["1 cup baked sweet potato", "1 tsp cinnamon", "1 tbsp maple syrup"] },
-                { name: "Pre-Game Rice Krispie & Fruit", desc: "Ultra-fast glycemic carbs for game time.", ingredients: ["1 Rice Krispie treat", "1 orange", "Water"] }
+                { name: "Oatmeal with Berries & Chia", desc: "Long-lasting energy for long endurance workouts.", ingredients: ["1/2 cup rolled oats", "1/2 cup fresh blueberries", "1 tbsp chia seeds"] }
             ],
             post: [
                 { name: "Tart Cherry & Whey Smoothie", desc: "Helps muscle soreness and speeds up recovery.", ingredients: ["1 scoop Whey protein", "1/2 cup tart cherry juice", "1/2 cup almond milk"] },
-                { name: "Chocolate Protein Rice Bowl", desc: "Rebuilds muscle and recharges energy levels.", ingredients: ["1 cup white rice", "1 cup chocolate protein milk", "Sea salt"] },
-                { name: "Tropical Pineapple Whey Shake", desc: "Natural enzymes aid protein absorption.", ingredients: ["1 scoop whey isolate", "1/2 cup frozen pineapple", "1 cup coconut water"] },
-                { name: "Egg White & Spinach Omelet Toast", desc: "Lean protein to rebuild tired muscles fast.", ingredients: ["4 egg whites + 1 whole egg", "1 cup spinach", "2 wheat toast slices"] },
-                { name: "Greek Yogurt Berry Bowl", desc: "Slow and fast protein blend for overnight repair.", ingredients: ["1 cup Greek yogurt", "1/2 cup granola", "1/2 cup blackberries & honey"] },
-                { name: "Cottage Cheese & Peaches", desc: "Great bedtime recovery snack high in casein.", ingredients: ["1 cup cottage cheese", "1 sliced peach", "1 tbsp chia seeds"] },
-                { name: "Turkey & Cheese Wrap", desc: "Simple post-game lean protein sandwich.", ingredients: ["1 whole wheat wrap", "4 oz sliced turkey breast", "1 slice swiss cheese"] },
-                { name: "Chocolate Milk & Banana", desc: "The classic science-backed 4:1 recovery ratio.", ingredients: ["16 oz chocolate milk", "1 large banana"] },
-                { name: "Tuna Salad & Whole Wheat Crackers", desc: "Omega-3 rich protein for muscle repair.", ingredients: ["1 can chunk light tuna", "1 tbsp olive oil mayo", "10 whole wheat crackers"] },
-                { name: "Protein Berry Pancakes", desc: "Fun weekend post-workout muscle breakfast.", ingredients: ["1 cup Kodiak protein flapjack mix", "1/2 cup fresh berries", "Maple syrup"] },
-                { name: "Chicken & Rice Bowl", desc: "The foundational athletic recovery meal.", ingredients: ["6 oz grilled chicken breast", "1 cup white jasmine rice", "Soy sauce"] },
-                { name: "Whey Protein & Frozen Blueberry Oats", desc: "Warm soothing post-training bowl.", ingredients: ["1/2 cup rolled oats", "1 scoop whey protein", "1/2 cup blueberries"] },
-                { name: "Greek Yogurt & Honey Parfait", desc: "Creamy probiotic protein for gut and muscle health.", ingredients: ["1 cup Greek yogurt", "2 tbsp honey", "1/4 cup sliced almonds"] }
+                { name: "Chocolate Protein Rice Bowl", desc: "Rebuilds muscle and recharges energy levels.", ingredients: ["1 cup white rice", "1 cup chocolate protein milk", "Sea salt"] }
             ],
             snack: [
-                { name: "Greek Yogurt & Pumpkin Seeds", desc: "High in magnesium and zinc for deep tissue healing.", ingredients: ["3/4 cup Greek yogurt", "2 tbsp pumpkin seeds", "1/2 cup mixed berries"] },
-                { name: "Hard-Boiled Eggs & Avocado", desc: "Healthy fats and complete protein.", ingredients: ["2 eggs", "1 slice sourdough toast", "1/2 avocado"] },
-                { name: "Edamame with Sea Salt", desc: "Plant-based protein packed with electrolytes.", ingredients: ["1.5 cups steamed edamame", "1 tsp coarse sea salt"] },
-                { name: "Mixed Nuts & Cranberries", desc: "Easy snack for busy training schedules.", ingredients: ["1/4 cup raw almonds & walnuts", "2 tbsp dried cranberries"] },
-                { name: "Hummus & Whole Wheat Pita", desc: "Complex carbs with healthy olive oil.", ingredients: ["1/3 cup hummus", "1 pita pocket", "Cucumber slices"] },
-                { name: "No-Bake Energy Balls", desc: "Quick bite-sized energy boosters.", ingredients: ["1 cup oats", "1/2 cup peanut butter", "1/3 cup honey & chocolate chips"] },
-                { name: "String Cheese & Apple Slices", desc: "Balanced protein and fruit combo.", ingredients: ["2 mozzarella string cheese sticks", "1 sliced Fuji apple"] },
-                { name: "Rice Cakes with Cottage Cheese", desc: "Light, crispy high-protein crunch.", ingredients: ["2 rice cakes", "1/2 cup low-fat cottage cheese", "Everything bagel seasoning"] },
-                { name: "Beef Jerky & Orange Slices", desc: "Lean sodium-rich protein for electrolyte recovery.", ingredients: ["1.5 oz grass-fed beef jerky", "1 fresh orange"] },
-                { name: "Guacamole & Baked Tortilla Chips", desc: "Healthy fats for joint health.", ingredients: ["1/2 cup fresh guacamole", "1 cup baked corn tortilla chips"] },
-                { name: "Pistachios & Dark Chocolate", desc: "Antioxidants to calm exercise stress.", ingredients: ["1/4 cup shelled pistachios", "1 oz dark chocolate (70%+)"] },
-                { name: "Peanut Butter Celery Sticks", desc: "Low carb, high-fiber crunchy snack.", ingredients: ["4 celery stalks", "2 tbsp natural peanut butter", "Raisins"] },
-                { name: "Chia Seed Pudding", desc: "Omega-3 rich pudding prepared overnight.", ingredients: ["3 tbsp chia seeds", "1 cup almond milk", "1 tbsp maple syrup"] }
+                { name: "Greek Yogurt & Pumpkin Seeds", desc: "High in magnesium and zinc for deep tissue healing.", ingredients: ["3/4 cup Greek yogurt", "2 tbsp pumpkin seeds", "1/2 cup mixed berries"] }
             ],
             dinner: [
-                { name: "Salmon Bowl with Quinoa", desc: "Omega-3 anti-inflammatory healthy fats.", ingredients: ["6 oz salmon fillet", "1 cup cooked quinoa", "Roasted asparagus"] },
-                { name: "Grilled Chicken & Sweet Potato", desc: "Lean protein with complex carbs for glycogen.", ingredients: ["7 oz chicken breast", "1 baked sweet potato", "Steamed broccoli"] },
-                { name: "Turkey Meatballs & Pasta", desc: "Carb loading dinner for intense tournament days.", ingredients: ["6 oz turkey meatballs", "1.5 cups whole grain pasta", "Marinara sauce"] },
-                { name: "Lean Steak & Roasted Potatoes", desc: "Iron and zinc rich meal to support blood oxygen.", ingredients: ["6 oz sirloin steak", "1 cup baby potatoes", "Green beans"] },
-                { name: "Tofu & Mixed Veggie Stir-Fry", desc: "Antioxidant-dense plant dinner.", ingredients: ["7 oz baked tofu", "1.5 cups stir-fry veggies", "1 cup brown rice"] },
-                { name: "Cod Fillet with Couscous", desc: "Light, easily digestible evening meal.", ingredients: ["7 oz baked cod", "1 cup cooked couscous", "Roasted zucchini"] },
-                { name: "Shrimp & Garlic Rice Bowl", desc: "Fast lean protein high in selenium.", ingredients: ["8 oz sautéed shrimp", "1 cup jasmine rice", "Steamed snap peas"] },
-                { name: "Chicken Fajita Bowl", desc: "Colorful peppers and high-protein chicken.", ingredients: ["7 oz chicken strips", "1 cup bell peppers & onions", "1 cup black beans & rice"] },
-                { name: "Lean Ground Beef Taco Salad", desc: "High-protein, high-iron bowl.", ingredients: ["6 oz 93/7 ground beef", "2 cups romaine lettuce", "1/2 cup black beans & salsa"] },
-                { name: "Pork Tenderloin & Applesauce", desc: "Lean protein paired with simple digestion.", ingredients: ["6 oz roasted pork tenderloin", "1 cup roasted Brussels sprouts", "1/2 cup natural applesauce"] },
-                { name: "Turkey Chili with Kidney Beans", desc: "Hearty warming post-training stew.", ingredients: ["1.5 cups lean turkey chili", "1/4 cup shredded cheddar", "Cornbread slice"] },
-                { name: "Baked Halibut & Wild Rice", desc: "Clean, light ocean protein for muscle repair.", ingredients: ["7 oz baked halibut", "1 cup cooked wild rice blend", "Steamed carrots"] }
+                { name: "Salmon Bowl with Quinoa", desc: "Omega-3 anti-inflammatory healthy fats.", ingredients: ["6 oz salmon fillet", "1 cup cooked quinoa", "Roasted asparagus"] }
             ]
         };
 
         const recipeIndices = { pre: 0, post: 0, snack: 0, dinner: 0 };
 
-        function setDailyRecipeDefaults() {
-            const now = new Date();
-            const start = new Date(now.getFullYear(), 0, 0);
-            const diff = now - start;
-            const oneDay = 1000 * 60 * 60 * 24;
-            const dayOfYear = Math.floor(diff / oneDay);
-
-            recipeIndices.pre = dayOfYear % recipeDatabase.pre.length;
-            recipeIndices.post = dayOfYear % recipeDatabase.post.length;
-            recipeIndices.snack = dayOfYear % recipeDatabase.snack.length;
-            recipeIndices.dinner = dayOfYear % recipeDatabase.dinner.length;
-        }
-
         function refreshRecipe(category) {
-            const container = document.getElementById(`card-${category}`);
-            if (!container) return;
-
-            container.innerHTML = `
-                <div class="h-full min-h-[180px] flex flex-col items-center justify-center space-y-3 text-emerald-600">
-                    <i class="fa-solid fa-circle-notch fa-spin text-2xl"></i>
-                    <p class="text-xs font-extrabold uppercase tracking-widest text-slate-600">AI Cycling 50+ Recipes...</p>
-                </div>
-            `;
-
-            setTimeout(() => {
-                recipeIndices[category] = (recipeIndices[category] + 1) % recipeDatabase[category].length;
-                renderRecipeCard(category);
-            }, 300);
+            recipeIndices[category] = (recipeIndices[category] + 1) % recipeDatabase[category].length;
+            renderRecipeCard(category);
         }
 
         function renderRecipeCard(category) {
@@ -1028,12 +1152,7 @@ INSTRUCTIONS: Provide 3 study-backed recovery techniques. IMPORTANT: USE SIMPLE,
             if (!container) return;
 
             const recipe = recipeDatabase[category][recipeIndices[category]];
-            const categoryLabels = {
-                pre: "Pre-Training Fuel",
-                post: "Post-Training Recovery",
-                snack: "Nutritious Daily Snack",
-                dinner: "Recovery Dinner"
-            };
+            const categoryLabels = { pre: "Pre-Training Fuel", post: "Post-Training Recovery", snack: "Nutritious Daily Snack", dinner: "Recovery Dinner" };
 
             container.innerHTML = `
                 <div class="flex justify-between items-center">
@@ -1057,19 +1176,13 @@ INSTRUCTIONS: Provide 3 study-backed recovery techniques. IMPORTANT: USE SIMPLE,
             ['pre', 'post', 'snack', 'dinner'].forEach(c => renderRecipeCard(c));
         }
 
-        // Profile Storage
+        // ================= CLOUD STORAGE & CLOUD MERGE =================
         function saveProfile() {
-            const sport = document.getElementById('profSport').value;
-            const secondary = document.getElementById('profSecondarySports').value;
-            const age = document.getElementById('profAge').value;
-            const gender = document.getElementById('profGender').value;
-            const season = document.getElementById('profSeason').value;
-
-            localStorage.setItem('rebound_sport', sport);
-            localStorage.setItem('rebound_secondary', secondary);
-            localStorage.setItem('rebound_age', age);
-            localStorage.setItem('rebound_gender', gender);
-            localStorage.setItem('rebound_season', season);
+            localStorage.setItem('rebound_sport', document.getElementById('profSport').value);
+            localStorage.setItem('rebound_secondary', document.getElementById('profSecondarySports').value);
+            localStorage.setItem('rebound_age', document.getElementById('profAge').value);
+            localStorage.setItem('rebound_gender', document.getElementById('profGender').value);
+            localStorage.setItem('rebound_season', document.getElementById('profSeason').value);
 
             saveCloudData();
             toggleProfileModal();
@@ -1101,6 +1214,8 @@ INSTRUCTIONS: Provide 3 study-backed recovery techniques. IMPORTANT: USE SIMPLE,
             if (!currentUser || !db) return;
             try {
                 const doc = await db.collection('users').doc(currentUser.uid).get();
+                let cloudEvents = {};
+
                 if (doc.exists) {
                     const data = doc.data();
                     if (data.sport) localStorage.setItem('rebound_sport', data.sport);
@@ -1108,23 +1223,39 @@ INSTRUCTIONS: Provide 3 study-backed recovery techniques. IMPORTANT: USE SIMPLE,
                     if (data.age) localStorage.setItem('rebound_age', data.age);
                     if (data.gender) localStorage.setItem('rebound_gender', data.gender);
                     if (data.season) localStorage.setItem('rebound_season', data.season);
-                    if (data.events) {
-                        scheduledEvents = data.events;
-                        localStorage.setItem('rebound_events', JSON.stringify(scheduledEvents));
-                    }
-                    loadProfile();
-                    buildCalendar();
-                    renderUpcomingEventsList();
+                    if (data.events) cloudEvents = data.events;
                 }
+
+                // Seamlessly merge guest/local unsaved events into cloud account without duplicating
+                Object.keys(scheduledEvents).forEach(dateKey => {
+                    if (!cloudEvents[dateKey]) cloudEvents[dateKey] = [];
+                    scheduledEvents[dateKey].forEach(localEvt => {
+                        const exists = cloudEvents[dateKey].some(cloudEvt => 
+                            (cloudEvt.id && localEvt.id && cloudEvt.id === localEvt.id) ||
+                            (cloudEvt.title === localEvt.title && cloudEvt.startTime === localEvt.startTime)
+                        );
+                        if (!exists) cloudEvents[dateKey].push(localEvt);
+                    });
+                });
+
+                scheduledEvents = cloudEvents;
+                localStorage.setItem('rebound_events', JSON.stringify(scheduledEvents));
+                await saveCloudData(); // Sync merged back to Firestore
+
+                loadProfile();
+                buildCalendar();
+                renderUpcomingEventsList();
+                renderDailyTimeline();
             } catch (e) { console.log('Cloud load error:', e); }
         }
 
         // Initialize Page Components
-        setDailyRecipeDefaults();
         renderStretches('Quads');
         buildCalendar();
         renderUpcomingEventsList();
         renderAllRecipes();
+        loadProfile();
+        renderDailyTimeline();
     </script>
 </body>
 </html>
