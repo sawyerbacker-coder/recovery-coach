@@ -97,13 +97,13 @@
             </div>
         </header>
 
-        <!-- Email Memory Banner when Logged In -->
-        <div id="accountBanner" class="hidden bg-emerald-900 text-white p-3 px-5 rounded-2xl flex items-center justify-between text-xs font-semibold shadow-sm">
-            <div class="flex items-center space-x-2">
-                <i class="fa-solid fa-cloud-check text-emerald-400 text-sm"></i>
-                <span>Cloud Sync Active: <strong id="userEmailDisplay" class="text-emerald-300"></strong></span>
+        <!-- Email Memory & Sync Banner when Logged In -->
+        <div id="accountBanner" class="hidden bg-emerald-900 text-white p-3 px-5 rounded-2xl flex items-center justify-between text-xs font-semibold shadow-sm transition-all duration-300">
+            <div class="flex items-center space-x-2.5">
+                <i id="syncIcon" class="fa-solid fa-cloud-check text-emerald-400 text-sm"></i>
+                <span id="syncText">Cloud Sync Active: <strong id="userEmailDisplay" class="text-emerald-300"></strong></span>
             </div>
-            <button onclick="handleSignOut()" class="text-slate-300 hover:text-white underline font-bold">Sign Out</button>
+            <button onclick="handleSignOut()" class="text-slate-300 hover:text-white underline font-bold ml-4">Sign Out</button>
         </div>
 
         <!-- Navigation Bar -->
@@ -548,6 +548,29 @@
         let auth, db, currentUser = null;
         let activeModalEventId = null;
 
+        // Visual Cloud Sync State Controller
+        function setSyncStatus(state) {
+            const syncIcon = document.getElementById('syncIcon');
+            const syncText = document.getElementById('syncText');
+            if (!syncIcon || !syncText) return;
+
+            const email = currentUser ? currentUser.email : '';
+
+            if (state === 'syncing') {
+                syncIcon.className = "fa-solid fa-cloud-arrow-up text-amber-300 text-sm animate-pulse";
+                syncText.innerHTML = `Saving changes to cloud... <strong class="text-amber-200">(${email})</strong>`;
+            } else if (state === 'synced') {
+                syncIcon.className = "fa-solid fa-cloud-check text-emerald-400 text-sm";
+                syncText.innerHTML = `Cloud Sync Active: <strong class="text-emerald-300">${email}</strong>`;
+            } else if (state === 'loading') {
+                syncIcon.className = "fa-solid fa-arrows-rotate text-emerald-300 text-sm fa-spin";
+                syncText.innerHTML = `Syncing cloud memory... <strong class="text-emerald-300">(${email})</strong>`;
+            } else if (state === 'error') {
+                syncIcon.className = "fa-solid fa-cloud-exclamation text-rose-400 text-sm";
+                syncText.innerHTML = `Sync error. Check network connection.`;
+            }
+        }
+
         // Date helper: returns YYYY-MM-DD in local time
         function getTodayDateString() {
             const d = new Date();
@@ -585,12 +608,11 @@
                 currentUser = user;
                 const authBtnText = document.getElementById('authBtnText');
                 const accountBanner = document.getElementById('accountBanner');
-                const userEmailDisplay = document.getElementById('userEmailDisplay');
 
                 if (user) {
                     authBtnText.textContent = user.email.split('@')[0];
-                    userEmailDisplay.textContent = user.email;
                     accountBanner.classList.remove('hidden');
+                    setSyncStatus('synced');
                     loadCloudData();
                 } else {
                     authBtnText.textContent = "Account Login";
@@ -870,7 +892,6 @@
             const savedDate = localStorage.getItem('rebound_checkin_date');
 
             if (savedDate === todayStr) {
-                // Same day: restore check-in form and recovery plan
                 try {
                     const checkInData = JSON.parse(localStorage.getItem('rebound_checkin_data'));
                     if (checkInData) {
@@ -889,7 +910,6 @@
                     document.getElementById('planOutput').innerHTML = formatRecoveryPlan(savedPlan);
                 }
             } else {
-                // Midnight passed or new day: Reset check-in form & recovery plan
                 localStorage.removeItem('rebound_checkin_date');
                 localStorage.removeItem('rebound_checkin_data');
                 localStorage.removeItem('rebound_generated_plan');
@@ -933,7 +953,6 @@
             const profGender = localStorage.getItem('rebound_gender') || 'Male';
             const profSeason = localStorage.getItem('rebound_season') || 'In-Season';
 
-            // Gather today's and upcoming scheduled calendar events
             const todayStr = getTodayDateString();
             const upcomingList = [];
             if (scheduledEvents) {
@@ -978,13 +997,12 @@ INSTRUCTIONS: Provide 3 highly specific, actionable, high-value athletic recover
 
                 const data = await response.json();
                 
-                // Store today's check-in data and plan locally
                 localStorage.setItem('rebound_checkin_date', todayStr);
                 localStorage.setItem('rebound_checkin_data', JSON.stringify(checkInPayload));
                 localStorage.setItem('rebound_generated_plan', data.plan);
 
                 planOutput.innerHTML = formatRecoveryPlan(data.plan);
-                saveCloudData(); // Sync to Firestore account
+                saveCloudData();
                 switchTab('protocol');
 
             } catch (err) {
@@ -1373,7 +1391,7 @@ INSTRUCTIONS: Provide 3 highly specific, actionable, high-value athletic recover
             ['pre', 'post', 'snack', 'dinner'].forEach(c => renderRecipeCard(c));
         }
 
-        // ================= CLOUD STORAGE & MERGE =================
+        // ================= CLOUD STORAGE & MERGE WITH VISUAL INDICATORS =================
         function saveProfile() {
             localStorage.setItem('rebound_sport', document.getElementById('profSport').value);
             localStorage.setItem('rebound_secondary', document.getElementById('profSecondarySports').value);
@@ -1395,6 +1413,8 @@ INSTRUCTIONS: Provide 3 highly specific, actionable, high-value athletic recover
 
         async function saveCloudData() {
             if (!currentUser || !db) return;
+            setSyncStatus('syncing');
+
             try {
                 let parsedCheckIn = null;
                 try {
@@ -1412,11 +1432,18 @@ INSTRUCTIONS: Provide 3 highly specific, actionable, high-value athletic recover
                     checkInData: parsedCheckIn,
                     generatedPlan: localStorage.getItem('rebound_generated_plan') || ''
                 }, { merge: true });
-            } catch (e) { console.log('Cloud sync error:', e); }
+
+                setTimeout(() => setSyncStatus('synced'), 600);
+            } catch (e) {
+                console.log('Cloud sync error:', e);
+                setSyncStatus('error');
+            }
         }
 
         async function loadCloudData() {
             if (!currentUser || !db) return;
+            setSyncStatus('loading');
+
             try {
                 const doc = await db.collection('users').doc(currentUser.uid).get();
                 let cloudEvents = {};
@@ -1424,17 +1451,14 @@ INSTRUCTIONS: Provide 3 highly specific, actionable, high-value athletic recover
                 if (doc.exists) {
                     const data = doc.data();
 
-                    // 1. Sync Athlete Bio
                     if (data.sport !== undefined) localStorage.setItem('rebound_sport', data.sport);
                     if (data.secondary !== undefined) localStorage.setItem('rebound_secondary', data.secondary);
                     if (data.age !== undefined) localStorage.setItem('rebound_age', data.age);
                     if (data.gender !== undefined) localStorage.setItem('rebound_gender', data.gender);
                     if (data.season !== undefined) localStorage.setItem('rebound_season', data.season);
 
-                    // 2. Sync Calendar Events
                     if (data.events) cloudEvents = data.events;
 
-                    // 3. Sync Check-In Data & Generated Recovery Plan
                     const todayStr = getTodayDateString();
                     if (data.checkInDate === todayStr) {
                         if (data.checkInDate) localStorage.setItem('rebound_checkin_date', data.checkInDate);
@@ -1443,7 +1467,6 @@ INSTRUCTIONS: Provide 3 highly specific, actionable, high-value athletic recover
                     }
                 }
 
-                // Seamlessly merge guest/local unsaved events into cloud account without duplicating
                 Object.keys(scheduledEvents).forEach(dateKey => {
                     if (!cloudEvents[dateKey]) cloudEvents[dateKey] = [];
                     scheduledEvents[dateKey].forEach(localEvt => {
@@ -1457,14 +1480,29 @@ INSTRUCTIONS: Provide 3 highly specific, actionable, high-value athletic recover
 
                 scheduledEvents = cloudEvents;
                 localStorage.setItem('rebound_events', JSON.stringify(scheduledEvents));
-                
-                await saveCloudData(); // Sync merged data back to Firestore
+
+                await db.collection('users').doc(currentUser.uid).set({
+                    sport: localStorage.getItem('rebound_sport') || '',
+                    secondary: localStorage.getItem('rebound_secondary') || '',
+                    age: localStorage.getItem('rebound_age') || '18',
+                    gender: localStorage.getItem('rebound_gender') || 'Male',
+                    season: localStorage.getItem('rebound_season') || 'In-Season Competition Phase',
+                    events: scheduledEvents,
+                    checkInDate: localStorage.getItem('rebound_checkin_date') || '',
+                    checkInData: localStorage.getItem('rebound_checkin_data') ? JSON.parse(localStorage.getItem('rebound_checkin_data')) : null,
+                    generatedPlan: localStorage.getItem('rebound_generated_plan') || ''
+                }, { merge: true });
 
                 loadProfile();
                 buildCalendar();
                 renderUpcomingEventsList();
                 checkAndApplyDailyCheckIn();
-            } catch (e) { console.log('Cloud load error:', e); }
+
+                setTimeout(() => setSyncStatus('synced'), 600);
+            } catch (e) {
+                console.log('Cloud load error:', e);
+                setSyncStatus('error');
+            }
         }
 
         // Initialize Page Components
