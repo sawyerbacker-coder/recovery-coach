@@ -430,7 +430,7 @@
                     </div>
                     <div>
                         <h3 class="text-lg font-extrabold text-slate-900">Account Access</h3>
-                        <p class="text-xs text-slate-500">Log in to permanently sync calendar & recovery data.</p>
+                        <p class="text-xs text-slate-500">Log in to permanently sync calendar, bio & recovery data.</p>
                     </div>
                 </div>
                 <button onclick="toggleAuthModal()" class="text-slate-400 hover:text-slate-700 p-2 text-lg">
@@ -452,7 +452,7 @@
                 <div class="pt-2 flex flex-col gap-2">
                     <button type="button" onclick="handleAuth('login')" class="w-full py-3.5 rounded-xl font-extrabold text-white bg-emerald-600 hover:bg-emerald-700 text-sm shadow-md flex items-center justify-center space-x-2">
                         <i class="fa-solid fa-right-to-bracket"></i>
-                        <span>Log In & Merge Local Calendar</span>
+                        <span>Log In & Merge Local Data</span>
                     </button>
                     <button type="button" onclick="handleAuth('signup')" class="w-full py-3 rounded-xl font-bold text-emerald-900 bg-emerald-100 hover:bg-emerald-200 text-sm">
                         Create New Email Account
@@ -548,6 +548,15 @@
         let auth, db, currentUser = null;
         let activeModalEventId = null;
 
+        // Date helper: returns YYYY-MM-DD in local time
+        function getTodayDateString() {
+            const d = new Date();
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
         let scheduledEvents = {};
         try {
             const saved = localStorage.getItem('rebound_events');
@@ -586,8 +595,10 @@
                 } else {
                     authBtnText.textContent = "Account Login";
                     accountBanner.classList.add('hidden');
+                    loadProfile();
                     buildCalendar();
                     renderUpcomingEventsList();
+                    checkAndApplyDailyCheckIn();
                 }
             });
         } catch (e) { console.log('Firebase init error:', e); }
@@ -621,10 +632,10 @@
             try {
                 if (mode === 'signup') {
                     await auth.createUserWithEmailAndPassword(email, password);
-                    alert(`Account created for ${email}! Calendar synced.`);
+                    alert(`Account created for ${email}! Calendar, Bio & Memory synced.`);
                 } else {
                     await auth.signInWithEmailAndPassword(email, password);
-                    alert(`Signed in as ${email}. Calendar merged to your account!`);
+                    alert(`Signed in as ${email}. Your data has been merged to your account!`);
                 }
                 toggleAuthModal();
             } catch (err) {
@@ -643,7 +654,7 @@
         function getEventStatus(evt) {
             if (evt.manualStatus) return evt.manualStatus;
 
-            const todayStr = new Date().toISOString().split('T')[0];
+            const todayStr = getTodayDateString();
             if (evt.date < todayStr) return 'completed';
             if (evt.date > todayStr) return 'upcoming';
 
@@ -827,7 +838,7 @@
 
         // ================= PARSER FOR CUSTOM RECOVERY PROTOCOL FORMATTING =================
         function formatRecoveryPlan(text) {
-            if (!text) return '<p class="text-slate-500 text-sm">No plan generated yet.</p>';
+            if (!text) return '<p class="text-slate-500 text-sm font-medium">Complete your Daily Check-In to generate today\'s customized protocol!</p>';
             
             let lines = text.split('\n');
             let html = '';
@@ -853,6 +864,49 @@
             return html;
         }
 
+        // ================= MIDNIGHT RESET & CHECK-IN PERSISTENCE =================
+        function checkAndApplyDailyCheckIn() {
+            const todayStr = getTodayDateString();
+            const savedDate = localStorage.getItem('rebound_checkin_date');
+
+            if (savedDate === todayStr) {
+                // Same day: restore check-in form and recovery plan
+                try {
+                    const checkInData = JSON.parse(localStorage.getItem('rebound_checkin_data'));
+                    if (checkInData) {
+                        if (checkInData.activity) document.getElementById('activity').value = checkInData.activity;
+                        if (checkInData.effort) document.getElementById('effort').value = checkInData.effort;
+                        if (checkInData.sleep) document.getElementById('sleep').value = checkInData.sleep;
+                        if (checkInData.sore) document.getElementById('sore').value = checkInData.sore;
+                        if (checkInData.area) document.getElementById('area').value = checkInData.area;
+                        if (checkInData.stress) document.getElementById('stress').value = checkInData.stress;
+                        renderStretches(checkInData.area || 'Quads');
+                    }
+                } catch(e) {}
+
+                const savedPlan = localStorage.getItem('rebound_generated_plan');
+                if (savedPlan) {
+                    document.getElementById('planOutput').innerHTML = formatRecoveryPlan(savedPlan);
+                }
+            } else {
+                // Midnight passed or new day: Reset check-in form & recovery plan
+                localStorage.removeItem('rebound_checkin_date');
+                localStorage.removeItem('rebound_checkin_data');
+                localStorage.removeItem('rebound_generated_plan');
+
+                document.getElementById('activity').value = '';
+                document.getElementById('effort').value = '2';
+                document.getElementById('sleep').value = '7.5';
+                document.getElementById('sore').value = '2';
+                document.getElementById('area').value = 'Quads';
+                document.getElementById('stress').value = '2';
+
+                document.getElementById('planOutput').innerHTML = `
+                    <p class="text-slate-500 text-sm font-medium">Complete your Daily Check-In to generate today's customized protocol!</p>
+                `;
+            }
+        }
+
         // ================= FORM SUBMIT & AI INTEGRATION =================
         const form = document.getElementById('recoveryForm');
         const submitBtn = document.getElementById('submitBtn');
@@ -864,6 +918,15 @@
             const rawActivity = document.getElementById('activity').value;
             const areaVal = document.getElementById('area').value;
 
+            const checkInPayload = {
+                activity: rawActivity,
+                effort: document.getElementById('effort').value,
+                sleep: document.getElementById('sleep').value,
+                sore: document.getElementById('sore').value,
+                area: areaVal,
+                stress: document.getElementById('stress').value
+            };
+
             const profSport = localStorage.getItem('rebound_sport') || 'Athlete';
             const profSecondary = localStorage.getItem('rebound_secondary') || 'None';
             const profAge = localStorage.getItem('rebound_age') || '18';
@@ -871,7 +934,7 @@
             const profSeason = localStorage.getItem('rebound_season') || 'In-Season';
 
             // Gather today's and upcoming scheduled calendar events
-            const todayStr = new Date().toISOString().split('T')[0];
+            const todayStr = getTodayDateString();
             const upcomingList = [];
             if (scheduledEvents) {
                 Object.keys(scheduledEvents).sort().forEach(dateKey => {
@@ -887,18 +950,18 @@
                 ? `SCHEDULED EVENTS: ${upcomingList.slice(0, 4).join(' | ')}. Adjust recovery focus specifically around these games/events!` 
                 : 'SCHEDULED EVENTS: None logged on calendar.';
 
-            const multiSportContext = `Workout Today: ${rawActivity}. Effort: ${document.getElementById('effort').value}/3, Sleep: ${document.getElementById('sleep').value} hrs, Soreness: ${document.getElementById('sore').value}/3 on ${areaVal}, Stress: ${document.getElementById('stress').value}/3.
+            const multiSportContext = `Workout Today: ${rawActivity}. Effort: ${checkInPayload.effort}/3, Sleep: ${checkInPayload.sleep} hrs, Soreness: ${checkInPayload.sore}/3 on ${areaVal}, Stress: ${checkInPayload.stress}/3.
 [ATHLETE BIO: Primary Sport: ${profSport} | Secondary: ${profSecondary} | Age: ${profAge} | Phase: ${profSeason}]. 
 [${eventContext}].
 INSTRUCTIONS: Provide 3 highly specific, actionable, high-value athletic recovery strategies tailored to this athlete's workout, soreness, and upcoming calendar. DO NOT give generic advice like "drink water" or "get rest". Instead, provide specific athletic recovery techniques (e.g. targeted myofascial release, magnesium/sodium rehydration, parasympathetic downregulation, active contrast recovery). Write in clear, athletic, youth-friendly language. Format each title like "1. Strategy Name" on its own line.`;
 
             const payload = {
                 activity: multiSportContext,
-                effort: document.getElementById('effort').value,
-                sleep: document.getElementById('sleep').value,
-                sore: document.getElementById('sore').value,
+                effort: checkInPayload.effort,
+                sleep: checkInPayload.sleep,
+                sore: checkInPayload.sore,
                 area: areaVal,
-                stress: document.getElementById('stress').value
+                stress: checkInPayload.stress
             };
 
             renderStretches(areaVal);
@@ -914,7 +977,14 @@ INSTRUCTIONS: Provide 3 highly specific, actionable, high-value athletic recover
                 });
 
                 const data = await response.json();
+                
+                // Store today's check-in data and plan locally
+                localStorage.setItem('rebound_checkin_date', todayStr);
+                localStorage.setItem('rebound_checkin_data', JSON.stringify(checkInPayload));
+                localStorage.setItem('rebound_generated_plan', data.plan);
+
                 planOutput.innerHTML = formatRecoveryPlan(data.plan);
+                saveCloudData(); // Sync to Firestore account
                 switchTab('protocol');
 
             } catch (err) {
@@ -1185,7 +1255,7 @@ INSTRUCTIONS: Provide 3 highly specific, actionable, high-value athletic recover
                 { name: "Dark Chocolate Covered Almonds", desc: "Sweet magnesium bite.", ingredients: ["1/4 cup dark chocolate almonds"] },
                 { name: "Sliced Pear with Goat Cheese", desc: "Gourmet fruit and fat pairing.", ingredients: ["1 sliced Bartlett pear", "1.5 oz goat cheese"] },
                 { name: "Dried Apricots & Raw Pecans", desc: "Potassium rich dried fruit mix.", ingredients: ["5 dried apricots", "10 pecan halves"] },
-                { name: "Air-Popped Popcorn with Nutritional Yeast", desc: "B-vitamin rich high volume snack.", ingredients:cmd = ["3 cups popped popcorn", "1 tbsp nutritional yeast", "Salt"] },
+                { name: "Air-Popped Popcorn with Nutritional Yeast", desc: "B-vitamin rich high volume snack.", ingredients: ["3 cups popped popcorn", "1 tbsp nutritional yeast", "Salt"] },
                 { name: "Frozen Yogurt Bark with Berries", desc: "Refreshing frozen protein snack.", ingredients: ["3/4 cup Greek yogurt spread thin", "Handful blueberries", "Frozen"] },
                 { name: "Apple Slices with Sharp Cheddar Cheese", desc: "Classic sweet and savory pair.", ingredients: ["1 Honeycrisp apple", "1.5 oz sharp cheddar cheese"] },
                 { name: "Smoked Salmon Bites on Cucumber Slices", desc: "Low-carb omega-3 bites.", ingredients: ["2 oz smoked salmon", "1/2 cucumber sliced", "Dill"] },
@@ -1326,14 +1396,22 @@ INSTRUCTIONS: Provide 3 highly specific, actionable, high-value athletic recover
         async function saveCloudData() {
             if (!currentUser || !db) return;
             try {
+                let parsedCheckIn = null;
+                try {
+                    parsedCheckIn = JSON.parse(localStorage.getItem('rebound_checkin_data'));
+                } catch(e){}
+
                 await db.collection('users').doc(currentUser.uid).set({
-                    sport: localStorage.getItem('rebound_sport'),
-                    secondary: localStorage.getItem('rebound_secondary'),
-                    age: localStorage.getItem('rebound_age'),
-                    gender: localStorage.getItem('rebound_gender'),
-                    season: localStorage.getItem('rebound_season'),
-                    events: scheduledEvents
-                });
+                    sport: localStorage.getItem('rebound_sport') || '',
+                    secondary: localStorage.getItem('rebound_secondary') || '',
+                    age: localStorage.getItem('rebound_age') || '18',
+                    gender: localStorage.getItem('rebound_gender') || 'Male',
+                    season: localStorage.getItem('rebound_season') || 'In-Season Competition Phase',
+                    events: scheduledEvents,
+                    checkInDate: localStorage.getItem('rebound_checkin_date') || '',
+                    checkInData: parsedCheckIn,
+                    generatedPlan: localStorage.getItem('rebound_generated_plan') || ''
+                }, { merge: true });
             } catch (e) { console.log('Cloud sync error:', e); }
         }
 
@@ -1345,14 +1423,27 @@ INSTRUCTIONS: Provide 3 highly specific, actionable, high-value athletic recover
 
                 if (doc.exists) {
                     const data = doc.data();
-                    if (data.sport) localStorage.setItem('rebound_sport', data.sport);
-                    if (data.secondary) localStorage.setItem('rebound_secondary', data.secondary);
-                    if (data.age) localStorage.setItem('rebound_age', data.age);
-                    if (data.gender) localStorage.setItem('rebound_gender', data.gender);
-                    if (data.season) localStorage.setItem('rebound_season', data.season);
+
+                    // 1. Sync Athlete Bio
+                    if (data.sport !== undefined) localStorage.setItem('rebound_sport', data.sport);
+                    if (data.secondary !== undefined) localStorage.setItem('rebound_secondary', data.secondary);
+                    if (data.age !== undefined) localStorage.setItem('rebound_age', data.age);
+                    if (data.gender !== undefined) localStorage.setItem('rebound_gender', data.gender);
+                    if (data.season !== undefined) localStorage.setItem('rebound_season', data.season);
+
+                    // 2. Sync Calendar Events
                     if (data.events) cloudEvents = data.events;
+
+                    // 3. Sync Check-In Data & Generated Recovery Plan
+                    const todayStr = getTodayDateString();
+                    if (data.checkInDate === todayStr) {
+                        if (data.checkInDate) localStorage.setItem('rebound_checkin_date', data.checkInDate);
+                        if (data.checkInData) localStorage.setItem('rebound_checkin_data', JSON.stringify(data.checkInData));
+                        if (data.generatedPlan) localStorage.setItem('rebound_generated_plan', data.generatedPlan);
+                    }
                 }
 
+                // Seamlessly merge guest/local unsaved events into cloud account without duplicating
                 Object.keys(scheduledEvents).forEach(dateKey => {
                     if (!cloudEvents[dateKey]) cloudEvents[dateKey] = [];
                     scheduledEvents[dateKey].forEach(localEvt => {
@@ -1366,11 +1457,13 @@ INSTRUCTIONS: Provide 3 highly specific, actionable, high-value athletic recover
 
                 scheduledEvents = cloudEvents;
                 localStorage.setItem('rebound_events', JSON.stringify(scheduledEvents));
-                await saveCloudData();
+                
+                await saveCloudData(); // Sync merged data back to Firestore
 
                 loadProfile();
                 buildCalendar();
                 renderUpcomingEventsList();
+                checkAndApplyDailyCheckIn();
             } catch (e) { console.log('Cloud load error:', e); }
         }
 
@@ -1380,6 +1473,7 @@ INSTRUCTIONS: Provide 3 highly specific, actionable, high-value athletic recover
         renderUpcomingEventsList();
         renderAllRecipes();
         loadProfile();
+        checkAndApplyDailyCheckIn();
     </script>
 </body>
 </html>
