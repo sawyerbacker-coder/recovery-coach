@@ -114,7 +114,7 @@
             </button>
             <button onclick="switchTab('protocol')" id="tab-btn-protocol" class="tab-btn flex items-center justify-center space-x-2 py-3 px-3 text-xs md:text-sm font-bold text-slate-600 hover:text-slate-900">
                 <i class="fa-solid fa-person-stretching"></i>
-                <span>Plan & Stretches</span>
+                <span>Plan & Mobility</span>
             </button>
             <button onclick="switchTab('schedule')" id="tab-btn-schedule" class="tab-btn flex items-center justify-center space-x-2 py-3 px-3 text-xs md:text-sm font-bold text-slate-600 hover:text-slate-900">
                 <i class="fa-solid fa-calendar-days"></i>
@@ -136,7 +136,7 @@
                     </div>
                     <div>
                         <h2 class="text-xl font-extrabold text-slate-900">Daily Training Check-In</h2>
-                        <p class="text-xs text-slate-500 font-medium">Log today's workout to generate clear, actionable recovery steps.</p>
+                        <p class="text-xs text-slate-500 font-medium">Log today's workout to generate clear, actionable recovery steps tailored to upcoming games.</p>
                     </div>
                 </div>
 
@@ -213,7 +213,7 @@
             </div>
         </section>
 
-        <!-- ================= TAB 2: PLAN & STRETCHES ================= -->
+        <!-- ================= TAB 2: PLAN & MOBILITY ================= -->
         <section id="tab-protocol" class="tab-content hidden space-y-6">
             
             <div class="fluid-card p-6 md:p-8 space-y-4 border-l-4 border-emerald-600">
@@ -224,10 +224,10 @@
                         </div>
                         <div>
                             <h2 class="text-xl font-extrabold text-slate-900">Custom Recovery Protocol</h2>
-                            <p class="text-xs text-slate-500 font-medium">Science-backed instructions tailored to your bio & soreness</p>
+                            <p class="text-xs text-slate-500 font-medium">Science-backed instructions tailored to your bio, schedule & upcoming events</p>
                         </div>
                     </div>
-                    <span class="text-xs bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1 rounded-full border border-emerald-300">AI Sports Bio</span>
+                    <span class="text-xs bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1 rounded-full border border-emerald-300">AI Event-Aware</span>
                 </div>
 
                 <hr class="border-slate-200">
@@ -246,10 +246,10 @@
                         </div>
                         <div>
                             <h2 class="text-xl font-extrabold text-slate-900">Targeted Mobility Routine</h2>
-                            <p class="text-xs text-slate-500 font-medium" id="stretchTargetText">Clear step-by-step form cues for optimal relief</p>
+                            <p class="text-xs text-slate-500 font-medium" id="stretchTargetText">Clear anatomical focus & form alignment cues</p>
                         </div>
                     </div>
-                    <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full border border-emerald-300">Form Cues</span>
+                    <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full border border-emerald-300">Pro Cues</span>
                 </div>
 
                 <div id="stretchingCardsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -268,7 +268,7 @@
                         </div>
                         <div>
                             <h2 class="text-xl font-extrabold text-slate-900">Training & Event Calendar</h2>
-                            <p class="text-xs text-slate-500 font-medium">Synced to your email memory across all devices</p>
+                            <p class="text-xs text-slate-500 font-medium">Synced to your cloud account across all devices</p>
                         </div>
                     </div>
                     <span id="currentMonthYear" class="text-sm font-extrabold text-emerald-700"></span>
@@ -308,14 +308,17 @@
         <!-- ================= TAB 4: NUTRITION ================= -->
         <section id="tab-nutrition" class="tab-content hidden space-y-6">
             <div class="fluid-card p-6 md:p-8 space-y-6">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
-                        <i class="fa-solid fa-utensils text-lg"></i>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
+                            <i class="fa-solid fa-utensils text-lg"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-extrabold text-slate-900">Performance Nutrition Hub</h2>
+                            <p class="text-xs text-slate-500 font-medium">Daily rotating recipes + click <strong>AI Refresh 🔄</strong> for fresh options!</p>
+                        </div>
                     </div>
-                    <div>
-                        <h2 class="text-xl font-extrabold text-slate-900">Performance Nutrition Hub</h2>
-                        <p class="text-xs text-slate-500 font-medium">Click <strong>AI Refresh 🔄</strong> to cycle through meal options!</p>
-                    </div>
+                    <span class="text-xs bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1 rounded-full border border-emerald-300">Daily Auto-Update</span>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -381,7 +384,7 @@
                     </div>
                     <div>
                         <h3 class="text-lg font-extrabold text-slate-900">Multi-Sport Athlete Bio</h3>
-                        <p class="text-xs text-slate-500">Saved to your email account and injected into AI prompts.</p>
+                        <p class="text-xs text-slate-500">Saved to your account and injected into AI recovery prompts.</p>
                     </div>
                 </div>
                 <button onclick="toggleProfileModal()" class="text-slate-400 hover:text-slate-700 p-2 text-lg">
@@ -443,9 +446,9 @@
 
     <!-- Application Script -->
     <script>
-        // YOUR EXACT FIREBASE KEYS (UPDATED)
+        // FIREBASE CONFIGURATION
         const firebaseConfig = {
-            apiKey: "AIzaSyBoUAlsqAR3vAdFzfYRcZBKjy6FwI40OxI",
+            apiKey: "AIzaSyBoUAlsqAR3vAdFzFYRcZBKjy6FwI40OxI",
             authDomain: "rebound-recovery-coach.firebaseapp.com",
             projectId: "rebound-recovery-coach",
             storageBucket: "rebound-recovery-coach.firebasestorage.app",
@@ -526,53 +529,64 @@
             }
         }
 
-        // ================= CLEAN, HIGH-END POSE CARDS (NO STICK FIGURES) =================
+        // ================= ENHANCED STRETCH & MOBILITY LIBRARY =================
         const stretchLibrary = {
             'Quads': [
                 {
                     name: 'Standing Quad Pull',
                     duration: '45 sec / leg',
                     focus: 'Quadriceps & Hip Flexors',
+                    targetMuscle: 'Rectus Femoris & Vastus Lateralis',
                     icon: 'fa-person-walking-arrow-right',
-                    steps: ['Stand tall near a wall or chair for balance.', 'Pull heel directly toward glutes with your hand.', 'Keep knees aligned and squeeze core to protect lower back.']
+                    proTip: 'Keep knees touching & tuck pelvis slightly to avoid back hyperextension.',
+                    steps: ['Stand upright holding a wall or chair for stability.', 'Reach back and pull heel directly toward your glute.', 'Squeeze core and glutes to maximize the anterior hip stretch.']
                 },
                 {
                     name: 'Kneeling Couch Stretch',
                     duration: '60 sec / leg',
-                    focus: 'Deep Hip Flexors & Rectus Femoris',
+                    focus: 'Deep Hip Flexors & Psoas',
+                    targetMuscle: 'Iliopsoas & Rectus Femoris',
                     icon: 'fa-drumstick-bite',
-                    focusTag: 'High Impact Relief',
-                    steps: ['Place rear foot elevated against a wall or box.', 'Lower knee onto a padded cushion or mat.', 'Drive torso upright to open up tight anterior thigh muscles.']
+                    proTip: 'Contract rear glute hard throughout the stretch to release tight hip flexors.',
+                    steps: ['Place rear shin against a wall or couch with knee on a mat.', 'Step front foot out into a lunge position.', 'Raise torso upright, maintaining a neutral spine and tight core.']
                 },
                 {
                     name: 'Targeted Quad Foam Roll',
                     duration: '90 sec total',
-                    focus: 'Muscle Tissue Myofascial Release',
+                    focus: 'Myofascial Tissue Release',
+                    targetMuscle: 'Quadriceps Femoris Group',
                     icon: 'fa-mattress-pillow',
-                    steps: ['Lie face down with foam roller under your upper thighs.', 'Roll slowly from hip bone down to 1 inch above kneecap.', 'Pause and breathe through tight trigger points for 15 seconds.']
+                    proTip: 'Flex and extend knee when you hit a tender spot to break up tissue tightness.',
+                    steps: ['Lie face down with roller placed under upper thighs.', 'Roll slowly from hip joint down to 1 inch above knee cap.', 'Pause on tight trigger points for 15-20 seconds.']
                 }
             ],
             'Hamstrings': [
                 {
                     name: 'Elevated Heel Hinge',
                     duration: '45 sec / leg',
-                    focus: 'Biceps Femoris & Upper Hamstrings',
+                    focus: 'Biceps Femoris & Glute-Ham Junction',
+                    targetMuscle: 'Upper Hamstring & Ischial Tuberosity',
                     icon: 'fa-box-archive',
-                    steps: ['Place heel on a low bench or sturdy box.', 'Hinge forward from hips keeping back flat and spine long.', 'Reach torso toward toes until a gentle opening is felt.']
+                    proTip: 'Hinge strictly from the hip joint—do not round your lower spine.',
+                    steps: ['Place heel on a bench or sturdy box with foot flexed.', 'Keep back flat and chest lifted as you hinge forward.', 'Reach chest toward toes until stretch is felt in hamstring belly.']
                 },
                 {
                     name: 'Seated Reach Stretch',
                     duration: '60 sec / leg',
-                    focus: 'Lower Hamstring & Calves',
+                    focus: 'Distal Hamstring & Calves',
+                    targetMuscle: 'Semimembranosus & Gastrocnemius',
                     icon: 'fa-chair',
-                    steps: ['Sit tall with one leg extended out straight.', 'Keep foot flexed back toward your shin.', 'Lean forward from lower back smoothly without rounding.']
+                    proTip: 'Pull toes toward shin to engage distal tendon stretching.',
+                    steps: ['Sit tall on ground with target leg extended.', 'Flex ankle back toward shin continuously.', 'Reach forward smoothly with extended arms without hunching.']
                 },
                 {
                     name: 'Controlled Leg Swings',
                     duration: '15 swings / leg',
                     focus: 'Dynamic Hamstring Mobility',
+                    targetMuscle: 'Hamstring Complex (Dynamic)',
                     icon: 'fa-person-running',
-                    steps: ['Place hand against wall for balance support.', 'Swing leg smoothly forward and backward in a full arc.', 'Increase range of motion progressively on each pass.']
+                    proTip: 'Start with small amplitude and gradually increase range on each swing.',
+                    steps: ['Place hand flat against wall for balance.', 'Swing leg smoothly forward and backward like a pendulum.', 'Keep torso steady without leaning excessive forward/backward.']
                 }
             ],
             'Calves': [
@@ -580,68 +594,86 @@
                     name: 'Wall Press Calf Stretch',
                     duration: '45 sec / leg',
                     focus: 'Gastrocnemius & Achilles Tendon',
+                    targetMuscle: 'Gastrocnemius Medial & Lateral Heads',
                     icon: 'fa-shield-halved',
-                    steps: ['Hands flat against wall at chest height.', 'Step one leg back, pressing rear heel firmly into floor.', 'Keep rear knee fully straight and lean hips forward.']
+                    proTip: 'Press rear heel firmly into floor while keeping back leg straight.',
+                    steps: ['Place both hands on wall at chest height.', 'Step target leg back and press heel flat into ground.', 'Lean hips forward into wall while keeping rear knee extended.']
                 },
                 {
                     name: 'Downward Dog Pedal',
                     duration: '60 sec',
-                    focus: 'Soleus & Ankle Mobility',
+                    focus: 'Soleus & Ankle Plantarflexors',
+                    targetMuscle: 'Soleus & Plantaris',
                     icon: 'fa-mountain',
-                    steps: ['Press hands and feet onto floor with hips pushed high.', 'Alternate pressing one heel down while bending opposite knee.', 'Hold each heel down for 3 deep breaths.']
+                    proTip: 'Bend the knee slightly on the target leg to isolate the deeper Soleus muscle.',
+                    steps: ['Form an inverted V shape with hands and feet on floor.', 'Alternate pressing one heel toward ground while bending opposite knee.', 'Hold each heel down for 3 deep diaphragmatic breaths.']
                 },
                 {
                     name: 'Calf & Achilles Roller',
                     duration: '90 sec',
                     focus: 'Myofascial Calf Release',
+                    targetMuscle: 'Gastrocnemius & Achilles Complex',
                     icon: 'fa-circle-dot',
-                    steps: ['Sit with foam roller under lower calf.', 'Cross opposite leg over for extra pressure.', 'Roll slowly from lower Achilles tendon to calf muscle belly.']
+                    proTip: 'Rotate ankle in circles while resting on high-tension areas.',
+                    steps: ['Sit on floor with roller under lower calf muscle.', 'Cross non-target leg over target leg for additional pressure.', 'Roll from lower ankle up to just below the knee fold.']
                 }
             ],
             'Glutes & Hips': [
                 {
                     name: 'Pigeon Pose Hold',
                     duration: '60 sec / side',
-                    focus: 'Gluteus Maximus & Deep Rotators',
+                    focus: 'Gluteus Maximus & External Rotators',
+                    targetMuscle: 'Gluteus Max, Medius & Piriformis',
                     icon: 'fa-feather',
-                    steps: ['Lay front leg shin flat across mat at 40 to 90 degrees.', 'Extend rear leg directly back.', 'Lower forearms to floor and sink hips square toward ground.']
+                    proTip: 'Keep hips square to the ground—do not let torso roll onto target hip.',
+                    steps: ['Place front leg shin flat across floor at 45-90 degrees.', 'Extend back leg straight behind with hip facing floor.', 'Lower forearms onto floor and breathe deeply into hips.']
                 },
                 {
                     name: 'Supine Figure-4 Stretch',
                     duration: '45 sec / side',
-                    focus: 'Piriformis & Sciatic Nerve Relief',
+                    focus: 'Piriformis & Sciatic Relief',
+                    targetMuscle: 'Deep Rotator Group & Piriformis',
                     icon: 'fa-cross-hairs',
-                    steps: ['Lie flat on back with knees bent.', 'Cross right ankle over left knee.', 'Reach hands around left thigh and pull gently toward chest.']
+                    proTip: 'Flex ankle on top leg to protect knee joint during stretch.',
+                    steps: ['Lie flat on back with knees bent and feet flat.', 'Cross right ankle over left thigh just above knee.', 'Pull left thigh toward chest with both hands.']
                 },
                 {
                     name: '90/90 Hip Switches',
                     duration: '10 switches',
-                    focus: 'Hip Joint Internal & External Rotation',
+                    focus: 'Hip Joint Internal & External Mobility',
+                    targetMuscle: 'Hip Capsule & TFL',
                     icon: 'fa-arrows-rotate',
-                    steps: ['Sit on floor with both legs bent at 90-degree angles.', 'Keep chest tall without leaning back.', 'Rotate knees smoothly side to side touching floor.']
+                    proTip: 'Keep spine upright without rounding or leaning back excessively.',
+                    steps: ['Sit on floor with front leg at 90° and back leg at 90°.', 'Rotate knees smoothly over to opposite side without lifting feet.', 'Pause 2 seconds at end position on each side.']
                 }
             ],
             'Lower Back': [
                 {
                     name: 'Child’s Pose Reach',
                     duration: '60 sec',
-                    focus: 'Thoracolumbar Fascia & Erector Spinae',
+                    focus: 'Erector Spinae & Thoracolumbar Fascia',
+                    targetMuscle: 'Paraspinal Musculature & Lats',
                     icon: 'fa-spa',
-                    steps: ['Kneel on floor, sink hips back onto heels.', 'Extend arms straight out on floor in front of you.', 'Breathe deeply into lower back, sinking lower on exhales.']
+                    proTip: 'Walk fingertips 3 inches to the left/right to stretch side lats.',
+                    steps: ['Kneel on floor, widen knees, and sink hips back onto heels.', 'Extend arms fully out on floor in front of you.', 'Breathe into lower back, sinking lower on exhalations.']
                 },
                 {
                     name: 'Cat-Cow Flow',
                     duration: '10 reps',
                     focus: 'Spinal Articulation & Decompression',
+                    targetMuscle: 'Spinal Flexors & Extensors',
                     icon: 'fa-arrows-up-down',
-                    steps: ['Start on hands and knees under shoulders and hips.', 'Inhale to softly drop belly and look up (Cow).', 'Exhale to round back completely toward ceiling (Cat).']
+                    proTip: 'Move slowly vertebra by vertebra rather than rushing.',
+                    steps: ['Start on hands and knees with wrists under shoulders.', 'Inhale, arch lower back softly and look upward (Cow).', 'Exhale, tuck chin and round spine fully toward ceiling (Cat).']
                 },
                 {
                     name: 'Supine Spinal Twist',
                     duration: '45 sec / side',
-                    focus: 'Lower Back & Quadratus Lumborum',
+                    focus: 'Quadratus Lumborum & Spine Rotation',
+                    targetMuscle: 'Quadratus Lumborum & Obliques',
                     icon: 'fa-repeat',
-                    steps: ['Lie flat on back with arms extended out wide.', 'Draw right knee up and rotate it across body to floor.', 'Keep both shoulders glued flat against ground.']
+                    proTip: 'Keep both shoulder blades glued to the floor.',
+                    steps: ['Lie flat on back with arms extended out wide into a T.', 'Bring right knee toward chest and guide it across body to floor.', 'Turn head to look toward right fingers.']
                 }
             ],
             'Shoulders & Chest': [
@@ -649,22 +681,28 @@
                     name: 'Doorway Chest Opener',
                     duration: '45 sec',
                     focus: 'Pectoralis Major & Minor',
+                    targetMuscle: 'Pectoralis Major & Anterior Deltoid',
                     icon: 'fa-door-open',
-                    steps: ['Place elbows and forearms flat against a doorframe.', 'Step one foot forward through doorway.', 'Lean chest forward until stretch is felt across shoulders.']
+                    proTip: 'Adjust elbow height (above/below shoulder) to hit different chest fibers.',
+                    steps: ['Place forearms flat against a doorway or frame.', 'Step one foot forward through doorway.', 'Lean torso forward smoothly until stretch is felt across chest.']
                 },
                 {
                     name: 'Cross-Body Deltoid Pull',
                     duration: '45 sec / side',
-                    focus: 'Rear Deltoids & Upper Back',
+                    focus: 'Posterior Deltoid & Scapular Retractors',
+                    targetMuscle: 'Posterior Deltoid & Infraspinatus',
                     icon: 'fa-hand-holding-hand',
-                    steps: ['Bring straight arm across your chest.', 'Use opposite arm to hold elbow close to torso.', 'Keep shoulder blade pulled down and away from ear.']
+                    proTip: 'Keep shoulder blade depressed away from ear while pulling.',
+                    steps: ['Bring straight target arm across chest.', 'Use opposite arm to hold target elbow close to torso.', 'Gently pull arm closer to chest while keeping shoulders down.']
                 },
                 {
                     name: 'Thread the Needle',
                     duration: '45 sec / side',
                     focus: 'Thoracic Spine & Scapular Release',
+                    targetMuscle: 'Rhomboids & Upper Trapezius',
                     icon: 'fa-hashtag',
-                    steps: ['On all fours, slide right arm underneath chest across floor.', 'Rest right shoulder and temple flat on ground.', 'Breathe into shoulder blade area.']
+                    proTip: 'Breathe into back ribs to open scapular tissue.',
+                    steps: ['Start on hands and knees in tabletop position.', 'Slide target arm underneath chest across floor with palm up.', 'Rest side of shoulder and temple flat on ground.']
                 }
             ]
         };
@@ -680,7 +718,7 @@
 
             stretches.forEach(item => {
                 const stepsHtml = item.steps.map((st, idx) => `
-                    <li class="flex items-start gap-2 text-xs text-slate-700">
+                    <li class="flex items-start gap-2 text-xs text-slate-700 leading-snug">
                         <span class="w-4 h-4 rounded-full bg-emerald-100 text-emerald-800 font-extrabold flex items-center justify-center text-[10px] shrink-0 mt-0.5">${idx + 1}</span>
                         <span>${st}</span>
                     </li>
@@ -698,7 +736,14 @@
                             
                             <div>
                                 <h4 class="font-extrabold text-slate-900 text-base">${item.name}</h4>
-                                <p class="text-[11px] font-bold text-emerald-700 mt-0.5">${item.focus}</p>
+                                <p class="text-[11px] font-bold text-emerald-700 mt-0.5"><i class="fa-solid fa-bullseye text-[10px] mr-1"></i>${item.targetMuscle}</p>
+                            </div>
+
+                            <div class="bg-emerald-50/70 p-2.5 rounded-xl border border-emerald-200 text-[11px] text-emerald-900 space-y-1">
+                                <span class="font-extrabold uppercase text-[9px] tracking-wider text-emerald-700 flex items-center gap-1">
+                                    <i class="fa-solid fa-lightbulb"></i> Form Alignment Cue
+                                </span>
+                                <p class="font-medium leading-tight">${item.proTip}</p>
                             </div>
 
                             <ul class="space-y-2 pt-1 border-t border-slate-100">
@@ -738,7 +783,7 @@
             return html;
         }
 
-        // ================= FORM SUBMIT & AI PROMPT =================
+        // ================= FORM SUBMIT & EVENT-AWARE AI PROMPT =================
         const form = document.getElementById('recoveryForm');
         const submitBtn = document.getElementById('submitBtn');
         const planOutput = document.getElementById('planOutput');
@@ -755,9 +800,26 @@
             const profGender = localStorage.getItem('rebound_gender') || 'Male';
             const profSeason = localStorage.getItem('rebound_season') || 'In-Season';
 
+            // Gather upcoming scheduled events to give the AI context for taper/readiness!
+            const todayStr = new Date().toISOString().split('T')[0];
+            const upcomingList = [];
+            if (scheduledEvents) {
+                Object.keys(scheduledEvents).sort().forEach(dateKey => {
+                    if (dateKey >= todayStr) {
+                        scheduledEvents[dateKey].forEach(evt => {
+                            upcomingList.push(`${evt} on ${dateKey}`);
+                        });
+                    }
+                });
+            }
+            const eventContext = upcomingList.length > 0 
+                ? `UPCOMING EVENTS: ${upcomingList.slice(0, 3).join(', ')}. Optimize today's recovery specifically to ensure peak athletic readiness for these near-term events!` 
+                : 'UPCOMING EVENTS: None scheduled.';
+
             const multiSportContext = `Workout: ${rawActivity}. 
-[ATHLETE BIO: Primary In-Season Sport: ${profSport} | Off-Season/Secondary: ${profSecondary} | Age: ${profAge} | Gender: ${profGender} | Phase: ${profSeason}]. 
-INSTRUCTIONS: Provide 3 study-backed recovery techniques (e.g., Cold Water Immersion, Heat Therapy/Sauna, Active Recovery Walk <50% HRmax). DO NOT INCLUDE ANY FORMAL CITATIONS, PAPER TITLES, AUTHOR NAMES, OR IN-TEXT REFERENCES. State the practical reason why it helps. Format each strategy title on its own line like "1. Strategy Name" so it stands out.`;
+[ATHLETE BIO: Primary Sport: ${profSport} | Secondary: ${profSecondary} | Age: ${profAge} | Gender: ${profGender} | Phase: ${profSeason}]. 
+[${eventContext}].
+INSTRUCTIONS: Provide 3 study-backed recovery techniques (e.g., Cold Water Immersion, Active Recovery, Sleep/Nutrition Taper). DO NOT INCLUDE CITATIONS OR PAPER TITLES. Tailor recommendations to prepare the athlete for their upcoming event if one exists. Format each title like "1. Strategy Name" on its own line.`;
 
             const payload = {
                 activity: multiSportContext,
@@ -771,7 +833,7 @@ INSTRUCTIONS: Provide 3 study-backed recovery techniques (e.g., Cold Water Immer
             renderStretches(areaVal);
 
             submitBtn.disabled = true;
-            submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i><span>Analyzing Recovery Protocols...</span>`;
+            submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i><span>Analyzing Event & Recovery Protocols...</span>`;
 
             try {
                 const response = await fetch('/api/recovery-plan', {
@@ -793,8 +855,8 @@ INSTRUCTIONS: Provide 3 study-backed recovery techniques (e.g., Cold Water Immer
             }
         });
 
-        // ================= CALENDAR & CLOUD PERSISTENCE =================
-        let scheduledEvents = { "2026-07-22": ["Basketball Game"] };
+        // ================= CALENDAR, EDIT & DELETE CONTROLS =================
+        let scheduledEvents = { "2026-07-25": ["Basketball Game"] };
 
         function buildCalendar() {
             const calGrid = document.getElementById('calendarDays');
@@ -825,8 +887,13 @@ INSTRUCTIONS: Provide 3 study-backed recovery techniques (e.g., Cold Water Immer
 
                 let eventBadge = '';
                 if (hasEvents) {
-                    eventBadge = `<div class="mt-1 flex flex-col gap-0.5">${scheduledEvents[dateKey].map(evt => 
-                        `<span class="text-[9px] truncate bg-emerald-600 text-white font-bold rounded px-1 py-0.5 leading-tight">${evt}</span>`
+                    eventBadge = `<div class="mt-1 flex flex-col gap-0.5">${scheduledEvents[dateKey].map((evt, idx) => 
+                        `<div class="flex items-center justify-between text-[9px] bg-emerald-600 text-white font-bold rounded px-1 py-0.5 leading-tight group">
+                            <span class="truncate">${evt}</span>
+                            <button onclick="deleteScheduleEvent('${dateKey}', ${idx})" class="ml-1 text-emerald-200 hover:text-white" title="Delete event">
+                                <i class="fa-solid fa-xmark text-[8px]"></i>
+                            </button>
+                        </div>`
                     ).join('')}</div>`;
                 }
 
@@ -860,6 +927,19 @@ INSTRUCTIONS: Provide 3 study-backed recovery techniques (e.g., Cold Water Immer
             document.getElementById('eventTitle').value = '';
         }
 
+        function deleteScheduleEvent(dateKey, index) {
+            if (scheduledEvents[dateKey]) {
+                scheduledEvents[dateKey].splice(index, 1);
+                if (scheduledEvents[dateKey].length === 0) {
+                    delete scheduledEvents[dateKey];
+                }
+                localStorage.setItem('rebound_events', JSON.stringify(scheduledEvents));
+                saveCloudData();
+                buildCalendar();
+                renderUpcomingEventsList();
+            }
+        }
+
         function renderUpcomingEventsList() {
             const eventsList = document.getElementById('eventsList');
             if (!eventsList) return;
@@ -872,38 +952,76 @@ INSTRUCTIONS: Provide 3 study-backed recovery techniques (e.g., Cold Water Immer
             }
 
             keys.forEach(dateKey => {
-                scheduledEvents[dateKey].forEach(title => {
+                scheduledEvents[dateKey].forEach((title, idx) => {
                     eventsList.innerHTML += `
-                        <div class="p-3 bg-white rounded-xl border border-slate-200 flex justify-between items-center text-sm shadow-sm">
-                            <span class="font-extrabold text-slate-800">${title}</span>
-                            <span class="text-xs bg-emerald-100 text-emerald-800 font-bold border border-emerald-300 px-2.5 py-1 rounded-md">${dateKey}</span>
+                        <div class="p-3 bg-white rounded-xl border border-slate-200 flex justify-between items-center text-sm shadow-sm hover:border-emerald-400 transition">
+                            <div class="flex items-center space-x-2">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                <span class="font-extrabold text-slate-800">${title}</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-xs bg-emerald-100 text-emerald-800 font-bold border border-emerald-300 px-2.5 py-1 rounded-md">${dateKey}</span>
+                                <button onclick="deleteScheduleEvent('${dateKey}', ${idx})" class="p-1.5 text-slate-400 hover:text-red-600 transition" title="Delete event">
+                                    <i class="fa-solid fa-trash-can text-xs"></i>
+                                </button>
+                            </div>
                         </div>
                     `;
                 });
             });
         }
 
-        // ================= ROTATING NUTRITION RECIPE ENGINE =================
+        // ================= ROTATING EXPANDED NUTRITION RECIPE BANK =================
         const recipeDatabase = {
             pre: [
                 { name: "Banana Rice Cakes & Peanut Butter", desc: "Quick-digesting carbohydrates for fast muscle glycogen fuel.", ingredients: ["2 whole grain rice cakes", "2 tbsp natural peanut butter", "1 sliced banana & honey drizzle"] },
-                { name: "Oatmeal with Berries & Chia", desc: "Sustained glucose release for longer endurance sessions.", ingredients: ["1/2 cup rolled oats", "1/2 cup fresh blueberries", "1 tbsp chia seeds & maple syrup"] }
+                { name: "Oatmeal with Berries & Chia", desc: "Sustained glucose release for longer endurance sessions.", ingredients: ["1/2 cup rolled oats", "1/2 cup fresh blueberries", "1 tbsp chia seeds & maple syrup"] },
+                { name: "Honey & Greek Yogurt Toast", desc: "Fast-acting simple sugars combined with amino acids.", ingredients: ["1 slice toasted sourdough", "1/4 cup plain Greek yogurt", "1 tbsp raw honey & cinnamon"] },
+                { name: "Sourdough Toast with Almond Butter & Jam", desc: "Easy-on-the-stomach pre-workout carbohydrate kick.", ingredients: ["2 sourdough slices", "1.5 tbsp almond butter", "1 tbsp strawberry preserve"] },
+                { name: "Cream of Rice with Berries & Protein", desc: "Ultra-fast digesting glycemic fuel favored by elite athletes.", ingredients: ["1/2 cup Cream of Rice", "1 scoop vanilla whey protein", "1/2 cup raspberries"] },
+                { name: "Apple Slices & Almond Butter", desc: "Fructose and healthy mono-fats for steady pre-workout energy.", ingredients: ["1 large Honeycrisp apple", "2 tbsp raw almond butter", "Pinch of sea salt"] }
             ],
             post: [
                 { name: "Tart Cherry & Whey Smoothie", desc: "Protein synthesis paired with tart cherry anti-inflammatory antioxidants.", ingredients: ["1 scoop Whey / Plant protein", "1/2 cup tart cherry juice", "1/2 cup almond milk & blueberries"] },
-                { name: "Chocolate Protein Rice Bowl", desc: "Optimal 3:1 carb-to-protein ratio for rapid muscle repair.", ingredients: ["1 cup cooked white rice", "1 cup chocolate protein milk", "Pinch of sea salt"] }
+                { name: "Chocolate Protein Rice Bowl", desc: "Optimal 3:1 carb-to-protein ratio for rapid muscle repair.", ingredients: ["1 cup cooked white rice", "1 cup chocolate protein milk", "Pinch of sea salt"] },
+                { name: "Tropical Pineapple Whey Shake", desc: "Bromelain enzyme from pineapple aids protein absorption.", ingredients: ["1 scoop whey isolate", "1/2 cup frozen pineapple chunks", "1 cup coconut water"] },
+                { name: "Egg White & Spinach Omelet Toast", desc: "Bioavailable lean protein to initiate rapid muscle muscle recovery.", ingredients: ["4 egg whites + 1 whole egg", "1 cup fresh spinach", "2 slices whole wheat toast"] },
+                { name: "Greek Yogurt Berry Glycogen Bowl", desc: "Casein and whey blend for sustained overnight repair.", ingredients: ["1 cup Greek yogurt", "1/2 cup granola", "1/2 cup blackberry & honey"] },
+                { name: "Cottage Cheese & Peaches", desc: "Slow-digesting protein with quick fruit carb replenishment.", ingredients: ["1 cup low-fat cottage cheese", "1 fresh sliced peach", "1 tbsp chia seeds"] }
             ],
             snack: [
                 { name: "Greek Yogurt & Pumpkin Seeds", desc: "Rich in casein protein, zinc, and magnesium for deep tissue repair.", ingredients: ["3/4 cup plain Greek yogurt", "2 tbsp pumpkin seeds (pepitas)", "1/2 cup fresh mixed berries"] },
-                { name: "Hard-Boiled Eggs & Avocado", desc: "Healthy fats and complete bioavailable proteins.", ingredients: ["2 pasture-raised eggs", "1 slice sourdough toast", "1/2 mashed avocado & sea salt"] }
+                { name: "Hard-Boiled Eggs & Avocado", desc: "Healthy fats and complete bioavailable proteins.", ingredients: ["2 pasture-raised eggs", "1 slice sourdough toast", "1/2 mashed avocado & sea salt"] },
+                { name: "Edamame with Sea Salt & Sesame", desc: "Plant-based complete protein packed with electrolytes.", ingredients: ["1.5 cups steamed edamame pods", "1 tsp coarse sea salt", "1/2 tsp sesame oil"] },
+                { name: "Mixed Nuts & Dried Cranberries", desc: "Portable calorie-dense snack for busy training schedules.", ingredients: ["1/4 cup raw almonds & walnuts", "2 tbsp dried cranberries", "1 tbsp dark chocolate chips"] },
+                { name: "Hummus & Whole Wheat Pita", desc: "Complex plant carbs with heart-healthy olive oil fats.", ingredients: ["1/3 cup roasted garlic hummus", "1 whole wheat pita pocket", "Cucumber slices"] },
+                { name: "Protein Energy Balls", desc: "No-bake quick recovery bites for on-the-go fueling.", ingredients: ["1 cup rolled oats", "1/2 cup peanut butter", "1/3 cup honey & chocolate chips"] }
             ],
             dinner: [
                 { name: "Salmon Bowl with Quinoa", desc: "Omega-3 anti-inflammatory healthy fats paired with complex grains.", ingredients: ["6 oz wild salmon fillet", "1 cup cooked quinoa", "1 cup roasted asparagus & olive oil"] },
-                { name: "Grilled Chicken & Sweet Potato", desc: "Lean protein with complex carbs to replenish glycogen overnight.", ingredients: ["7 oz chicken breast", "1 medium baked sweet potato", "Steamed broccoli florets"] }
+                { name: "Grilled Chicken & Sweet Potato", desc: "Lean protein with complex carbs to replenish glycogen overnight.", ingredients: ["7 oz chicken breast", "1 medium baked sweet potato", "Steamed broccoli florets"] },
+                { name: "Turkey Meatballs with Marinara & Pasta", desc: "High carb, lean protein dinner for intense training blocks.", ingredients: ["6 oz turkey meatballs", "1.5 cups whole grain pasta", "1/2 cup marinara sauce"] },
+                { name: "Lean Steak & Roasted Potatoes", desc: "Heme iron and zinc rich meal to support oxygen transportation.", ingredients: ["6 oz sirloin steak", "1 cup roasted baby potatoes", "Sautéed green beans"] },
+                { name: "Tofu & Mixed Veggie Stir-Fry", desc: "Antioxidant-dense plant dinner with complete soya protein.", ingredients: ["7 oz baked firm tofu", "1.5 cups mixed stir-fry veggies", "1 cup cooked brown rice"] },
+                { name: "Cod Fillet with Couscous & Zucchini", desc: "Light, easily digestible protein for post-evening workout meals.", ingredients: ["7 oz baked wild cod", "1 cup cooked couscous", "Roasted zucchini & lemon juice"] }
             ]
         };
 
         const recipeIndices = { pre: 0, post: 0, snack: 0, dinner: 0 };
+
+        // Auto-seed recipe indices based on day of year so meals change daily automatically!
+        function setDailyRecipeDefaults() {
+            const now = new Date();
+            const start = new Date(now.getFullYear(), 0, 0);
+            const diff = now - start;
+            const oneDay = 1000 * 60 * 60 * 24;
+            const dayOfYear = Math.floor(diff / oneDay);
+
+            recipeIndices.pre = dayOfYear % recipeDatabase.pre.length;
+            recipeIndices.post = dayOfYear % recipeDatabase.post.length;
+            recipeIndices.snack = dayOfYear % recipeDatabase.snack.length;
+            recipeIndices.dinner = dayOfYear % recipeDatabase.dinner.length;
+        }
 
         function refreshRecipe(category) {
             const container = document.getElementById(`card-${category}`);
@@ -912,14 +1030,14 @@ INSTRUCTIONS: Provide 3 study-backed recovery techniques (e.g., Cold Water Immer
             container.innerHTML = `
                 <div class="h-full min-h-[180px] flex flex-col items-center justify-center space-y-3 text-emerald-600">
                     <i class="fa-solid fa-circle-notch fa-spin text-2xl"></i>
-                    <p class="text-xs font-extrabold uppercase tracking-widest text-slate-600">AI Refreshing...</p>
+                    <p class="text-xs font-extrabold uppercase tracking-widest text-slate-600">AI Cycling Recipes...</p>
                 </div>
             `;
 
             setTimeout(() => {
                 recipeIndices[category] = (recipeIndices[category] + 1) % recipeDatabase[category].length;
                 renderRecipeCard(category);
-            }, 600);
+            }, 400);
         }
 
         function renderRecipeCard(category) {
@@ -1019,6 +1137,7 @@ INSTRUCTIONS: Provide 3 study-backed recovery techniques (e.g., Cold Water Immer
         }
 
         // Initialize Page Components
+        setDailyRecipeDefaults();
         renderStretches('Quads');
         buildCalendar();
         renderUpcomingEventsList();
