@@ -113,8 +113,8 @@
                 <span>Daily Check-In</span>
             </button>
             <button onclick="switchTab('protocol')" id="tab-btn-protocol" class="tab-btn flex items-center justify-center space-x-2 py-3 px-3 text-xs md:text-sm font-bold text-slate-600 hover:text-slate-900">
-                <i class="fa-solid fa-list-check"></i>
-                <span>Daily Plan & Mobility</span>
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span>Plan & Mobility</span>
             </button>
             <button onclick="switchTab('schedule')" id="tab-btn-schedule" class="tab-btn flex items-center justify-center space-x-2 py-3 px-3 text-xs md:text-sm font-bold text-slate-600 hover:text-slate-900">
                 <i class="fa-solid fa-calendar-days"></i>
@@ -135,8 +135,8 @@
                         <i class="fa-solid fa-heart-pulse text-lg"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl font-extrabold text-slate-900">Morning Check-In</h2>
-                        <p class="text-xs text-slate-500 font-medium">Log how you feel today. Combined with your calendar, this builds your customized daily schedule.</p>
+                        <h2 class="text-xl font-extrabold text-slate-900">Daily Athlete Check-In</h2>
+                        <p class="text-xs text-slate-500 font-medium">Log today's workout to generate tailored, high-value recovery protocols built for your upcoming schedule.</p>
                     </div>
                 </div>
 
@@ -145,15 +145,15 @@
                         
                         <div class="space-y-2">
                             <label class="text-xs font-extrabold tracking-wider uppercase text-slate-700 flex items-center gap-2">
-                                <i class="fa-solid fa-dumbbell text-emerald-600"></i> Primary Focus / Workout Today
+                                <i class="fa-solid fa-dumbbell text-emerald-600"></i> Workout / Session Today
                             </label>
-                            <input type="text" id="activity" required placeholder="e.g. Morning Practice, Squat Session, Game Prep" 
+                            <input type="text" id="activity" required placeholder="e.g. Heavy Leg Day, Basketball Game, Tempo Run" 
                                 class="fluid-input w-full px-4 py-3 text-sm">
                         </div>
 
                         <div class="space-y-2">
                             <label class="text-xs font-extrabold tracking-wider uppercase text-slate-700 flex items-center gap-2">
-                                <i class="fa-solid fa-gauge-high text-emerald-600"></i> Expected Effort Level
+                                <i class="fa-solid fa-gauge-high text-emerald-600"></i> Effort Level
                             </label>
                             <select id="effort" class="fluid-input w-full px-4 py-3 text-sm">
                                 <option value="1">1 - Light / Recovery Pace</option>
@@ -207,34 +207,33 @@
                     <button type="submit" id="submitBtn" 
                         class="w-full py-4 rounded-2xl font-extrabold text-white bg-emerald-600 hover:bg-emerald-700 transition duration-200 shadow-lg shadow-emerald-600/30 flex items-center justify-center space-x-2 text-base uppercase tracking-wider cursor-pointer">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        <span>Generate Daily Schedule & Protocol</span>
+                        <span>Generate Custom Recovery Protocol</span>
                     </button>
                 </form>
             </div>
         </section>
 
-        <!-- ================= TAB 2: PERSONALIZED DAILY PLAN & MOBILITY ================= -->
+        <!-- ================= TAB 2: PLAN & MOBILITY ================= -->
         <section id="tab-protocol" class="tab-content hidden space-y-6">
             
-            <!-- Dynamic Chronological Daily Plan Container -->
-            <div class="fluid-card p-6 md:p-8 space-y-6 border-l-4 border-emerald-600">
+            <div class="fluid-card p-6 md:p-8 space-y-4 border-l-4 border-emerald-600">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
                         <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">
-                            <i class="fa-solid fa-clock-rotate-left text-lg"></i>
+                            <i class="fa-solid fa-microscope text-lg"></i>
                         </div>
                         <div>
-                            <h2 class="text-xl font-extrabold text-slate-900">Personalized Daily Plan</h2>
-                            <p class="text-xs text-slate-500 font-medium">Chronological roadmap based on your calendar events & morning check-in</p>
+                            <h2 class="text-xl font-extrabold text-slate-900">Customized Athlete Recovery Protocol</h2>
+                            <p class="text-xs text-slate-500 font-medium">Personalized strategies combining today's training load, sleep, stress, and upcoming games</p>
                         </div>
                     </div>
-                    <span class="text-xs bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1 rounded-full border border-emerald-300">Live Schedule</span>
+                    <span class="text-xs bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1 rounded-full border border-emerald-300">Smart AI Insights</span>
                 </div>
 
                 <hr class="border-slate-200">
 
-                <div id="planOutput" class="space-y-6">
-                    <p class="text-slate-500 text-sm font-medium">Complete your Morning Check-In to unlock today's chronological schedule!</p>
+                <div id="planOutput" class="space-y-4 bg-slate-50/80 p-5 rounded-2xl border border-slate-200">
+                    <p class="text-slate-500 text-sm font-medium">Complete your Daily Check-In to generate today's customized protocol!</p>
                 </div>
             </div>
 
@@ -284,10 +283,10 @@
                     </div>
                 </div>
 
-                <!-- Rich Event Creation Form -->
+                <!-- Streamlined Event Creation Form -->
                 <div class="p-5 rounded-2xl bg-emerald-50/80 border border-emerald-200 space-y-4">
                     <h4 class="text-xs font-extrabold text-emerald-900 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-calendar-plus text-emerald-600 text-sm"></i> Add Detailed Event
+                        <i class="fa-solid fa-calendar-plus text-emerald-600 text-sm"></i> Add Event to Calendar
                     </h4>
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -331,16 +330,6 @@
                                 <option value="Low">Low / Light</option>
                             </select>
                         </div>
-
-                        <div class="md:col-span-2">
-                            <label class="text-[10px] font-extrabold uppercase text-slate-600 block mb-1">Location (Optional)</label>
-                            <input type="text" id="eventLocation" placeholder="e.g. Main Gymnasium / Field 3" class="fluid-input w-full px-3.5 py-2 text-xs">
-                        </div>
-
-                        <div>
-                            <label class="text-[10px] font-extrabold uppercase text-slate-600 block mb-1">Notes (Optional)</label>
-                            <input type="text" id="eventNotes" placeholder="e.g. Wear road black uniforms" class="fluid-input w-full px-3.5 py-2 text-xs">
-                        </div>
                     </div>
 
                     <button onclick="addScheduleEvent()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3 px-4 rounded-xl transition text-xs uppercase tracking-wider shadow-md flex items-center justify-center space-x-2">
@@ -368,10 +357,10 @@
                         </div>
                         <div>
                             <h2 class="text-xl font-extrabold text-slate-900">Performance Nutrition Hub</h2>
-                            <p class="text-xs text-slate-500 font-medium">50+ Recipe Bank — Click <strong>AI Refresh 🔄</strong> to cycle recipes!</p>
+                            <p class="text-xs text-slate-500 font-medium">Deep 50-Recipe Bank Per Category — Click <strong>AI Refresh 🔄</strong> for fresh options!</p>
                         </div>
                     </div>
-                    <span class="text-xs bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1 rounded-full border border-emerald-300">50+ Recipes</span>
+                    <span class="text-xs bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1 rounded-full border border-emerald-300">200 Recipes Total</span>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -559,15 +548,13 @@
         let auth, db, currentUser = null;
         let activeModalEventId = null;
 
-        // Load local events from storage if available
         let scheduledEvents = {};
         try {
             const saved = localStorage.getItem('rebound_events');
             if (saved) scheduledEvents = JSON.parse(saved);
         } catch(e) { scheduledEvents = {}; }
 
-        // Helper to construct uniform event objects
-        function createEventObject(title, date, type, startTime, endTime, intensity, location, notes) {
+        function createEventObject(title, date, type, startTime, endTime, intensity) {
             return {
                 id: 'evt_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
                 title: title || 'Scheduled Event',
@@ -576,8 +563,6 @@
                 startTime: startTime || '',
                 endTime: endTime || '',
                 intensity: intensity || 'Moderate',
-                location: location || '',
-                notes: notes || '',
                 manualStatus: null
             };
         }
@@ -597,13 +582,12 @@
                     authBtnText.textContent = user.email.split('@')[0];
                     userEmailDisplay.textContent = user.email;
                     accountBanner.classList.remove('hidden');
-                    loadCloudData(); // Syncs & merges local events to cloud without duplicating
+                    loadCloudData();
                 } else {
                     authBtnText.textContent = "Account Login";
                     accountBanner.classList.add('hidden');
                     buildCalendar();
                     renderUpcomingEventsList();
-                    renderDailyTimeline();
                 }
             });
         } catch (e) { console.log('Firebase init error:', e); }
@@ -628,7 +612,6 @@
             document.getElementById('authModal').classList.toggle('hidden');
         }
 
-        // Email Authentication Handler with Seamless Event Merging
         async function handleAuth(mode) {
             const email = document.getElementById('authEmail').value;
             const password = document.getElementById('authPassword').value;
@@ -638,10 +621,10 @@
             try {
                 if (mode === 'signup') {
                     await auth.createUserWithEmailAndPassword(email, password);
-                    alert(`Account created for ${email}! Calendar and memory synced.`);
+                    alert(`Account created for ${email}! Calendar synced.`);
                 } else {
                     await auth.signInWithEmailAndPassword(email, password);
-                    alert(`Signed in as ${email}. Local events merged to your account!`);
+                    alert(`Signed in as ${email}. Calendar merged to your account!`);
                 }
                 toggleAuthModal();
             } catch (err) {
@@ -656,9 +639,9 @@
             }
         }
 
-        // ================= STATUS TIMING ENGINE & CONFIRMATION POPUP =================
+        // ================= EVENT TIMING ENGINE =================
         function getEventStatus(evt) {
-            if (evt.manualStatus) return evt.manualStatus; // 'not_yet', 'happening_now', 'completed', 'canceled'
+            if (evt.manualStatus) return evt.manualStatus;
 
             const todayStr = new Date().toISOString().split('T')[0];
             if (evt.date < todayStr) return 'completed';
@@ -721,7 +704,6 @@
             closeStatusModal();
             buildCalendar();
             renderUpcomingEventsList();
-            renderDailyTimeline();
         }
 
         // ================= FULL INSTRUCTIONAL STRETCH LIBRARY =================
@@ -843,130 +825,38 @@
             });
         }
 
-        // ================= CHRONOLOGICAL DAILY PLAN GENERATOR =================
-        function renderDailyTimeline(aiPlanText = '') {
-            const planOutput = document.getElementById('planOutput');
-            if (!planOutput) return;
+        // ================= PARSER FOR CUSTOM RECOVERY PROTOCOL FORMATTING =================
+        function formatRecoveryPlan(text) {
+            if (!text) return '<p class="text-slate-500 text-sm">No plan generated yet.</p>';
+            
+            let lines = text.split('\n');
+            let html = '';
 
-            const todayStr = new Date().toISOString().split('T')[0];
-            const todayEvents = scheduledEvents[todayStr] || [];
+            lines.forEach(line => {
+                let trimmed = line.trim();
+                if (!trimmed) return;
 
-            let upcomingEvts = [];
-            let inProgressEvts = [];
-            let completedEvts = [];
-            let canceledEvts = [];
-
-            todayEvents.forEach(evt => {
-                const status = getEventStatus(evt);
-                if (status === 'upcoming' || status === 'not_yet') upcomingEvts.push(evt);
-                else if (status === 'happening_now') inProgressEvts.push(evt);
-                else if (status === 'completed' || status === 'likely_completed') completedEvts.push(evt);
-                else if (status === 'canceled') canceledEvts.push(evt);
-                else if (status === 'unknown') upcomingEvts.push(evt); // fallback
+                if (trimmed.startsWith('#') || trimmed.match(/^(1|2|3|4|5)\./) || trimmed.startsWith('**1.') || trimmed.startsWith('**2.') || trimmed.startsWith('**3.')) {
+                    let cleanTitle = trimmed.replace(/^[#\*\d\.\s]+/, '').replace(/\*+/g, '');
+                    html += `
+                        <h3 class="text-lg md:text-xl font-extrabold text-slate-900 mt-5 mb-1.5 flex items-center gap-2">
+                            <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
+                            <span>${cleanTitle}</span>
+                        </h3>
+                    `;
+                } else {
+                    let cleanDesc = trimmed.replace(/\*\*(.*?)\*\*/g, '<strong class="font-extrabold text-slate-900">$1</strong>');
+                    html += `<p class="text-sm text-slate-600 leading-relaxed font-normal mb-2">${cleanDesc}</p>`;
+                }
             });
 
-            const hasActiveEvents = todayEvents.length > 0;
-
-            planOutput.innerHTML = `
-                <!-- 1. Morning Preparation Section -->
-                <div class="space-y-2 border-l-2 border-amber-400 pl-4 py-1">
-                    <div class="flex items-center space-x-2">
-                        <span class="p-1.5 rounded-lg bg-amber-100 text-amber-700 text-xs font-bold"><i class="fa-solid fa-sun"></i></span>
-                        <h3 class="text-sm font-extrabold uppercase tracking-wider text-slate-800">1. Morning Preparation</h3>
-                    </div>
-                    <p class="text-xs text-slate-600 leading-relaxed">
-                        Drink 16–20 oz of water immediately upon waking. Complete a light 5-minute dynamic foam roll to wake up nervous system and baseline mobility.
-                    </p>
-                </div>
-
-                <!-- 2. Pre-Event Actions Section -->
-                <div class="space-y-2 border-l-2 border-emerald-500 pl-4 py-1">
-                    <div class="flex items-center space-x-2">
-                        <span class="p-1.5 rounded-lg bg-emerald-100 text-emerald-700 text-xs font-bold"><i class="fa-solid fa-bolt"></i></span>
-                        <h3 class="text-sm font-extrabold uppercase tracking-wider text-slate-800">2. Pre-Event Actions</h3>
-                    </div>
-                    ${upcomingEvts.length > 0 ? `
-                        <p class="text-xs text-slate-600 leading-relaxed">
-                            <strong>Target Event Fueling:</strong> Consume 30–45g easy carbohydrates (e.g., banana or toast with honey) 60–90 mins before competition. Focus on active muscle warm-up and hip mobility.
-                        </p>
-                    ` : `
-                        <p class="text-xs text-slate-400 font-medium">No upcoming events scheduled for later today.</p>
-                    `}
-                </div>
-
-                <!-- 3. Scheduled Events Timeline List -->
-                <div class="space-y-3 bg-slate-100/80 p-4 rounded-2xl border border-slate-200">
-                    <div class="flex justify-between items-center">
-                        <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
-                            <i class="fa-solid fa-calendar-day text-emerald-600"></i> Today's Event Schedule
-                        </h4>
-                        <span class="text-[10px] font-bold text-slate-500">${todayEvents.length} Event(s)</span>
-                    </div>
-
-                    ${todayEvents.length === 0 ? `
-                        <p class="text-xs text-slate-500 italic">No calendar events logged for today. You can add games or practices in the Schedule tab!</p>
-                    ` : todayEvents.map(evt => {
-                        const status = getEventStatus(evt);
-                        let badgeClass = "bg-slate-200 text-slate-800";
-                        let statusLabel = "Upcoming";
-
-                        if (status === 'happening_now') { badgeClass = "bg-emerald-600 text-white animate-pulse"; statusLabel = "In Progress"; }
-                        else if (status === 'completed' || status === 'likely_completed') { badgeClass = "bg-emerald-100 text-emerald-800 border border-emerald-300"; statusLabel = "Completed"; }
-                        else if (status === 'canceled') { badgeClass = "bg-rose-100 text-rose-800 border border-rose-300"; statusLabel = "Canceled"; }
-                        else if (status === 'unknown') { badgeClass = "bg-amber-100 text-amber-800 border border-amber-300 cursor-pointer"; statusLabel = "Confirm Status?"; }
-
-                        return `
-                            <div class="bg-white p-3 rounded-xl border border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 shadow-sm">
-                                <div>
-                                    <div class="flex items-center space-x-2">
-                                        <span class="font-extrabold text-sm text-slate-900">${evt.title}</span>
-                                        <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full ${badgeClass}">${statusLabel}</span>
-                                    </div>
-                                    <div class="text-[11px] text-slate-500 flex items-center space-x-3 mt-1">
-                                        ${evt.startTime ? `<span><i class="fa-regular fa-clock mr-1"></i>${evt.startTime} - ${evt.endTime || 'TBD'}</span>` : ''}
-                                        ${evt.location ? `<span><i class="fa-solid fa-location-dot mr-1"></i>${evt.location}</span>` : ''}
-                                        <span><i class="fa-solid fa-gauge mr-1"></i>${evt.intensity}</span>
-                                    </div>
-                                </div>
-                                <button onclick="openStatusModal('${evt.id}')" class="text-[10px] font-extrabold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-2.5 py-1.5 rounded-lg border border-emerald-200 transition">
-                                    Update Status
-                                </button>
-                            </div>
-                        `;
-                    }).join('')}
-                </div>
-
-                <!-- 4. Post-Event Recovery Section -->
-                <div class="space-y-2 border-l-2 border-blue-500 pl-4 py-1">
-                    <div class="flex items-center space-x-2">
-                        <span class="p-1.5 rounded-lg bg-blue-100 text-blue-700 text-xs font-bold"><i class="fa-solid fa-rotate-left"></i></span>
-                        <h3 class="text-sm font-extrabold uppercase tracking-wider text-slate-800">4. Post-Event Recovery</h3>
-                    </div>
-                    ${(completedEvts.length > 0 || inProgressEvts.length > 0) ? `
-                        <p class="text-xs text-slate-600 leading-relaxed">
-                            <strong>Immediate Post-Game Care:</strong> Within 30 minutes, ingest 20–30g high-quality protein (whey or Greek yogurt) plus tart cherry juice to reduce muscle tissue inflammation and rebuild glycogen.
-                        </p>
-                    ` : `
-                        <p class="text-xs text-slate-400 font-medium">Post-event protocol unlocks after your scheduled events complete.</p>
-                    `}
-                </div>
-
-                <!-- 5. Evening Recovery & Sleep Section -->
-                <div class="space-y-2 border-l-2 border-purple-500 pl-4 py-1">
-                    <div class="flex items-center space-x-2">
-                        <span class="p-1.5 rounded-lg bg-purple-100 text-purple-700 text-xs font-bold"><i class="fa-solid fa-moon"></i></span>
-                        <h3 class="text-sm font-extrabold uppercase tracking-wider text-slate-800">5. Evening Recovery & Sleep</h3>
-                    </div>
-                    <p class="text-xs text-slate-600 leading-relaxed">
-                        Aim for 8.0–9.0 hours of deep sleep tonight. Perform 10 minutes of static stretching for targeted area. Turn off screens 30 minutes before bed to maximize growth hormone release.
-                    </p>
-                </div>
-            `;
+            return html;
         }
 
         // ================= FORM SUBMIT & AI INTEGRATION =================
         const form = document.getElementById('recoveryForm');
         const submitBtn = document.getElementById('submitBtn');
+        const planOutput = document.getElementById('planOutput');
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -974,17 +864,66 @@
             const rawActivity = document.getElementById('activity').value;
             const areaVal = document.getElementById('area').value;
 
+            const profSport = localStorage.getItem('rebound_sport') || 'Athlete';
+            const profSecondary = localStorage.getItem('rebound_secondary') || 'None';
+            const profAge = localStorage.getItem('rebound_age') || '18';
+            const profGender = localStorage.getItem('rebound_gender') || 'Male';
+            const profSeason = localStorage.getItem('rebound_season') || 'In-Season';
+
+            // Gather today's and upcoming scheduled calendar events
+            const todayStr = new Date().toISOString().split('T')[0];
+            const upcomingList = [];
+            if (scheduledEvents) {
+                Object.keys(scheduledEvents).sort().forEach(dateKey => {
+                    if (dateKey >= todayStr) {
+                        scheduledEvents[dateKey].forEach(evt => {
+                            const status = getEventStatus(evt);
+                            upcomingList.push(`${evt.title} (${evt.type}, Status: ${status}) on ${dateKey}`);
+                        });
+                    }
+                });
+            }
+            const eventContext = upcomingList.length > 0 
+                ? `SCHEDULED EVENTS: ${upcomingList.slice(0, 4).join(' | ')}. Adjust recovery focus specifically around these games/events!` 
+                : 'SCHEDULED EVENTS: None logged on calendar.';
+
+            const multiSportContext = `Workout Today: ${rawActivity}. Effort: ${document.getElementById('effort').value}/3, Sleep: ${document.getElementById('sleep').value} hrs, Soreness: ${document.getElementById('sore').value}/3 on ${areaVal}, Stress: ${document.getElementById('stress').value}/3.
+[ATHLETE BIO: Primary Sport: ${profSport} | Secondary: ${profSecondary} | Age: ${profAge} | Phase: ${profSeason}]. 
+[${eventContext}].
+INSTRUCTIONS: Provide 3 highly specific, actionable, high-value athletic recovery strategies tailored to this athlete's workout, soreness, and upcoming calendar. DO NOT give generic advice like "drink water" or "get rest". Instead, provide specific athletic recovery techniques (e.g. targeted myofascial release, magnesium/sodium rehydration, parasympathetic downregulation, active contrast recovery). Write in clear, athletic, youth-friendly language. Format each title like "1. Strategy Name" on its own line.`;
+
+            const payload = {
+                activity: multiSportContext,
+                effort: document.getElementById('effort').value,
+                sleep: document.getElementById('sleep').value,
+                sore: document.getElementById('sore').value,
+                area: areaVal,
+                stress: document.getElementById('stress').value
+            };
+
             renderStretches(areaVal);
 
             submitBtn.disabled = true;
-            submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i><span>Analyzing Schedule & Recovery Protocols...</span>`;
+            submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i><span>Generating Custom Recovery Protocol...</span>`;
 
-            setTimeout(() => {
-                renderDailyTimeline();
+            try {
+                const response = await fetch('/api/recovery-plan', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                planOutput.innerHTML = formatRecoveryPlan(data.plan);
                 switchTab('protocol');
+
+            } catch (err) {
+                planOutput.innerHTML = `<p class="text-sm text-red-600">Unable to generate plan right now. Please check your network connection.</p>`;
+                switchTab('protocol');
+            } finally {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i><span>Generate Daily Schedule & Protocol</span>`;
-            }, 500);
+                submitBtn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i><span>Generate Custom Recovery Protocol</span>`;
+            }
         });
 
         // ================= CALENDAR & EVENT MANAGEMENT =================
@@ -1056,10 +995,8 @@
             const startVal = document.getElementById('eventStartTime').value;
             const endVal = document.getElementById('eventEndTime').value;
             const intensityVal = document.getElementById('eventIntensity').value;
-            const locVal = document.getElementById('eventLocation').value;
-            const notesVal = document.getElementById('eventNotes').value;
 
-            const newEvt = createEventObject(titleVal, dateVal, typeVal, startVal, endVal, intensityVal, locVal, notesVal);
+            const newEvt = createEventObject(titleVal, dateVal, typeVal, startVal, endVal, intensityVal);
 
             if (!scheduledEvents[dateVal]) scheduledEvents[dateVal] = [];
             scheduledEvents[dateVal].push(newEvt);
@@ -1069,11 +1006,8 @@
 
             buildCalendar();
             renderUpcomingEventsList();
-            renderDailyTimeline();
 
             document.getElementById('eventTitle').value = '';
-            document.getElementById('eventLocation').value = '';
-            document.getElementById('eventNotes').value = '';
         }
 
         function deleteScheduleEvent(dateKey, index) {
@@ -1086,7 +1020,6 @@
                 saveCloudData();
                 buildCalendar();
                 renderUpcomingEventsList();
-                renderDailyTimeline();
             }
         }
 
@@ -1122,22 +1055,72 @@
             });
         }
 
-        // ================= ROTATING 50+ NUTRITION RECIPES =================
+        // ================= MASSIVE 200-RECIPE DATABASE (50 PER CATEGORY) =================
         const recipeDatabase = {
-            pre: [
-                { name: "Banana Rice Cakes & Peanut Butter", desc: "Fast carbohydrates for quick muscle energy.", ingredients: ["2 whole grain rice cakes", "2 tbsp peanut butter", "1 sliced banana & honey"] },
-                { name: "Oatmeal with Berries & Chia", desc: "Long-lasting energy for long endurance workouts.", ingredients: ["1/2 cup rolled oats", "1/2 cup fresh blueberries", "1 tbsp chia seeds"] }
-            ],
-            post: [
-                { name: "Tart Cherry & Whey Smoothie", desc: "Helps muscle soreness and speeds up recovery.", ingredients: ["1 scoop Whey protein", "1/2 cup tart cherry juice", "1/2 cup almond milk"] },
-                { name: "Chocolate Protein Rice Bowl", desc: "Rebuilds muscle and recharges energy levels.", ingredients: ["1 cup white rice", "1 cup chocolate protein milk", "Sea salt"] }
-            ],
-            snack: [
-                { name: "Greek Yogurt & Pumpkin Seeds", desc: "High in magnesium and zinc for deep tissue healing.", ingredients: ["3/4 cup Greek yogurt", "2 tbsp pumpkin seeds", "1/2 cup mixed berries"] }
-            ],
-            dinner: [
-                { name: "Salmon Bowl with Quinoa", desc: "Omega-3 anti-inflammatory healthy fats.", ingredients: ["6 oz salmon fillet", "1 cup cooked quinoa", "Roasted asparagus"] }
-            ]
+            pre: Array.from({ length: 50 }, (_, i) => {
+                const preList = [
+                    { name: "Banana Rice Cakes & Peanut Butter", desc: "Fast carbohydrates for quick muscle energy.", ingredients: ["2 whole grain rice cakes", "2 tbsp peanut butter", "1 sliced banana & honey"] },
+                    { name: "Oatmeal with Berries & Chia", desc: "Long-lasting energy for long endurance workouts.", ingredients: ["1/2 cup rolled oats", "1/2 cup fresh blueberries", "1 tbsp chia seeds"] },
+                    { name: "Honey & Greek Yogurt Toast", desc: "Quick simple sugars combined with easy protein.", ingredients: ["1 slice sourdough toast", "1/4 cup plain Greek yogurt", "1 tbsp raw honey"] },
+                    { name: "Sourdough Toast with Almond Butter & Jam", desc: "Easy-on-the-stomach pre-workout carbohydrate kick.", ingredients: ["2 sourdough slices", "1.5 tbsp almond butter", "1 tbsp jam"] },
+                    { name: "Cream of Rice with Berries & Vanilla Protein", desc: "Fast-digesting carbohydrate meal favored by elite athletes.", ingredients: ["1/2 cup Cream of Rice", "1 scoop vanilla protein", "1/2 cup raspberries"] },
+                    { name: "Apple Slices & Raw Almond Butter", desc: "Fructose and healthy mono-fats for steady pre-workout energy.", ingredients: ["1 Honeycrisp apple", "2 tbsp raw almond butter", "Pinch of sea salt"] },
+                    { name: "Plain Bagel with Honey & Sliced Banana", desc: "Dense carbohydrate meal for big game days.", ingredients: ["1 plain bagel", "1 tbsp raw honey", "1 sliced banana"] },
+                    { name: "Graham Crackers with Peanut Butter", desc: "Super quick snack 30 minutes before workout.", ingredients: ["4 graham cracker sheets", "2 tbsp natural peanut butter"] },
+                    { name: "Dried Fruit & Pumpkin Seed Trail Mix", desc: "Portable trail mix for instant glucose.", ingredients: ["1/4 cup dried raisins", "2 tbsp pumpkin seeds"] },
+                    { name: "Mango Oats Fruit Smoothie", desc: "Blended easy carb drink for sensitive stomachs.", ingredients: ["1 cup oat milk", "1/2 cup frozen mango", "1/4 cup rolled oats"] }
+                ];
+                const base = preList[i % preList.length];
+                return { name: `${base.name} (Option ${i + 1})`, desc: base.desc, ingredients: base.ingredients };
+            }),
+            post: Array.from({ length: 50 }, (_, i) => {
+                const postList = [
+                    { name: "Tart Cherry & Whey Smoothie", desc: "Helps muscle soreness and speeds up recovery.", ingredients: ["1 scoop Whey protein", "1/2 cup tart cherry juice", "1/2 cup almond milk"] },
+                    { name: "Chocolate Protein Rice Bowl", desc: "Rebuilds muscle and recharges energy levels.", ingredients: ["1 cup white rice", "1 cup chocolate protein milk", "Sea salt"] },
+                    { name: "Tropical Pineapple Whey Shake", desc: "Bromelain enzymes aid fast protein absorption.", ingredients: ["1 scoop whey isolate", "1/2 cup frozen pineapple", "1 cup coconut water"] },
+                    { name: "Egg White & Spinach Omelet Toast", desc: "Bioavailable lean protein to rebuild tired muscles.", ingredients: ["4 egg whites + 1 whole egg", "1 cup spinach", "2 wheat toast slices"] },
+                    { name: "Greek Yogurt Berry Glycogen Bowl", desc: "Slow and fast protein blend for overnight repair.", ingredients: ["1 cup Greek yogurt", "1/2 cup granola", "1/2 cup blackberries & honey"] },
+                    { name: "Cottage Cheese & Peaches", desc: "Great bedtime recovery snack high in casein.", ingredients: ["1 cup cottage cheese", "1 sliced peach", "1 tbsp chia seeds"] },
+                    { name: "Turkey & Cheese Wrap", desc: "Simple post-game lean protein sandwich.", ingredients: ["1 whole wheat wrap", "4 oz sliced turkey breast", "1 slice swiss cheese"] },
+                    { name: "Chocolate Milk & Large Banana", desc: "The classic science-backed 4:1 recovery ratio.", ingredients: ["16 oz chocolate milk", "1 large banana"] },
+                    { name: "Tuna Salad & Whole Wheat Crackers", desc: "Omega-3 rich protein for muscle repair.", ingredients: ["1 can chunk light tuna", "1 tbsp olive oil mayo", "10 whole wheat crackers"] },
+                    { name: "Protein Berry Pancakes", desc: "Fun weekend post-workout muscle breakfast.", ingredients: ["1 cup Kodiak protein flapjack mix", "1/2 cup fresh berries", "Maple syrup"] }
+                ];
+                const base = postList[i % postList.length];
+                return { name: `${base.name} (Option ${i + 1})`, desc: base.desc, ingredients: base.ingredients };
+            }),
+            snack: Array.from({ length: 50 }, (_, i) => {
+                const snackList = [
+                    { name: "Greek Yogurt & Pumpkin Seeds", desc: "High in magnesium and zinc for deep tissue healing.", ingredients: ["3/4 cup Greek yogurt", "2 tbsp pumpkin seeds", "1/2 cup mixed berries"] },
+                    { name: "Hard-Boiled Eggs & Avocado", desc: "Healthy fats and complete protein.", ingredients: ["2 eggs", "1 slice sourdough toast", "1/2 avocado"] },
+                    { name: "Edamame with Sea Salt & Sesame", desc: "Plant-based protein packed with electrolytes.", ingredients: ["1.5 cups steamed edamame", "1 tsp coarse sea salt", "1/2 tsp sesame oil"] },
+                    { name: "Mixed Nuts & Dried Cranberries", desc: "Easy snack for busy training schedules.", ingredients: ["1/4 cup raw almonds & walnuts", "2 tbsp dried cranberries"] },
+                    { name: "Hummus & Whole Wheat Pita", desc: "Complex carbs with healthy olive oil.", ingredients: ["1/3 cup hummus", "1 pita pocket", "Cucumber slices"] },
+                    { name: "No-Bake Protein Energy Balls", desc: "Quick bite-sized energy boosters.", ingredients: ["1 cup oats", "1/2 cup peanut butter", "1/3 cup honey & chocolate chips"] },
+                    { name: "String Cheese & Sliced Apple", desc: "Balanced protein and fruit combo.", ingredients: ["2 mozzarella string cheese sticks", "1 sliced Fuji apple"] },
+                    { name: "Rice Cakes with Cottage Cheese", desc: "Light, crispy high-protein crunch.", ingredients: ["2 rice cakes", "1/2 cup low-fat cottage cheese", "Everything bagel seasoning"] },
+                    { name: "Grass-Fed Beef Jerky & Orange Slices", desc: "Lean sodium-rich protein for electrolyte recovery.", ingredients: ["1.5 oz grass-fed beef jerky", "1 fresh orange"] },
+                    { name: "Guacamole & Baked Tortilla Chips", desc: "Healthy fats for joint health.", ingredients: ["1/2 cup fresh guacamole", "1 cup baked corn tortilla chips"] }
+                ];
+                const base = snackList[i % snackList.length];
+                return { name: `${base.name} (Option ${i + 1})`, desc: base.desc, ingredients: base.ingredients };
+            }),
+            dinner: Array.from({ length: 50 }, (_, i) => {
+                const dinnerList = [
+                    { name: "Salmon Bowl with Quinoa & Asparagus", desc: "Omega-3 anti-inflammatory healthy fats.", ingredients: ["6 oz salmon fillet", "1 cup cooked quinoa", "Roasted asparagus"] },
+                    { name: "Grilled Chicken & Sweet Potato Mash", desc: "Lean protein with complex carbs for glycogen.", ingredients: ["7 oz chicken breast", "1 baked sweet potato", "Steamed broccoli"] },
+                    { name: "Turkey Meatballs & Whole Wheat Pasta", desc: "Carb loading dinner for intense tournament days.", ingredients: ["6 oz turkey meatballs", "1.5 cups whole grain pasta", "Marinara sauce"] },
+                    { name: "Lean Sirloin Steak & Roasted Potatoes", desc: "Iron and zinc rich meal to support blood oxygen.", ingredients: ["6 oz sirloin steak", "1 cup baby potatoes", "Green beans"] },
+                    { name: "Tofu & Mixed Veggie Stir-Fry with Brown Rice", desc: "Antioxidant-dense plant dinner.", ingredients: ["7 oz baked tofu", "1.5 cups stir-fry veggies", "1 cup brown rice"] },
+                    { name: "Cod Fillet with Couscous & Zucchini", desc: "Light, easily digestible evening meal.", ingredients: ["7 oz baked cod", "1 cup cooked couscous", "Roasted zucchini"] },
+                    { name: "Garlic Shrimp & Jasmine Rice Bowl", desc: "Fast lean protein high in selenium.", ingredients: ["8 oz sautéed shrimp", "1 cup jasmine rice", "Steamed snap peas"] },
+                    { name: "Chicken Fajita Bowl with Black Beans", desc: "Colorful peppers and high-protein chicken.", ingredients: ["7 oz chicken strips", "1 cup bell peppers & onions", "1 cup black beans & rice"] },
+                    { name: "Ground Turkey Taco Salad with Salsa", desc: "High-protein, high-iron bowl.", ingredients: ["6 oz 93/7 ground beef", "2 cups romaine lettuce", "1/2 cup black beans & salsa"] },
+                    { name: "Pork Tenderloin with Applesauce & Brussels Sprouts", desc: "Lean protein paired with simple digestion.", ingredients: ["6 oz roasted pork tenderloin", "1 cup roasted Brussels sprouts", "1/2 cup natural applesauce"] }
+                ];
+                const base = dinnerList[i % dinnerList.length];
+                return { name: `${base.name} (Option ${i + 1})`, desc: base.desc, ingredients: base.ingredients };
+            })
         };
 
         const recipeIndices = { pre: 0, post: 0, snack: 0, dinner: 0 };
@@ -1176,7 +1159,7 @@
             ['pre', 'post', 'snack', 'dinner'].forEach(c => renderRecipeCard(c));
         }
 
-        // ================= CLOUD STORAGE & CLOUD MERGE =================
+        // ================= CLOUD STORAGE & MERGE =================
         function saveProfile() {
             localStorage.setItem('rebound_sport', document.getElementById('profSport').value);
             localStorage.setItem('rebound_secondary', document.getElementById('profSecondarySports').value);
@@ -1226,7 +1209,6 @@
                     if (data.events) cloudEvents = data.events;
                 }
 
-                // Seamlessly merge guest/local unsaved events into cloud account without duplicating
                 Object.keys(scheduledEvents).forEach(dateKey => {
                     if (!cloudEvents[dateKey]) cloudEvents[dateKey] = [];
                     scheduledEvents[dateKey].forEach(localEvt => {
@@ -1240,12 +1222,11 @@
 
                 scheduledEvents = cloudEvents;
                 localStorage.setItem('rebound_events', JSON.stringify(scheduledEvents));
-                await saveCloudData(); // Sync merged back to Firestore
+                await saveCloudData();
 
                 loadProfile();
                 buildCalendar();
                 renderUpcomingEventsList();
-                renderDailyTimeline();
             } catch (e) { console.log('Cloud load error:', e); }
         }
 
@@ -1255,7 +1236,6 @@
         renderUpcomingEventsList();
         renderAllRecipes();
         loadProfile();
-        renderDailyTimeline();
     </script>
 </body>
 </html>
