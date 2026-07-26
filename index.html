@@ -246,14 +246,14 @@
                         </div>
                         <div>
                             <h2 class="text-xl font-extrabold text-slate-900">Targeted Mobility Routine</h2>
-                            <p class="text-xs text-slate-500 font-medium" id="stretchTargetText">Anatomical figure sequence & visual movement cues</p>
+                            <p class="text-xs text-slate-500 font-medium" id="stretchTargetText">3-exercise movement protocol customized to target muscle</p>
                         </div>
                     </div>
-                    <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full border border-emerald-300">Visual Figures</span>
+                    <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full border border-emerald-300">3 Targeted Exercises</span>
                 </div>
 
                 <div id="stretchingCardsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Exercise Figures Render Here -->
+                    <!-- 3 Exercise Cards Render Here -->
                 </div>
             </div>
         </section>
@@ -772,32 +772,38 @@
             renderUpcomingEventsList();
         }
 
-        // ================= FULL INSTRUCTIONAL STRETCH LIBRARY =================
+        // ================= FULL INSTRUCTIONAL STRETCH LIBRARY (EXACTLY 3 STRETCHES PER CATEGORY) =================
         const stretchLibrary = {
             'Quads': [
                 {
-                    name: 'Standing Quad Pull',
+                    name: 'Standing Quad Hold',
                     holdTime: '45 sec / leg',
                     reps: '2 sets each side',
-                    side: 'BOTH (Left & Right)',
-                    equipment: 'Wall or Chair (Balance)',
-                    safety: 'Avoid arching your lower back backward while pulling heel.',
-                    targetMuscle: 'Front Thigh (Quadriceps & Hip Flexor)',
-                    proTip: 'Squeeze glutes & tuck pelvis slightly to deepen front thigh stretch.',
-                    svgStart: `<svg viewBox="0 0 100 120" class="w-16 h-20 stroke-slate-700 fill-none stroke-[3]"><circle cx="50" cy="18" r="8" fill="#cbd5e1"/><path d="M50 26 v35 M50 38 h-12 M50 38 h12 M50 61 v35 M50 61 v35"/></svg>`,
-                    svgEnd: `<svg viewBox="0 0 100 120" class="w-16 h-20 stroke-slate-700 fill-none stroke-[3]"><circle cx="50" cy="18" r="8" fill="#cbd5e1"/><path d="M50 26 v35 M50 38 h-10 M50 38 l12 12 M50 61 v35 M50 61 l-12 -20 l-2 20" stroke="#10b981" stroke-width="4"/><path d="M38 50 l10 -10" stroke="#059669" stroke-width="2" stroke-dasharray="2"/><path d="M48 65 Q 40 70 48 80" fill="rgba(16,185,129,0.3)" stroke="none"/></svg>`
+                    side: 'Both Sides',
+                    equipment: 'Wall or Chair',
+                    targetMuscle: 'Quadriceps & Hip Flexors',
+                    howTo: 'Stand tall near a wall. Grab your ankle behind you and draw your heel toward your glutes while keeping your knees together.',
+                    proTip: 'Squeeze your glutes and tuck your hips slightly forward to feel a deep stretch down the front of your thigh.'
                 },
                 {
                     name: 'Kneeling Couch Stretch',
                     holdTime: '60 sec / leg',
                     reps: '2 sets each side',
-                    side: 'BOTH (Left & Right)',
-                    equipment: 'Wall & Padded Mat',
-                    safety: 'Do not dump weight into lower back—keep core tight.',
+                    side: 'Both Sides',
+                    equipment: 'Wall & Mat',
                     targetMuscle: 'Deep Hip Flexors & Psoas',
-                    proTip: 'Contract rear glute hard throughout the stretch to release tight hip flexors.',
-                    svgStart: `<svg viewBox="0 0 100 120" class="w-16 h-20 stroke-slate-700 fill-none stroke-[3]"><path d="M20 20 v80" stroke="#94a3b8" stroke-width="4"/><circle cx="45" cy="40" r="8" fill="#cbd5e1"/><path d="M45 48 v25 M45 73 l-20 20 M45 73 h20 v20"/></svg>`,
-                    svgEnd: `<svg viewBox="0 0 100 120" class="w-16 h-20 stroke-slate-700 fill-none stroke-[3]"><path d="M20 20 v80" stroke="#94a3b8" stroke-width="4"/><circle cx="40" cy="25" r="8" fill="#cbd5e1"/><path d="M40 33 v28 M40 61 l-20 30 M40 61 h25 v30" stroke="#10b981" stroke-width="4"/><path d="M42 45 Q 30 50 35 60" fill="rgba(16,185,129,0.3)" stroke="none"/></svg>`
+                    howTo: 'Place back knee against a wall with toes pointing straight up. Step opposite foot forward into a lunge and bring torso upright.',
+                    proTip: 'Keep your core engaged—don\'t let your lower back arch backward as you press your hips forward.'
+                },
+                {
+                    name: 'Prone Strap Quad Pull',
+                    holdTime: '45 sec / leg',
+                    reps: '2 sets each side',
+                    side: 'Both Sides',
+                    equipment: 'Towel or Band',
+                    targetMuscle: 'Rectus Femoris (Upper Quad)',
+                    howTo: 'Lie flat on your stomach. Loop a strap around your foot and gently pull your heel toward your glute while keeping your hips flat on the floor.',
+                    proTip: 'Press your hip bone directly into the ground to isolate the quad without arching your spine.'
                 }
             ],
             'Hamstrings': [
@@ -805,13 +811,31 @@
                     name: 'Elevated Heel Hinge',
                     holdTime: '45 sec / leg',
                     reps: '2 sets each side',
-                    side: 'BOTH (Left & Right)',
-                    equipment: 'Bench or Box',
-                    safety: 'Do not round spine—keep chest up and hinge only at hips.',
-                    targetMuscle: 'Upper Hamstring & Glute-Ham Tie-In',
-                    proTip: 'Flex foot back toward shin to maximize hamstring stretch.',
-                    svgStart: `<svg viewBox="0 0 100 120" class="w-16 h-20 stroke-slate-700 fill-none stroke-[3]"><rect x="60" y="70" width="30" height="30" stroke="#cbd5e1"/><circle cx="35" cy="25" r="8" fill="#cbd5e1"/><path d="M35 33 v30 M35 63 v35 M35 63 h30 v-10"/></svg>`,
-                    svgEnd: `<svg viewBox="0 0 100 120" class="w-16 h-20 stroke-slate-700 fill-none stroke-[3]"><rect x="60" y="70" width="30" height="30" stroke="#cbd5e1"/><circle cx="48" cy="35" r="8" fill="#cbd5e1"/><path d="M48 43 l-10 20 M38 63 v35 M38 63 h30 v-10" stroke="#10b981" stroke-width="4"/><path d="M40 60 Q 48 55 52 63" fill="rgba(16,185,129,0.3)" stroke="none"/></svg>`
+                    side: 'Both Sides',
+                    equipment: 'Bench or Chair',
+                    targetMuscle: 'Upper Hamstrings & Glutes',
+                    howTo: 'Place one heel on an elevated surface with your foot flexed upward. Keep your chest up and hinge forward at your hips.',
+                    proTip: 'Keep a tiny bend in your standing knee and reach your hips backward like you\'re closing a car door with your glutes.'
+                },
+                {
+                    name: 'Doorframe Leg-Up Stretch',
+                    holdTime: '60 sec / leg',
+                    reps: '2 sets each side',
+                    side: 'Both Sides',
+                    equipment: 'Doorframe or Wall',
+                    targetMuscle: 'Full Hamstring Belly',
+                    howTo: 'Lie on your back near a doorframe. Rest one leg up against the frame with the other extended flat through the doorway.',
+                    proTip: 'Flex your foot back toward your face to activate your calf and lengthen the entire posterior nerve pathway.'
+                },
+                {
+                    name: 'Seated Single-Leg Reach',
+                    holdTime: '45 sec / leg',
+                    reps: '2 sets each side',
+                    side: 'Both Sides',
+                    equipment: 'Floor Mat',
+                    targetMuscle: 'Mid-Hamstring & Lower Back',
+                    howTo: 'Sit on the floor with one leg straight and the other folded in. Hinge forward from your pelvis toward your straight foot.',
+                    proTip: 'Reach with your chest rather than rounding your shoulders to ensure the stretch stays in the hamstring.'
                 }
             ],
             'Calves': [
@@ -819,13 +843,127 @@
                     name: 'Wall Press Calf Stretch',
                     holdTime: '45 sec / leg',
                     reps: '2 sets each side',
-                    side: 'BOTH (Left & Right)',
+                    side: 'Both Sides',
                     equipment: 'Wall',
-                    safety: 'Keep back heel flat on the ground at all times.',
-                    targetMuscle: 'Gastrocnemius & Achilles Tendon',
-                    proTip: 'Keep rear leg fully extended and drive heel downward.',
-                    svgStart: `<svg viewBox="0 0 100 120" class="w-16 h-20 stroke-slate-700 fill-none stroke-[3]"><path d="M80 10 v90" stroke="#94a3b8" stroke-width="4"/><circle cx="40" cy="25" r="8" fill="#cbd5e1"/><path d="M40 33 v30 M40 63 l-15 30 M40 63 l15 30"/></svg>`,
-                    svgEnd: `<svg viewBox="0 0 100 120" class="w-16 h-20 stroke-slate-700 fill-none stroke-[3]"><path d="M80 10 v90" stroke="#94a3b8" stroke-width="4"/><circle cx="50" cy="28" r="8" fill="#cbd5e1"/><path d="M50 36 l15 15 M50 51 l-25 40 M50 51 l15 40" stroke="#10b981" stroke-width="4"/><path d="M30 75 Q 26 85 32 90" fill="rgba(16,185,129,0.3)" stroke="none"/></svg>`
+                    targetMuscle: 'Gastrocnemius (Upper Calf)',
+                    howTo: 'Place hands on a wall and step one leg straight back. Drive your rear heel firmly into the ground while keeping that back knee fully straight.',
+                    proTip: 'Ensure your back foot points straight forward, not angled outward.'
+                },
+                {
+                    name: 'Bent-Knee Soleus Stretch',
+                    holdTime: '45 sec / leg',
+                    reps: '2 sets each side',
+                    side: 'Both Sides',
+                    equipment: 'Wall',
+                    targetMuscle: 'Soleus (Lower Calf & Achilles)',
+                    howTo: 'Stand close to a wall in a short stance. Bend BOTH knees and sink weight into your back heel without lifting it off the floor.',
+                    proTip: 'Bending the back knee shifts the focus away from the main calf down into the lower Achilles tendon.'
+                },
+                {
+                    name: 'Downward Dog Pedal Drive',
+                    holdTime: '60 sec total',
+                    reps: '2 sets (10 pedals)',
+                    side: 'Alternating',
+                    equipment: 'Floor Mat',
+                    targetMuscle: 'Ankle Plantarflexors & Calves',
+                    howTo: 'Start in a push-up position, press hips up toward the ceiling, and slowly press one heel down to the floor at a time.',
+                    proTip: 'Hold each side for 3-5 seconds at the bottom of the heel-drive.'
+                }
+            ],
+            'Glutes & Hips': [
+                {
+                    name: 'Figure-4 Glute Stretch',
+                    holdTime: '45 sec / leg',
+                    reps: '2 sets each side',
+                    side: 'Both Sides',
+                    equipment: 'Floor Mat',
+                    targetMuscle: 'Gluteus Medius & Piriformis',
+                    howTo: 'Lie on your back, cross your right ankle over your left knee, and thread your hands through to pull your left thigh toward your chest.',
+                    proTip: 'Relax your head and shoulders flat on the floor while gently pressing your crossed knee away from you.'
+                },
+                {
+                    name: 'Half-Kneeling Hip Drive',
+                    holdTime: '45 sec / leg',
+                    reps: '2 sets each side',
+                    side: 'Both Sides',
+                    equipment: 'Padded Mat',
+                    targetMuscle: 'Hip Flexors & TFL',
+                    howTo: 'Kneel on one knee at a 90-degree angle. Squeeze your back glute hard and gently shift your weight forward 2-3 inches.',
+                    proTip: 'Raise the arm on your back-leg side overhead and lean slightly to the opposite side for an extra hip stretch.'
+                },
+                {
+                    name: 'Seated 90/90 Shin Box Switch',
+                    holdTime: '60 sec total',
+                    reps: '2 sets (5 holds/side)',
+                    side: 'Alternating',
+                    equipment: 'Floor Mat',
+                    targetMuscle: 'Hip Internal & External Rotators',
+                    howTo: 'Sit on the floor with both legs bent at 90-degree angles (one in front, one to the side). Hinge forward over your front leg.',
+                    proTip: 'Keep both hip bones grounded into the mat to unlock deeper rotational hip capsule mobility.'
+                }
+            ],
+            'Lower Back': [
+                {
+                    name: 'Cat-Cow Spine Mobilization',
+                    holdTime: '60 sec total',
+                    reps: '2 sets (10 slow cycles)',
+                    side: 'Full Spine',
+                    equipment: 'Floor Mat',
+                    targetMuscle: 'Spinal Erectors & Lumbar Fascia',
+                    howTo: 'Start on hands and knees. Inhale as you arch your back and look up, then exhale as you round your spine toward the ceiling.',
+                    proTip: 'Move slowly segment-by-segment through each vertebra rather than rushing.'
+                },
+                {
+                    name: 'Child\'s Pose Side Reach',
+                    holdTime: '45 sec / side',
+                    reps: '2 sets each side',
+                    side: 'Both Sides',
+                    equipment: 'Floor Mat',
+                    targetMuscle: 'Latissimus Dorsi & Lower Back',
+                    howTo: 'Kneel with big toes touching, sit hips back to heels, and reach hands forward. Walk both hands 45 degrees to the right side.',
+                    proTip: 'Breathe deeply into the side of your ribcage to stretch out tight back muscles.'
+                },
+                {
+                    name: 'Knee-to-Chest Lumbar Decompress',
+                    holdTime: '45 sec hold',
+                    reps: '2 sets',
+                    side: 'Both Legs Together',
+                    equipment: 'Floor Mat',
+                    targetMuscle: 'Lumbar Spine & Sacrum',
+                    howTo: 'Lie flat on your back, pull both knees in toward your chest, and wrap your arms around your shins. Rock gently side-to-side.',
+                    proTip: 'Keep your neck relaxed and sink your tailbone toward the ground to relieve pressure off tight lower back discs.'
+                }
+            ],
+            'Shoulders & Chest': [
+                {
+                    name: 'Doorway Chest Opener',
+                    holdTime: '45 sec hold',
+                    reps: '2 sets',
+                    side: 'Both Sides',
+                    equipment: 'Doorframe',
+                    targetMuscle: 'Pectoralis Major & Minor',
+                    howTo: 'Stand in a doorway, place elbows on the frame at 90 degrees, and gently step one foot forward until you feel a chest opening.',
+                    proTip: 'Keep your chest open and shoulders down away from your ears.'
+                },
+                {
+                    name: 'Cross-Body Shoulder Pull',
+                    holdTime: '45 sec / arm',
+                    reps: '2 sets each side',
+                    side: 'Both Sides',
+                    equipment: 'None',
+                    targetMuscle: 'Rear Deltoid & Rotator Cuff',
+                    howTo: 'Bring one arm horizontally across your chest. Use your opposite hand to gently pull your arm closer in toward your torso.',
+                    proTip: 'Keep your shoulder blades pulled down and back rather than letting them shrug up toward your chin.'
+                },
+                {
+                    name: 'Thread the Needle T-Spine Mobility',
+                    holdTime: '45 sec / side',
+                    reps: '2 sets each side',
+                    side: 'Both Sides',
+                    equipment: 'Floor Mat',
+                    targetMuscle: 'Thoracic Spine & Upper Back',
+                    howTo: 'Start on hands and knees. Slide one arm underneath your body along the floor, lowering your shoulder to the ground.',
+                    proTip: 'Exhale as you rotate through your middle back to release upper body tightness.'
                 }
             ]
         };
@@ -836,10 +974,10 @@
             if (!container) return;
 
             const stretches = stretchLibrary[area] || stretchLibrary['Quads'];
-            targetText.textContent = `Visual instructional routine for: ${area}`;
+            targetText.textContent = `3-exercise mobility sequence targeted specifically for: ${area}`;
             container.innerHTML = '';
 
-            stretches.forEach(item => {
+            stretches.forEach((item, index) => {
                 container.innerHTML += `
                     <div class="bg-white p-5 rounded-2xl border border-slate-200/90 space-y-4 hover:border-emerald-500 transition shadow-sm flex flex-col justify-between">
                         <div class="space-y-3">
@@ -849,28 +987,19 @@
                             </div>
 
                             <div>
+                                <div class="text-[10px] font-extrabold text-emerald-600 uppercase tracking-wider mb-0.5">Exercise ${index + 1}</div>
                                 <h4 class="font-extrabold text-slate-900 text-base">${item.name}</h4>
-                                <p class="text-[11px] font-bold text-emerald-700 mt-0.5"><i class="fa-solid fa-bullseye text-[10px] mr-1"></i>${item.targetMuscle}</p>
+                                <p class="text-[11px] font-bold text-slate-600 mt-0.5"><i class="fa-solid fa-bullseye text-[10px] text-emerald-600 mr-1"></i>${item.targetMuscle}</p>
                             </div>
 
-                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 flex items-center justify-around relative">
-                                <div class="text-center">
-                                    <span class="text-[9px] font-extrabold uppercase text-slate-400 block mb-1">1. Start Pos</span>
-                                    ${item.svgStart}
-                                </div>
-                                <div class="text-emerald-500 text-lg font-bold flex flex-col items-center">
-                                    <i class="fa-solid fa-arrow-right"></i>
-                                    <span class="text-[8px] font-extrabold uppercase text-emerald-600 mt-1">Move</span>
-                                </div>
-                                <div class="text-center">
-                                    <span class="text-[9px] font-extrabold uppercase text-emerald-700 block mb-1">2. Stretch Pos</span>
-                                    ${item.svgEnd}
-                                </div>
+                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs text-slate-700 leading-relaxed">
+                                <span class="font-extrabold text-slate-900 block mb-1 uppercase text-[9px] tracking-wider text-slate-500">Execution Cues</span>
+                                ${item.howTo}
                             </div>
 
                             <div class="grid grid-cols-2 gap-2 text-[11px]">
                                 <div class="bg-emerald-50/60 p-2 rounded-lg border border-emerald-100">
-                                    <span class="font-bold text-emerald-900 block text-[9px] uppercase">Reps</span>
+                                    <span class="font-bold text-emerald-900 block text-[9px] uppercase">Sets / Reps</span>
                                     <span class="text-slate-700 font-medium">${item.reps}</span>
                                 </div>
                                 <div class="bg-emerald-50/60 p-2 rounded-lg border border-emerald-100">
@@ -881,7 +1010,7 @@
 
                             <div class="bg-emerald-50 p-2.5 rounded-xl border border-emerald-200 text-[11px] text-emerald-900">
                                 <span class="font-extrabold uppercase text-[9px] tracking-wider text-emerald-700 flex items-center gap-1">
-                                    <i class="fa-solid fa-lightbulb"></i> Alignment Cue
+                                    <i class="fa-solid fa-lightbulb"></i> Key Coaching Alignment
                                 </span>
                                 <p class="font-medium leading-tight mt-0.5">${item.proTip}</p>
                             </div>
@@ -961,7 +1090,7 @@
                 ? `SCHEDULED EVENTS: ${upcomingList.slice(0, 4).join(' | ')}. Adjust recovery focus specifically around these games/events!` 
                 : 'SCHEDULED EVENTS: None logged on calendar.';
 
-            // REFITIONED AI PROMPT: High Variety + Clear, Athletic Language (No heavy jargon, no boring defaults)
+            // REFINE AI PROMPT: High Variety + Clear, Athletic Language (No heavy jargon, no boring defaults)
             const multiSportContext = `Workout Today: ${rawActivity}. Effort Level: ${checkInPayload.effort}/3, Sleep Last Night: ${checkInPayload.sleep} hrs, Soreness Level: ${checkInPayload.sore}/3 on ${areaVal}, Daily Stress: ${checkInPayload.stress}/3.
 [ATHLETE BIO: Primary Sport: ${profSport} | Secondary: ${profSecondary} | Age: ${profAge} | Phase: ${profSeason}]. 
 [${eventContext}].
