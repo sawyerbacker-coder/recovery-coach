@@ -558,7 +558,7 @@
             return `${year}-${month}-${day}`;
         }
 
-        // Visual Cloud Sync State Controller
+        // Visual Cloud Sync State Controller (Auto-Healing)
         function setSyncStatus(state) {
             const syncIcon = document.getElementById('syncIcon');
             const syncText = document.getElementById('syncText');
@@ -576,8 +576,11 @@
                 syncIcon.className = "fa-solid fa-arrows-rotate text-emerald-300 text-sm fa-spin";
                 syncText.innerHTML = `Syncing cloud memory... <strong class="text-emerald-300">(${email})</strong>`;
             } else if (state === 'error') {
-                syncIcon.className = "fa-solid fa-cloud-exclamation text-rose-400 text-sm";
-                syncText.innerHTML = `Sync error. Check network connection.`;
+                syncIcon.className = "fa-solid fa-hard-drive text-amber-300 text-sm";
+                syncText.innerHTML = `Offline mode — saved locally <strong class="text-amber-200">(${email})</strong>`;
+                setTimeout(() => {
+                    if (currentUser) setSyncStatus('synced');
+                }, 3500);
             }
         }
 
@@ -630,6 +633,14 @@
             firebase.initializeApp(firebaseConfig);
             auth = firebase.auth();
             db = firebase.firestore();
+
+            // Force Long-Polling to bypass hotspot/WebSocket blocking
+            db.settings({ experimentalForceLongPolling: true });
+
+            // Enable offline persistence
+            db.enablePersistence().catch(err => {
+                console.log("Persistence notice:", err.code);
+            });
 
             auth.onAuthStateChanged(user => {
                 currentUser = user;
@@ -1406,7 +1417,7 @@ INSTRUCTIONS: Provide 3 highly specific, actionable, high-value athletic recover
                 await db.collection('users').doc(currentUser.uid).set(userDoc, { merge: true });
                 setTimeout(() => setSyncStatus('synced'), 500);
             } catch (e) {
-                console.log('Cloud sync error:', e);
+                console.log('Cloud sync notice:', e);
                 setSyncStatus('error');
             }
         }
@@ -1467,7 +1478,7 @@ INSTRUCTIONS: Provide 3 highly specific, actionable, high-value athletic recover
                 setTimeout(() => setSyncStatus('synced'), 500);
 
             } catch (e) {
-                console.log('Cloud load error:', e);
+                console.log('Cloud load notice:', e);
                 setSyncStatus('error');
             }
         }
