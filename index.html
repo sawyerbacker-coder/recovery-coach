@@ -357,18 +357,36 @@
                         </div>
                         <div>
                             <h2 class="text-xl font-extrabold text-slate-900">Performance Nutrition Hub</h2>
-                            <p class="text-xs text-slate-500 font-medium">Deep 50-Recipe Bank Per Category — Click <strong>AI Refresh 🔄</strong> for fresh options!</p>
+                            <p class="text-xs text-slate-500 font-medium">Deep 50-Recipe Bank Per Category — Click <strong>AI Refresh 🔄</strong> or <strong>Heart ❤️</strong> to Save!</p>
                         </div>
                     </div>
                     <span class="text-xs bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1 rounded-full border border-emerald-300">200 Recipes Total</span>
                 </div>
 
+                <!-- 4 Daily Recipe Suggestion Cards -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div id="card-pre" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition"></div>
                     <div id="card-post" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition"></div>
                     <div id="card-snack" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition"></div>
                     <div id="card-dinner" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-emerald-400 transition"></div>
                 </div>
+
+                <!-- Saved Favorites Drawer -->
+                <div class="bg-white p-5 rounded-2xl border border-emerald-200 shadow-sm space-y-4 pt-4">
+                    <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                        <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-heart text-rose-500"></i>
+                            <span>Saved Favorite Recipes</span>
+                            <span id="favCountBadge" class="text-xs bg-rose-100 text-rose-800 font-bold px-2 py-0.5 rounded-full border border-rose-200">0</span>
+                        </h3>
+                        <p class="text-[11px] text-slate-400">Synced to your email account</p>
+                    </div>
+
+                    <div id="savedFavoritesContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Dynamically populated favorited recipes -->
+                    </div>
+                </div>
+
             </div>
         </section>
 
@@ -548,6 +566,7 @@
         let auth, db, currentUser = null;
         let activeModalEventId = null;
         let scheduledEvents = {};
+        let favoriteRecipes = [];
         let syncStatusTimer = null;
 
         // Date helper: returns YYYY-MM-DD in local time
@@ -598,6 +617,7 @@
         function resetToCleanSlate() {
             localStorage.clear();
             scheduledEvents = {};
+            favoriteRecipes = [];
 
             // Clear Check-In form
             if (document.getElementById('activity')) document.getElementById('activity').value = '';
@@ -620,6 +640,10 @@
             if (document.getElementById('profAge')) document.getElementById('profAge').value = '18';
             if (document.getElementById('profGender')) document.getElementById('profGender').value = 'Male';
             if (document.getElementById('profSeason')) document.getElementById('profSeason').value = 'In-Season Competition Phase';
+
+            randomizeRecipeIndices();
+            renderAllRecipes();
+            renderSavedFavoritesList();
 
             buildCalendar();
             renderUpcomingEventsList();
@@ -782,7 +806,7 @@
             renderUpcomingEventsList();
         }
 
-        // ================= FULL INSTRUCTIONAL STRETCH LIBRARY (EXACTLY 3 STRETCHES PER CATEGORY) =================
+        // ================= FULL INSTRUCTIONAL STRETCH LIBRARY =================
         const stretchLibrary = {
             'Quads': [
                 {
@@ -1502,9 +1526,48 @@ Explanation...`;
 
         const recipeIndices = { pre: 0, post: 0, snack: 0, dinner: 0 };
 
+        // Randomize initial starting positions for all 4 categories
+        function randomizeRecipeIndices() {
+            Object.keys(recipeDatabase).forEach(category => {
+                recipeIndices[category] = Math.floor(Math.random() * recipeDatabase[category].length);
+            });
+        }
+
         function refreshRecipe(category) {
             recipeIndices[category] = (recipeIndices[category] + 1) % recipeDatabase[category].length;
             renderRecipeCard(category);
+        }
+
+        function isRecipeFavorited(category, recipeName) {
+            return favoriteRecipes.some(f => f.category === category && f.name === recipeName);
+        }
+
+        function toggleFavorite(category) {
+            const recipe = recipeDatabase[category][recipeIndices[category]];
+            if (!recipe) return;
+
+            const existingIndex = favoriteRecipes.findIndex(f => f.category === category && f.name === recipe.name);
+            if (existingIndex > -1) {
+                favoriteRecipes.splice(existingIndex, 1);
+            } else {
+                favoriteRecipes.push({
+                    category: category,
+                    name: recipe.name,
+                    desc: recipe.desc,
+                    ingredients: recipe.ingredients
+                });
+            }
+
+            renderRecipeCard(category);
+            renderSavedFavoritesList();
+            saveCloudData();
+        }
+
+        function removeFavoriteDirect(category, recipeName) {
+            favoriteRecipes = favoriteRecipes.filter(f => !(f.category === category && f.name === recipeName));
+            ['pre', 'post', 'snack', 'dinner'].forEach(c => renderRecipeCard(c));
+            renderSavedFavoritesList();
+            saveCloudData();
         }
 
         function renderRecipeCard(category) {
@@ -1514,12 +1577,20 @@ Explanation...`;
             const recipe = recipeDatabase[category][recipeIndices[category]];
             const categoryLabels = { pre: "Pre-Training Fuel", post: "Post-Training Recovery", snack: "Nutritious Daily Snack", dinner: "Recovery Dinner" };
 
+            const isFav = isRecipeFavorited(category, recipe.name);
+            const heartBtnClass = isFav ? "text-rose-500 bg-rose-50 border-rose-300" : "text-slate-400 hover:text-rose-500 bg-white border-slate-300";
+
             container.innerHTML = `
                 <div class="flex justify-between items-center">
                     <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-md border border-emerald-300">${categoryLabels[category]}</span>
-                    <button onclick="refreshRecipe('${category}')" class="text-xs text-emerald-700 hover:text-emerald-900 font-bold flex items-center gap-1 bg-white px-2.5 py-1 rounded-lg border border-slate-300 shadow-sm transition">
-                        <i class="fa-solid fa-arrows-rotate text-[10px]"></i> AI Refresh
-                    </button>
+                    <div class="flex items-center space-x-1.5">
+                        <button onclick="toggleFavorite('${category}')" class="p-1.5 rounded-lg border shadow-sm transition ${heartBtnClass}" title="${isFav ? 'Remove from favorites' : 'Save recipe'}">
+                            <i class="fa-solid fa-heart text-xs"></i>
+                        </button>
+                        <button onclick="refreshRecipe('${category}')" class="text-xs text-emerald-700 hover:text-emerald-900 font-bold flex items-center gap-1 bg-white px-2.5 py-1 rounded-lg border border-slate-300 shadow-sm transition">
+                            <i class="fa-solid fa-arrows-rotate text-[10px]"></i> AI Refresh
+                        </button>
+                    </div>
                 </div>
                 <h3 class="font-extrabold text-slate-900 text-base">${recipe.name}</h3>
                 <p class="text-xs text-slate-600">${recipe.desc}</p>
@@ -1530,6 +1601,42 @@ Explanation...`;
                     </ul>
                 </div>
             `;
+        }
+
+        function renderSavedFavoritesList() {
+            const container = document.getElementById('savedFavoritesContainer');
+            const badge = document.getElementById('favCountBadge');
+            if (!container) return;
+
+            if (badge) badge.textContent = favoriteRecipes.length;
+
+            if (favoriteRecipes.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 italic md:col-span-2 py-2">No saved recipes yet. Click the heart icon on any recipe to save it to your account!</p>`;
+                return;
+            }
+
+            const catBadgeStyles = {
+                pre: "bg-emerald-100 text-emerald-800 border-emerald-300",
+                post: "bg-blue-100 text-blue-800 border-blue-300",
+                snack: "bg-amber-100 text-amber-800 border-amber-300",
+                dinner: "bg-purple-100 text-purple-800 border-purple-300"
+            };
+
+            container.innerHTML = favoriteRecipes.map(fav => `
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2 relative group hover:border-rose-300 transition shadow-sm">
+                    <div class="flex justify-between items-start">
+                        <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded border ${catBadgeStyles[fav.category] || 'bg-slate-100 text-slate-700'}">${fav.category.toUpperCase()} FUEL</span>
+                        <button onclick="removeFavoriteDirect('${fav.category}', '${fav.name.replace(/'/g, "\\'")}')" class="text-slate-400 hover:text-rose-500 transition text-xs p-1" title="Remove from favorites">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                    <h4 class="font-extrabold text-slate-900 text-sm">${fav.name}</h4>
+                    <p class="text-[11px] text-slate-500">${fav.desc}</p>
+                    <div class="text-[11px] text-slate-600 pt-1">
+                        <strong class="text-emerald-700">Ingredients:</strong> ${fav.ingredients.join(', ')}
+                    </div>
+                </div>
+            `).join('');
         }
 
         function renderAllRecipes() {
@@ -1563,6 +1670,7 @@ Explanation...`;
                 gender: document.getElementById('profGender').value || 'Male',
                 season: document.getElementById('profSeason').value || 'In-Season Competition Phase',
                 events: scheduledEvents || {},
+                favoriteRecipes: favoriteRecipes || [],
                 checkInDate: localStorage.getItem('rebound_checkin_date') || '',
                 checkInData: parsedCheckIn,
                 generatedPlan: localStorage.getItem('rebound_generated_plan') || ''
@@ -1596,8 +1704,9 @@ Explanation...`;
                     if (data.gender !== undefined) document.getElementById('profGender').value = data.gender;
                     if (data.season !== undefined) document.getElementById('profSeason').value = data.season;
 
-                    // Restore Scheduled Events
+                    // Restore Scheduled Events & Favorites
                     scheduledEvents = data.events || {};
+                    favoriteRecipes = data.favoriteRecipes || [];
 
                     // Restore Today's Check-In & Generated Plan (If logged on today's date)
                     const todayStr = getTodayDateString();
@@ -1630,6 +1739,8 @@ Explanation...`;
                     saveCloudData();
                 }
 
+                renderAllRecipes();
+                renderSavedFavoritesList();
                 buildCalendar();
                 renderUpcomingEventsList();
                 setSyncStatus('synced');
@@ -1642,7 +1753,6 @@ Explanation...`;
 
         // Initialize Page Components
         resetToCleanSlate();
-        renderAllRecipes();
     </script>
 </body>
 </html>
