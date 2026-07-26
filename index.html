@@ -961,10 +961,16 @@
                 ? `SCHEDULED EVENTS: ${upcomingList.slice(0, 4).join(' | ')}. Adjust recovery focus specifically around these games/events!` 
                 : 'SCHEDULED EVENTS: None logged on calendar.';
 
-            const multiSportContext = `Workout Today: ${rawActivity}. Effort: ${checkInPayload.effort}/3, Sleep: ${checkInPayload.sleep} hrs, Soreness: ${checkInPayload.sore}/3 on ${areaVal}, Stress: ${checkInPayload.stress}/3.
+            // REFITIONED AI PROMPT: High Variety + Clear, Athletic Language (No heavy jargon, no boring defaults)
+            const multiSportContext = `Workout Today: ${rawActivity}. Effort Level: ${checkInPayload.effort}/3, Sleep Last Night: ${checkInPayload.sleep} hrs, Soreness Level: ${checkInPayload.sore}/3 on ${areaVal}, Daily Stress: ${checkInPayload.stress}/3.
 [ATHLETE BIO: Primary Sport: ${profSport} | Secondary: ${profSecondary} | Age: ${profAge} | Phase: ${profSeason}]. 
 [${eventContext}].
-INSTRUCTIONS: Provide 3 highly specific, actionable, high-value athletic recovery strategies tailored to this athlete's workout, soreness, and upcoming calendar. DO NOT give generic advice like "drink water" or "get rest". Instead, provide specific athletic recovery techniques (e.g. targeted myofascial release, magnesium/sodium rehydration, parasympathetic downregulation, active contrast recovery). Write in clear, athletic, youth-friendly language. Format each title like "1. Strategy Name" on its own line.`;
+
+INSTRUCTIONS:
+1. Generate 3 unique, actionable recovery strategies tailored directly to today's workout, soreness, stress, and upcoming schedule.
+2. MODALITY DIVERSITY: Pick 3 DIFFERENT recovery types based on today's needs (e.g. active circulation flush, joint & spine de-loading, contrast/thermal therapy, sleep hygiene hacks, targeted tissue release, nervous system resets, or fueling timing). DO NOT always default to the basic stretch/breath/drink trio!
+3. TONE & LANGUAGE: Write in a sharp, clear, pro athletic coach voice. AVOID overly dense medical/scientific jargon (e.g. use "Lower Back Pressure Relief" instead of "Lumbar Decompression", and "Nervous System Stress Reset" instead of "Parasympathetic Downregulation").
+4. FORMAT: Format each strategy heading as "1. Strategy Title" on its own line, followed by 2-3 concise, actionable sentences explaining exactly what to do and why it helps.`;
 
             const payload = {
                 activity: multiSportContext,
