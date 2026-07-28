@@ -19,15 +19,15 @@
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: linear-gradient(135deg, #eff6ff 0%, #f8fafc 50%, #e0f2fe 100%);
+            background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 50%, #e0f2fe 100%);
             color: #0f172a;
             min-height: 100vh;
         }
         .fluid-card {
-            background: rgba(255, 255, 255, 0.92);
+            background: rgba(255, 255, 255, 0.94);
             backdrop-filter: blur(16px);
-            border: 1px solid rgba(37, 99, 235, 0.18);
-            box-shadow: 0 10px 30px -5px rgba(37, 99, 235, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(14, 165, 233, 0.2);
+            box-shadow: 0 10px 30px -5px rgba(14, 165, 233, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
             border-radius: 1.75rem;
         }
         .fluid-input {
@@ -39,8 +39,8 @@
         }
         .fluid-input:focus {
             background: #ffffff;
-            border-color: #2563eb;
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.18);
             outline: none;
         }
         .tab-btn {
@@ -48,9 +48,9 @@
             border-radius: 1rem;
         }
         .tab-btn.active {
-            background: #2563eb;
+            background: #0ea5e9;
             color: #ffffff;
-            box-shadow: 0 8px 20px -4px rgba(37, 99, 235, 0.4);
+            box-shadow: 0 8px 20px -4px rgba(14, 165, 233, 0.4);
         }
         .sticker-badge {
             animation: float 4s ease-in-out infinite;
@@ -64,33 +64,33 @@
 <body class="min-h-screen flex flex-col items-center justify-start p-4 md:p-8 relative overflow-x-hidden">
 
     <!-- Background Badges -->
-    <div class="fixed top-12 left-6 text-blue-300/40 text-6xl pointer-events-none sticker-badge"><i class="fa-solid fa-basketball"></i></div>
-    <div class="fixed bottom-12 right-8 text-sky-300/40 text-6xl pointer-events-none sticker-badge" style="animation-delay: 2s;"><i class="fa-solid fa-person-running"></i></div>
-    <div class="fixed top-1/2 -left-8 text-blue-200/30 text-7xl pointer-events-none sticker-badge" style="animation-delay: 1s;"><i class="fa-solid fa-trophy"></i></div>
+    <div class="fixed top-12 left-6 text-sky-300/40 text-6xl pointer-events-none sticker-badge"><i class="fa-solid fa-basketball"></i></div>
+    <div class="fixed bottom-12 right-8 text-sky-400/30 text-6xl pointer-events-none sticker-badge" style="animation-delay: 2s;"><i class="fa-solid fa-person-running"></i></div>
+    <div class="fixed top-1/2 -left-8 text-sky-200/40 text-7xl pointer-events-none sticker-badge" style="animation-delay: 1s;"><i class="fa-solid fa-trophy"></i></div>
 
     <div class="max-w-4xl w-full space-y-6 relative z-10">
         
         <!-- Header & Account/Profile Controls -->
         <header class="flex items-center justify-between pb-2">
             <div class="space-y-1">
-                <div class="inline-flex items-center space-x-2 bg-blue-100 border border-blue-300 px-3.5 py-1 rounded-full text-blue-800 text-xs font-extrabold tracking-wide uppercase">
-                    <i class="fa-solid fa-bolt text-blue-600"></i>
+                <div class="inline-flex items-center space-x-2 bg-sky-100 border border-sky-300 px-3.5 py-1 rounded-full text-sky-800 text-xs font-extrabold tracking-wide uppercase">
+                    <i class="fa-solid fa-bolt text-sky-500"></i>
                     <span>Evidence-Based Recovery</span>
                 </div>
                 <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
-                    REBOUND <span class="text-blue-600">COACH</span>
+                    REBOUND <span class="text-sky-500">COACH</span>
                 </h1>
             </div>
 
             <!-- Top-Right Account & Profile Bar -->
             <div class="flex items-center space-x-2">
                 <button id="authBtn" onclick="toggleAuthModal()" class="flex items-center space-x-2 bg-slate-900 hover:bg-slate-800 text-white px-3.5 py-2.5 rounded-2xl shadow-md transition font-extrabold text-xs">
-                    <i class="fa-solid fa-user-circle text-blue-400"></i>
+                    <i class="fa-solid fa-user-circle text-sky-400"></i>
                     <span id="authBtnText">Account Login</span>
                 </button>
 
-                <button onclick="toggleProfileModal()" class="flex items-center space-x-2 bg-white hover:bg-blue-50 border border-blue-300 p-2.5 rounded-2xl shadow-sm transition text-slate-700" title="Athlete Bio Setup">
-                    <div class="w-7 h-7 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-xs">
+                <button onclick="toggleProfileModal()" class="flex items-center space-x-2 bg-white hover:bg-sky-50 border border-sky-300 p-2.5 rounded-2xl shadow-sm transition text-slate-700" title="Athlete Bio Setup">
+                    <div class="w-7 h-7 rounded-xl bg-sky-100 text-sky-800 flex items-center justify-center font-bold text-xs">
                         <i class="fa-solid fa-sliders"></i>
                     </div>
                 </button>
@@ -98,10 +98,10 @@
         </header>
 
         <!-- Email Memory & Sync Banner when Logged In -->
-        <div id="accountBanner" class="hidden bg-blue-900 text-white p-3 px-5 rounded-2xl flex items-center justify-between text-xs font-semibold shadow-sm transition-all duration-300">
+        <div id="accountBanner" class="hidden bg-sky-900 text-white p-3 px-5 rounded-2xl flex items-center justify-between text-xs font-semibold shadow-sm transition-all duration-300">
             <div class="flex items-center space-x-2.5">
-                <i id="syncIcon" class="fa-solid fa-cloud-check text-blue-400 text-sm"></i>
-                <span id="syncText">Cloud Sync Active: <strong id="userEmailDisplay" class="text-blue-300"></strong></span>
+                <i id="syncIcon" class="fa-solid fa-cloud-check text-sky-300 text-sm"></i>
+                <span id="syncText">Cloud Sync Active: <strong id="userEmailDisplay" class="text-sky-200"></strong></span>
             </div>
             <button onclick="handleSignOut()" class="text-slate-300 hover:text-white underline font-bold ml-4">Sign Out</button>
         </div>
@@ -131,7 +131,7 @@
             <div class="fluid-card p-6 md:p-8 space-y-6">
                 
                 <div class="flex items-center space-x-3 pb-2 border-b border-slate-200">
-                    <div class="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-600/30">
+                    <div class="w-10 h-10 rounded-2xl bg-sky-500 text-white flex items-center justify-center shadow-md shadow-sky-500/30">
                         <i class="fa-solid fa-heart-pulse text-lg"></i>
                     </div>
                     <div>
@@ -146,9 +146,9 @@
                     <div class="space-y-3">
                         <div class="flex items-center justify-between">
                             <label class="text-xs font-extrabold tracking-wider uppercase text-slate-700 flex items-center gap-2">
-                                <i class="fa-solid fa-dumbbell text-blue-600"></i> Workouts / Sessions Logged Today
+                                <i class="fa-solid fa-dumbbell text-sky-500"></i> Workouts / Sessions Logged Today
                             </label>
-                            <button type="button" onclick="addSessionInputRow()" class="text-xs font-extrabold text-blue-800 bg-blue-100 hover:bg-blue-200 border border-blue-300 px-3 py-1.5 rounded-xl transition flex items-center gap-1.5 shadow-sm">
+                            <button type="button" onclick="addSessionInputRow()" class="text-xs font-extrabold text-sky-800 bg-sky-100 hover:bg-sky-200 border border-sky-300 px-3 py-1.5 rounded-xl transition flex items-center gap-1.5 shadow-sm">
                                 <i class="fa-solid fa-plus text-[10px]"></i>
                                 <span>Add Another Session</span>
                             </button>
@@ -164,7 +164,7 @@
                         
                         <div class="space-y-2">
                             <label class="text-xs font-extrabold tracking-wider uppercase text-slate-700 flex items-center gap-2">
-                                <i class="fa-solid fa-bed text-blue-600"></i> Sleep Last Night (Hours)
+                                <i class="fa-solid fa-bed text-sky-500"></i> Sleep Last Night (Hours)
                             </label>
                             <input type="number" id="sleep" value="7.5" step="0.5" min="2" max="14" required 
                                 class="fluid-input w-full px-4 py-3 text-sm">
@@ -172,7 +172,7 @@
 
                         <div class="space-y-2">
                             <label class="text-xs font-extrabold tracking-wider uppercase text-slate-700 flex items-center gap-2">
-                                <i class="fa-solid fa-person-dots-from-line text-blue-600"></i> Soreness & Target Muscle
+                                <i class="fa-solid fa-person-dots-from-line text-sky-500"></i> Soreness & Target Muscle
                             </label>
                             <div class="grid grid-cols-2 gap-2">
                                 <select id="sore" class="fluid-input px-3 py-3 text-sm">
@@ -193,7 +193,7 @@
 
                         <div class="space-y-2">
                             <label class="text-xs font-extrabold tracking-wider uppercase text-slate-700 flex items-center gap-2">
-                                <i class="fa-solid fa-brain text-blue-600"></i> Daily Stress Level
+                                <i class="fa-solid fa-brain text-sky-500"></i> Daily Stress Level
                             </label>
                             <select id="stress" class="fluid-input w-full px-4 py-3 text-sm">
                                 <option value="1">1 - Low / Relaxed & Calm</option>
@@ -205,7 +205,7 @@
                     </div>
 
                     <button type="submit" id="submitBtn" 
-                        class="w-full py-4 rounded-2xl font-extrabold text-white bg-blue-600 hover:bg-blue-700 transition duration-200 shadow-lg shadow-blue-600/30 flex items-center justify-center space-x-2 text-base uppercase tracking-wider cursor-pointer">
+                        class="w-full py-4 rounded-2xl font-extrabold text-white bg-sky-500 hover:bg-sky-600 transition duration-200 shadow-lg shadow-sky-500/30 flex items-center justify-center space-x-2 text-base uppercase tracking-wider cursor-pointer">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
                         <span>Generate Custom Recovery Protocol</span>
                     </button>
@@ -216,10 +216,10 @@
         <!-- ================= TAB 2: PLAN & MOBILITY ================= -->
         <section id="tab-protocol" class="tab-content hidden space-y-6">
             
-            <div class="fluid-card p-6 md:p-8 space-y-4 border-l-4 border-blue-600">
+            <div class="fluid-card p-6 md:p-8 space-y-4 border-l-4 border-sky-500">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-2xl bg-blue-100 text-blue-800 flex items-center justify-center font-bold">
+                        <div class="w-10 h-10 rounded-2xl bg-sky-100 text-sky-800 flex items-center justify-center font-bold">
                             <i class="fa-solid fa-microscope text-lg"></i>
                         </div>
                         <div>
@@ -227,7 +227,7 @@
                             <p class="text-xs text-slate-500 font-medium">Personalized strategies combining today's training load, sleep, stress, and upcoming games</p>
                         </div>
                     </div>
-                    <span class="text-xs bg-blue-100 text-blue-800 font-extrabold px-3 py-1 rounded-full border border-blue-300">Smart AI Insights</span>
+                    <span class="text-xs bg-sky-100 text-sky-800 font-extrabold px-3 py-1 rounded-full border border-sky-300">Smart AI Insights</span>
                 </div>
 
                 <hr class="border-slate-200">
@@ -241,7 +241,7 @@
             <div class="fluid-card p-6 md:p-8 space-y-6">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md">
+                        <div class="w-10 h-10 rounded-2xl bg-sky-500 text-white flex items-center justify-center shadow-md">
                             <i class="fa-solid fa-person-stretching text-lg"></i>
                         </div>
                         <div>
@@ -249,7 +249,7 @@
                             <p class="text-xs text-slate-500 font-medium" id="stretchTargetText">3-exercise movement protocol customized to target muscle</p>
                         </div>
                     </div>
-                    <span class="text-xs bg-blue-100 text-blue-800 font-bold px-3 py-1 rounded-full border border-blue-300">3 Targeted Exercises</span>
+                    <span class="text-xs bg-sky-100 text-sky-800 font-bold px-3 py-1 rounded-full border border-sky-300">3 Targeted Exercises</span>
                 </div>
 
                 <div id="stretchingCardsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -263,7 +263,7 @@
             <div class="fluid-card p-6 md:p-8 space-y-6">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-2xl bg-blue-100 text-blue-800 flex items-center justify-center">
+                        <div class="w-10 h-10 rounded-2xl bg-sky-100 text-sky-800 flex items-center justify-center">
                             <i class="fa-solid fa-calendar-days text-lg"></i>
                         </div>
                         <div>
@@ -271,11 +271,11 @@
                             <p class="text-xs text-slate-500 font-medium">Events automatically sync to your account upon login</p>
                         </div>
                     </div>
-                    <span id="currentMonthYear" class="text-sm font-extrabold text-blue-700"></span>
+                    <span id="currentMonthYear" class="text-sm font-extrabold text-sky-700"></span>
                 </div>
 
                 <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-4">
-                    <div class="grid grid-cols-7 text-center text-xs font-extrabold uppercase tracking-wider text-blue-700 py-2 border-b border-slate-200">
+                    <div class="grid grid-cols-7 text-center text-xs font-extrabold uppercase tracking-wider text-sky-700 py-2 border-b border-slate-200">
                         <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
                     </div>
                     <div id="calendarDays" class="grid grid-cols-7 gap-1 text-center">
@@ -284,9 +284,9 @@
                 </div>
 
                 <!-- Streamlined Event Creation Form -->
-                <div class="p-5 rounded-2xl bg-blue-50/80 border border-blue-200 space-y-4">
-                    <h4 class="text-xs font-extrabold text-blue-900 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-calendar-plus text-blue-600 text-sm"></i> Add Event to Calendar
+                <div class="p-5 rounded-2xl bg-sky-50/80 border border-sky-200 space-y-4">
+                    <h4 class="text-xs font-extrabold text-sky-900 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-calendar-plus text-sky-500 text-sm"></i> Add Event to Calendar
                     </h4>
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -332,7 +332,7 @@
                         </div>
                     </div>
 
-                    <button onclick="addScheduleEvent()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-3 px-4 rounded-xl transition text-xs uppercase tracking-wider shadow-md flex items-center justify-center space-x-2">
+                    <button onclick="addScheduleEvent()" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-extrabold py-3 px-4 rounded-xl transition text-xs uppercase tracking-wider shadow-md flex items-center justify-center space-x-2">
                         <i class="fa-solid fa-plus-circle"></i>
                         <span>Save Event To Calendar</span>
                     </button>
@@ -352,7 +352,7 @@
             <div class="fluid-card p-6 md:p-8 space-y-6">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-2xl bg-blue-100 text-blue-800 flex items-center justify-center">
+                        <div class="w-10 h-10 rounded-2xl bg-sky-100 text-sky-800 flex items-center justify-center">
                             <i class="fa-solid fa-utensils text-lg"></i>
                         </div>
                         <div>
@@ -360,19 +360,19 @@
                             <p class="text-xs text-slate-500 font-medium">Deep 50-Recipe Bank Per Category — Click <strong>AI Refresh 🔄</strong> or <strong>Heart ❤️</strong> to Save!</p>
                         </div>
                     </div>
-                    <span class="text-xs bg-blue-100 text-blue-800 font-extrabold px-3 py-1 rounded-full border border-blue-300">200 Recipes Total</span>
+                    <span class="text-xs bg-sky-100 text-sky-800 font-extrabold px-3 py-1 rounded-full border border-sky-300">200 Recipes Total</span>
                 </div>
 
                 <!-- 4 Daily Recipe Suggestion Cards -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div id="card-pre" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-blue-400 transition"></div>
-                    <div id="card-post" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-blue-400 transition"></div>
-                    <div id="card-snack" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-blue-400 transition"></div>
-                    <div id="card-dinner" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-blue-400 transition"></div>
+                    <div id="card-pre" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-sky-400 transition"></div>
+                    <div id="card-post" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-sky-400 transition"></div>
+                    <div id="card-snack" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-sky-400 transition"></div>
+                    <div id="card-dinner" class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-sky-400 transition"></div>
                 </div>
 
                 <!-- Saved Favorites Drawer -->
-                <div class="bg-white p-5 rounded-2xl border border-blue-200 shadow-sm space-y-4 pt-4">
+                <div class="bg-white p-5 rounded-2xl border border-sky-200 shadow-sm space-y-4 pt-4">
                     <div class="flex items-center justify-between pb-2 border-b border-slate-100">
                         <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
                             <i class="fa-solid fa-heart text-rose-500"></i>
@@ -394,10 +394,10 @@
 
     <!-- ================= EVENT STATUS CONFIRMATION MODAL ================= -->
     <div id="statusModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="fluid-card w-full max-w-md p-6 space-y-5 bg-white relative shadow-2xl border-2 border-blue-500">
+        <div class="fluid-card w-full max-w-md p-6 space-y-5 bg-white relative shadow-2xl border-2 border-sky-400">
             <div class="flex items-center justify-between pb-3 border-b border-slate-200">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-2xl bg-blue-100 text-blue-800 flex items-center justify-center font-bold">
+                    <div class="w-10 h-10 rounded-2xl bg-sky-100 text-sky-800 flex items-center justify-center font-bold">
                         <i class="fa-solid fa-clock-check text-lg"></i>
                     </div>
                     <div>
@@ -420,14 +420,14 @@
                     <i class="fa-solid fa-chevron-right text-slate-400 text-[10px]"></i>
                 </button>
 
-                <button onclick="confirmEventStatus('happening_now')" class="w-full py-3 px-4 rounded-xl font-bold text-blue-900 bg-blue-100 hover:bg-blue-200 text-xs text-left flex items-center justify-between">
-                    <span><i class="fa-solid fa-bolt text-blue-600 mr-2"></i> Happening now</span>
-                    <i class="fa-solid fa-chevron-right text-blue-400 text-[10px]"></i>
+                <button onclick="confirmEventStatus('happening_now')" class="w-full py-3 px-4 rounded-xl font-bold text-sky-900 bg-sky-100 hover:bg-sky-200 text-xs text-left flex items-center justify-between">
+                    <span><i class="fa-solid fa-bolt text-sky-500 mr-2"></i> Happening now</span>
+                    <i class="fa-solid fa-chevron-right text-sky-400 text-[10px]"></i>
                 </button>
 
-                <button onclick="confirmEventStatus('completed')" class="w-full py-3 px-4 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 text-xs text-left flex items-center justify-between shadow-sm">
+                <button onclick="confirmEventStatus('completed')" class="w-full py-3 px-4 rounded-xl font-bold text-white bg-sky-500 hover:bg-sky-600 text-xs text-left flex items-center justify-between shadow-sm">
                     <span><i class="fa-solid fa-circle-check text-white mr-2"></i> Yes, it is complete</span>
-                    <i class="fa-solid fa-chevron-right text-blue-200 text-[10px]"></i>
+                    <i class="fa-solid fa-chevron-right text-sky-200 text-[10px]"></i>
                 </button>
 
                 <button onclick="confirmEventStatus('canceled')" class="w-full py-3 px-4 rounded-xl font-bold text-rose-800 bg-rose-50 hover:bg-rose-100 text-xs text-left flex items-center justify-between">
@@ -440,10 +440,10 @@
 
     <!-- ================= ACCOUNT / LOGIN MODAL ================= -->
     <div id="authModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="fluid-card w-full max-w-md p-6 md:p-8 space-y-6 bg-white relative shadow-2xl border-2 border-blue-500">
+        <div class="fluid-card w-full max-w-md p-6 md:p-8 space-y-6 bg-white relative shadow-2xl border-2 border-sky-400">
             <div class="flex items-center justify-between pb-3 border-b border-slate-200">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md">
+                    <div class="w-10 h-10 rounded-2xl bg-sky-500 text-white flex items-center justify-center shadow-md">
                         <i class="fa-solid fa-user-lock text-lg"></i>
                     </div>
                     <div>
@@ -468,11 +468,11 @@
                 </div>
 
                 <div class="pt-2 flex flex-col gap-2">
-                    <button type="button" onclick="handleAuth('login')" class="w-full py-3.5 rounded-xl font-extrabold text-white bg-blue-600 hover:bg-blue-700 text-sm shadow-md flex items-center justify-center space-x-2">
+                    <button type="button" onclick="handleAuth('login')" class="w-full py-3.5 rounded-xl font-extrabold text-white bg-sky-500 hover:bg-sky-600 text-sm shadow-md flex items-center justify-center space-x-2">
                         <i class="fa-solid fa-right-to-bracket"></i>
                         <span>Log In & Restore Profile Data</span>
                     </button>
-                    <button type="button" onclick="handleAuth('signup')" class="w-full py-3 rounded-xl font-bold text-blue-900 bg-blue-100 hover:bg-blue-200 text-sm">
+                    <button type="button" onclick="handleAuth('signup')" class="w-full py-3 rounded-xl font-bold text-sky-900 bg-sky-100 hover:bg-sky-200 text-sm">
                         Create New Email Account
                     </button>
                 </div>
@@ -485,7 +485,7 @@
         <div class="fluid-card w-full max-w-lg p-6 md:p-8 space-y-6 bg-white relative shadow-2xl">
             <div class="flex items-center justify-between pb-3 border-b border-slate-200">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md">
+                    <div class="w-10 h-10 rounded-2xl bg-sky-500 text-white flex items-center justify-center shadow-md">
                         <i class="fa-solid fa-id-card text-lg"></i>
                     </div>
                     <div>
@@ -503,14 +503,14 @@
                     
                     <div class="space-y-1.5 md:col-span-2">
                         <label class="text-xs font-extrabold uppercase text-slate-700 flex items-center gap-1.5">
-                            <i class="fa-solid fa-basketball text-blue-600"></i> Currently In-Season Sport
+                            <i class="fa-solid fa-basketball text-sky-500"></i> Currently In-Season Sport
                         </label>
                         <input type="text" id="profSport" placeholder="e.g. Basketball" class="fluid-input w-full px-3.5 py-2.5 text-sm">
                     </div>
 
                     <div class="space-y-1.5 md:col-span-2">
                         <label class="text-xs font-extrabold uppercase text-slate-700 flex items-center gap-1.5">
-                            <i class="fa-solid fa-person-running text-blue-600"></i> Off-Season / Secondary Sports
+                            <i class="fa-solid fa-person-running text-sky-500"></i> Off-Season / Secondary Sports
                         </label>
                         <input type="text" id="profSecondarySports" placeholder="e.g. Cross Country (Fall), Track" class="fluid-input w-full px-3.5 py-2.5 text-sm">
                     </div>
@@ -544,7 +544,7 @@
 
                 <div class="pt-2 flex justify-end space-x-3">
                     <button type="button" onclick="toggleProfileModal()" class="px-4 py-2.5 rounded-xl font-bold text-slate-600 hover:bg-slate-100 text-sm">Cancel</button>
-                    <button type="button" onclick="saveProfile()" class="px-5 py-2.5 rounded-xl font-extrabold text-white bg-blue-600 hover:bg-blue-700 text-sm shadow-md">Save Bio</button>
+                    <button type="button" onclick="saveProfile()" class="px-5 py-2.5 rounded-xl font-extrabold text-white bg-sky-500 hover:bg-sky-600 text-sm shadow-md">Save Bio</button>
                 </div>
             </form>
         </div>
@@ -585,12 +585,12 @@
 
             const sessionCount = container.children.length + 1;
             const sessionCard = document.createElement('div');
-            sessionCard.className = "session-row bg-slate-50 p-4 rounded-2xl border border-slate-200/90 space-y-3 relative group hover:border-blue-300 transition shadow-sm";
+            sessionCard.className = "session-row bg-slate-50 p-4 rounded-2xl border border-slate-200/90 space-y-3 relative group hover:border-sky-300 transition shadow-sm";
 
             sessionCard.innerHTML = `
                 <div class="flex items-center justify-between pb-1 border-b border-slate-200/60">
-                    <span class="text-[10px] font-extrabold uppercase text-blue-800 tracking-wider flex items-center gap-1.5">
-                        <i class="fa-solid fa-bolt text-blue-600"></i> Session <span class="session-number">${sessionCount}</span>
+                    <span class="text-[10px] font-extrabold uppercase text-sky-800 tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-bolt text-sky-500"></i> Session <span class="session-number">${sessionCount}</span>
                     </span>
                     <button type="button" onclick="removeSessionInputRow(this)" class="remove-session-btn text-slate-400 hover:text-rose-600 text-xs transition p-1" title="Remove Session">
                         <i class="fa-solid fa-trash-can"></i>
@@ -662,11 +662,11 @@
                 }, 2000);
 
             } else if (state === 'synced') {
-                syncIcon.className = "fa-solid fa-cloud-check text-blue-400 text-sm";
-                syncText.innerHTML = `Cloud Sync Active: <strong class="text-blue-300">${email}</strong>`;
+                syncIcon.className = "fa-solid fa-cloud-check text-sky-300 text-sm";
+                syncText.innerHTML = `Cloud Sync Active: <strong class="text-sky-200">${email}</strong>`;
             } else if (state === 'loading') {
-                syncIcon.className = "fa-solid fa-arrows-rotate text-blue-300 text-sm fa-spin";
-                syncText.innerHTML = `Syncing cloud memory... <strong class="text-blue-300">(${email})</strong>`;
+                syncIcon.className = "fa-solid fa-arrows-rotate text-sky-200 text-sm fa-spin";
+                syncText.innerHTML = `Syncing cloud memory... <strong class="text-sky-200">(${email})</strong>`;
             } else if (state === 'error') {
                 syncIcon.className = "fa-solid fa-hard-drive text-amber-300 text-sm";
                 syncText.innerHTML = `Offline mode — saved locally <strong class="text-amber-200">(${email})</strong>`;
@@ -1076,17 +1076,17 @@
 
             stretches.forEach((item, index) => {
                 container.innerHTML += `
-                    <div class="bg-white p-5 rounded-2xl border border-slate-200/90 space-y-4 hover:border-blue-500 transition shadow-sm flex flex-col justify-between">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200/90 space-y-4 hover:border-sky-500 transition shadow-sm flex flex-col justify-between">
                         <div class="space-y-3">
                             <div class="flex flex-wrap gap-1.5 justify-between items-center">
-                                <span class="text-[10px] bg-blue-100 text-blue-900 font-extrabold px-2.5 py-1 rounded-full border border-blue-300 uppercase">${item.holdTime}</span>
+                                <span class="text-[10px] bg-sky-100 text-sky-900 font-extrabold px-2.5 py-1 rounded-full border border-sky-300 uppercase">${item.holdTime}</span>
                                 <span class="text-[10px] bg-slate-100 text-slate-800 font-extrabold px-2.5 py-1 rounded-full border border-slate-300 uppercase">${item.side}</span>
                             </div>
 
                             <div>
-                                <div class="text-[10px] font-extrabold text-blue-600 uppercase tracking-wider mb-0.5">Exercise ${index + 1}</div>
+                                <div class="text-[10px] font-extrabold text-sky-600 uppercase tracking-wider mb-0.5">Exercise ${index + 1}</div>
                                 <h4 class="font-extrabold text-slate-900 text-base">${item.name}</h4>
-                                <p class="text-[11px] font-bold text-slate-600 mt-0.5"><i class="fa-solid fa-bullseye text-[10px] text-blue-600 mr-1"></i>${item.targetMuscle}</p>
+                                <p class="text-[11px] font-bold text-slate-600 mt-0.5"><i class="fa-solid fa-bullseye text-[10px] text-sky-500 mr-1"></i>${item.targetMuscle}</p>
                             </div>
 
                             <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs text-slate-700 leading-relaxed">
@@ -1095,18 +1095,18 @@
                             </div>
 
                             <div class="grid grid-cols-2 gap-2 text-[11px]">
-                                <div class="bg-blue-50/60 p-2 rounded-lg border border-blue-100">
-                                    <span class="font-bold text-blue-900 block text-[9px] uppercase">Sets / Reps</span>
+                                <div class="bg-sky-50/70 p-2 rounded-lg border border-sky-100">
+                                    <span class="font-bold text-sky-900 block text-[9px] uppercase">Sets / Reps</span>
                                     <span class="text-slate-700 font-medium">${item.reps}</span>
                                 </div>
-                                <div class="bg-blue-50/60 p-2 rounded-lg border border-blue-100">
-                                    <span class="font-bold text-blue-900 block text-[9px] uppercase">Equipment</span>
+                                <div class="bg-sky-50/70 p-2 rounded-lg border border-sky-100">
+                                    <span class="font-bold text-sky-900 block text-[9px] uppercase">Equipment</span>
                                     <span class="text-slate-700 font-medium">${item.equipment}</span>
                                 </div>
                             </div>
 
-                            <div class="bg-blue-50 p-2.5 rounded-xl border border-blue-200 text-[11px] text-blue-900">
-                                <span class="font-extrabold uppercase text-[9px] tracking-wider text-blue-700 flex items-center gap-1">
+                            <div class="bg-sky-50 p-2.5 rounded-xl border border-sky-200 text-[11px] text-sky-900">
+                                <span class="font-extrabold uppercase text-[9px] tracking-wider text-sky-700 flex items-center gap-1">
                                     <i class="fa-solid fa-lightbulb"></i> Key Coaching Alignment
                                 </span>
                                 <p class="font-medium leading-tight mt-0.5">${item.proTip}</p>
@@ -1132,7 +1132,7 @@
                     let cleanTitle = trimmed.replace(/^[#\*\d\.\s]+/, '').replace(/\*+/g, '');
                     html += `
                         <h3 class="text-lg md:text-xl font-extrabold text-slate-900 mt-5 mb-1.5 flex items-center gap-2">
-                            <i class="fa-solid fa-circle-check text-blue-600 text-sm"></i>
+                            <i class="fa-solid fa-circle-check text-sky-500 text-sm"></i>
                             <span>${cleanTitle}</span>
                         </h3>
                     `;
@@ -1314,14 +1314,14 @@ FORMAT STRICTLY AS:
                 if (hasEvents) {
                     eventBadge = `<div class="mt-1 flex flex-col gap-0.5">${scheduledEvents[dateKey].map((evt, idx) => {
                         const status = getEventStatus(evt);
-                        let color = "bg-blue-600";
+                        let color = "bg-sky-500";
                         if (status === 'happening_now') color = "bg-amber-500";
                         if (status === 'completed') color = "bg-slate-600";
                         if (status === 'canceled') color = "bg-rose-500 line-through opacity-60";
 
                         return `<div class="flex items-center justify-between text-[9px] ${color} text-white font-bold rounded px-1 py-0.5 leading-tight group">
                             <span class="truncate">${evt.title}</span>
-                            <button onclick="deleteScheduleEvent('${dateKey}', ${idx})" class="ml-1 text-blue-100 hover:text-white" title="Delete event">
+                            <button onclick="deleteScheduleEvent('${dateKey}', ${idx})" class="ml-1 text-sky-100 hover:text-white" title="Delete event">
                                 <i class="fa-solid fa-xmark text-[8px]"></i>
                             </button>
                         </div>`;
@@ -1329,12 +1329,12 @@ FORMAT STRICTLY AS:
                 }
 
                 const dayBoxClass = isToday 
-                    ? 'bg-blue-100 border-2 border-blue-600 text-blue-950 font-bold rounded-xl p-1 min-h-[55px]' 
+                    ? 'bg-sky-100 border-2 border-sky-500 text-sky-950 font-bold rounded-xl p-1 min-h-[55px]' 
                     : 'bg-white border border-slate-200 hover:bg-slate-100 rounded-xl p-1 text-slate-800 font-semibold min-h-[55px]';
 
                 calGrid.innerHTML += `
                     <div class="${dayBoxClass}">
-                        <div class="text-xs ${isToday ? 'font-extrabold text-blue-800' : ''}">${day}</div>
+                        <div class="text-xs ${isToday ? 'font-extrabold text-sky-800' : ''}">${day}</div>
                         ${eventBadge}
                     </div>
                 `;
@@ -1391,14 +1391,14 @@ FORMAT STRICTLY AS:
             keys.forEach(dateKey => {
                 scheduledEvents[dateKey].forEach((evt, idx) => {
                     eventsList.innerHTML += `
-                        <div class="p-3 bg-white rounded-xl border border-slate-200 flex justify-between items-center text-sm shadow-sm hover:border-blue-400 transition">
+                        <div class="p-3 bg-white rounded-xl border border-slate-200 flex justify-between items-center text-sm shadow-sm hover:border-sky-400 transition">
                             <div class="flex items-center space-x-2">
-                                <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                                <span class="w-2 h-2 rounded-full bg-sky-500"></span>
                                 <span class="font-extrabold text-slate-800">${evt.title}</span>
                                 ${evt.startTime ? `<span class="text-xs text-slate-500">(${evt.startTime})</span>` : ''}
                             </div>
                             <div class="flex items-center space-x-2">
-                                <span class="text-xs bg-blue-100 text-blue-800 font-bold border border-blue-300 px-2.5 py-1 rounded-md">${dateKey}</span>
+                                <span class="text-xs bg-sky-100 text-sky-800 font-bold border border-sky-300 px-2.5 py-1 rounded-md">${dateKey}</span>
                                 <button onclick="deleteScheduleEvent('${dateKey}', ${idx})" class="p-1.5 text-slate-400 hover:text-red-600 transition" title="Delete event">
                                     <i class="fa-solid fa-trash-can text-xs"></i>
                                 </button>
@@ -1678,12 +1678,12 @@ FORMAT STRICTLY AS:
 
             container.innerHTML = `
                 <div class="flex justify-between items-center">
-                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-blue-800 bg-blue-100 px-2.5 py-1 rounded-md border border-blue-300">${categoryLabels[category]}</span>
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-sky-800 bg-sky-100 px-2.5 py-1 rounded-md border border-sky-300">${categoryLabels[category]}</span>
                     <div class="flex items-center space-x-1.5">
                         <button onclick="toggleFavorite('${category}')" class="p-1.5 rounded-lg border shadow-sm transition ${heartBtnClass}" title="${isFav ? 'Remove from favorites' : 'Save recipe'}">
                             <i class="fa-solid fa-heart text-xs"></i>
                         </button>
-                        <button onclick="refreshRecipe('${category}')" class="text-xs text-blue-700 hover:text-blue-900 font-bold flex items-center gap-1 bg-white px-2.5 py-1 rounded-lg border border-slate-300 shadow-sm transition">
+                        <button onclick="refreshRecipe('${category}')" class="text-xs text-sky-700 hover:text-sky-900 font-bold flex items-center gap-1 bg-white px-2.5 py-1 rounded-lg border border-slate-300 shadow-sm transition">
                             <i class="fa-solid fa-arrows-rotate text-[10px]"></i> AI Refresh
                         </button>
                     </div>
@@ -1691,7 +1691,7 @@ FORMAT STRICTLY AS:
                 <h3 class="font-extrabold text-slate-900 text-base">${recipe.name}</h3>
                 <p class="text-xs text-slate-600">${recipe.desc}</p>
                 <div class="space-y-1 text-xs text-slate-700">
-                    <p class="font-bold text-blue-700">Ingredients:</p>
+                    <p class="font-bold text-sky-700">Ingredients:</p>
                     <ul class="list-disc list-inside space-y-0.5 text-slate-600">
                         ${recipe.ingredients.map(ing => `<li>${ing}</li>`).join('')}
                     </ul>
@@ -1712,7 +1712,7 @@ FORMAT STRICTLY AS:
             }
 
             const catBadgeStyles = {
-                pre: "bg-blue-100 text-blue-800 border-blue-300",
+                pre: "bg-sky-100 text-sky-800 border-sky-300",
                 post: "bg-sky-100 text-sky-800 border-sky-300",
                 snack: "bg-amber-100 text-amber-800 border-amber-300",
                 dinner: "bg-purple-100 text-purple-800 border-purple-300"
@@ -1729,7 +1729,7 @@ FORMAT STRICTLY AS:
                     <h4 class="font-extrabold text-slate-900 text-sm">${fav.name}</h4>
                     <p class="text-[11px] text-slate-500">${fav.desc}</p>
                     <div class="text-[11px] text-slate-600 pt-1">
-                        <strong class="text-blue-700">Ingredients:</strong> ${fav.ingredients.join(', ')}
+                        <strong class="text-sky-700">Ingredients:</strong> ${fav.ingredients.join(', ')}
                     </div>
                 </div>
             `).join('');
