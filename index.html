@@ -211,6 +211,19 @@
                     </button>
                 </form>
             </div>
+
+            <!-- Past 3 Days History Drawer Card -->
+            <div class="fluid-card p-6 space-y-4">
+                <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+                    <h3 class="text-sm font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-clock-rotate-left text-sky-500"></i> Training History (Past 3 Days)
+                    </h3>
+                    <span class="text-[10px] bg-sky-100 text-sky-800 font-bold px-2.5 py-0.5 rounded-full border border-sky-300">Factor in AI Context</span>
+                </div>
+                <div id="historyLogsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
         </section>
 
         <!-- ================= TAB 2: PLAN & MOBILITY ================= -->
@@ -567,6 +580,7 @@
         let activeModalEventId = null;
         let scheduledEvents = {};
         let favoriteRecipes = [];
+        let checkInHistory = []; // Rolling 3-day history array
         let syncStatusTimer = null;
 
         // Date helper: returns YYYY-MM-DD in local time
@@ -643,7 +657,37 @@
             });
         }
 
-        // Auto-Healing Cloud Sync State Controller with Guaranteed 2-Second Reset
+        // RENDER PAST 3 DAYS HISTORY CARDS
+        function renderHistoryLogs() {
+            const container = document.getElementById('historyLogsContainer');
+            if (!container) return;
+
+            if (!checkInHistory || checkInHistory.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 italic md:col-span-3 py-1">No previous check-in logs saved yet.</p>`;
+                return;
+            }
+
+            // Display latest 3 entries
+            const recent = checkInHistory.slice(-3).reverse();
+            container.innerHTML = recent.map(entry => {
+                const sessionNames = entry.sessions.map(s => s.activity).join(', ');
+                return `
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-200/90 text-xs space-y-1.5 shadow-sm">
+                        <div class="flex justify-between items-center pb-1 border-b border-slate-200">
+                            <span class="font-extrabold text-sky-800 text-[10px] uppercase">${entry.date}</span>
+                            <span class="text-[10px] bg-slate-200 text-slate-700 font-bold px-2 py-0.5 rounded">${entry.sleep}h Sleep</span>
+                        </div>
+                        <p class="font-extrabold text-slate-900 truncate" title="${sessionNames}">${sessionNames}</p>
+                        <div class="flex justify-between text-[10px] text-slate-500">
+                            <span>Soreness: <strong class="text-slate-800">${entry.sore}/3 (${entry.area})</strong></span>
+                            <span>Stress: <strong class="text-slate-800">${entry.stress}/3</strong></span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Auto-Healing Cloud Sync State Controller
         function setSyncStatus(state) {
             const syncIcon = document.getElementById('syncIcon');
             const syncText = document.getElementById('syncText');
@@ -681,6 +725,7 @@
             localStorage.clear();
             scheduledEvents = {};
             favoriteRecipes = [];
+            checkInHistory = [];
 
             // Reset dynamic sessions list to 1 blank row
             const container = document.getElementById('sessionsContainer');
@@ -713,6 +758,7 @@
             buildCalendar();
             renderUpcomingEventsList();
             renderStretches('Quads');
+            renderHistoryLogs();
         }
 
         function createEventObject(title, date, type, startTime, endTime, intensity) {
@@ -1145,7 +1191,7 @@
             return html;
         }
 
-        // ================= FORM SUBMIT & MULTI-SESSION AI INTEGRATION =================
+        // ================= FORM SUBMIT & MULTI-SESSION + HISTORICAL AI INTEGRATION =================
         const form = document.getElementById('recoveryForm');
         const submitBtn = document.getElementById('submitBtn');
         const planOutput = document.getElementById('planOutput');
@@ -1174,8 +1220,10 @@
             const sleepVal = document.getElementById('sleep').value;
             const soreVal = document.getElementById('sore').value;
             const stressVal = document.getElementById('stress').value;
+            const todayStr = getTodayDateString();
 
             const checkInPayload = {
+                date: todayStr,
                 sessions: sessions,
                 sleep: sleepVal,
                 sore: soreVal,
@@ -1183,13 +1231,19 @@
                 stress: stressVal
             };
 
+            // Maintain rolling 3-day history array
+            checkInHistory = checkInHistory.filter(item => item.date !== todayStr); // Replace today if exists
+            checkInHistory.push(checkInPayload);
+            if (checkInHistory.length > 5) checkInHistory.shift(); // keep max 5 entries
+
+            renderHistoryLogs();
+
             const profSport = document.getElementById('profSport').value || 'Athlete';
             const profSecondary = document.getElementById('profSecondarySports').value || 'None';
             const profAge = document.getElementById('profAge').value || '18';
             const profGender = document.getElementById('profGender').value || 'Male';
             const profSeason = document.getElementById('profSeason').value || 'In-Season';
 
-            const todayStr = getTodayDateString();
             const upcomingList = [];
             if (scheduledEvents) {
                 Object.keys(scheduledEvents).sort().forEach(dateKey => {
@@ -1211,11 +1265,23 @@
                 return `Session ${idx + 1}: "${s.activity}" — Effort Level: ${effortLabels[s.effort] || s.effort}`;
             }).join('\n');
 
-            // HYPER-SPECIFIC AI PROMPT FOR MULTI-SESSION RECOVERY
-            const multiSportContext = `MULTI-SESSION WORKOUT LOG TODAY (${sessions.length} Session(s)):
+            // Format past 3 days history text for AI
+            const historyText = checkInHistory.filter(h => h.date !== todayStr).slice(-3).map(h => {
+                const hSessions = h.sessions.map(s => `"${s.activity}" (Effort ${s.effort}/3)`).join(', ');
+                return `- Date ${h.date}: Workouts: [${hSessions}] | Sleep: ${h.sleep}h | Soreness: ${h.sore}/3 (${h.area}) | Stress: ${h.stress}/3`;
+            }).join('\n');
+
+            const multiDayContextText = historyText.length > 0
+                ? `PAST 3 DAYS CUMULATIVE TRAINING HISTORY:\n${historyText}`
+                : 'PAST 3 DAYS CUMULATIVE TRAINING HISTORY: No prior days logged yet.';
+
+            // HYPER-SPECIFIC AI PROMPT FOR MULTI-SESSION & MULTI-DAY RECOVERY
+            const multiSportContext = `TODAY'S WORKOUT LOG (${todayStr}):
 ${sessionBreakdownText}
 
-PHYSICAL & READINESS MARKERS:
+${multiDayContextText}
+
+TODAY'S PHYSICAL & READINESS MARKERS:
 - Sleep Last Night: ${sleepVal} hours
 - Soreness Level: ${soreVal}/3 on Target Muscle Group: "${areaVal}"
 - Daily Stress Level: ${stressVal}/3
@@ -1223,11 +1289,11 @@ PHYSICAL & READINESS MARKERS:
 ${eventContext}
 
 EVIDENCE-BASED RECOVERY DIRECTIVES:
-1. DISTINCT SESSION BIOMECHANICS: Deeply analyze the unique physical and physiological demands of EACH session logged today. Contrast the eccentric muscle damage, CNS strain, joint loading, and metabolic energy systems used across the different activities (e.g. distinguishing heavy resistance lifting vs. rapid lateral cut/deceleration in court sports like basketball/volleyball vs. sustained linear ground impact forces in running).
-2. CONCURRENT TRAINING INTERFERENCE & FATIGUE: If multiple sessions were logged (e.g. a lift AND a run/practice), factor in concurrent training fatigue, total cumulative volume, central nervous system depletion, and intra-workout energy drain.
-3. HIGHLY SPECIFIC, PROFESSIONAL PROTOCOLS: Do NOT offer generic boilerplate advice like basic "foam rolling" or "dead hangs". Offer advanced sports science recovery methods (e.g., soleus/Achilles flushing, rotatory hip capsule mobilization, glycogen supercompensation, or neural decompression depending on the workouts).
-4. 3 DISTINCT MODALITIES: Combine 3 distinct, high-value recovery pillars:
-   - 1 Tissue & Movement Restoration Protocol specifically tailored to the logged workouts & target area (${areaVal})
+1. MULTI-DAY WORKLOAD & RESIDUAL FATIGUE ANALYSIS: Deeply evaluate both TODAY'S training load AND the PAST 3 DAYS cumulative history. If today is an easy session following heavy/brutal training days, factor in accumulated neural fatigue, muscle damage, and joint strain from previous days!
+2. DISTINCT SESSION BIOMECHANICS: Contrast the physical demands, eccentric muscle damage, and metabolic systems across all logged sessions.
+3. HIGHLY SPECIFIC, PROFESSIONAL PROTOCOLS: Do NOT offer generic boilerplate advice. Offer advanced sports science recovery methods tailored specifically to the cumulative multi-day fatigue.
+4. 3 DISTINCT MODALITIES: Combine 3 distinct recovery pillars:
+   - 1 Tissue & Movement Restoration Protocol specifically tailored to cumulative workload & target area (${areaVal})
    - 1 Precision Nutrition & Electrolyte Strategy matching total metabolic expenditure
    - 1 Sleep, Thermal, or Nervous System Optimization Protocol
 5. TONE: Professional, authoritative sports performance coach. Direct, high-value, and actionable.
@@ -1254,7 +1320,7 @@ FORMAT STRICTLY AS:
             renderStretches(areaVal);
 
             submitBtn.disabled = true;
-            submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i><span>Analyzing Session Demands...</span>`;
+            submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i><span>Analyzing Cumulative Workload...</span>`;
 
             try {
                 const response = await fetch('/api/recovery-plan', {
@@ -1267,6 +1333,7 @@ FORMAT STRICTLY AS:
                 
                 localStorage.setItem('rebound_checkin_date', todayStr);
                 localStorage.setItem('rebound_checkin_data', JSON.stringify(checkInPayload));
+                localStorage.setItem('rebound_checkin_history', JSON.stringify(checkInHistory));
                 localStorage.setItem('rebound_generated_plan', data.plan);
 
                 planOutput.innerHTML = formatRecoveryPlan(data.plan);
@@ -1767,6 +1834,7 @@ FORMAT STRICTLY AS:
                 season: document.getElementById('profSeason').value || 'In-Season Competition Phase',
                 events: scheduledEvents || {},
                 favoriteRecipes: favoriteRecipes || [],
+                checkInHistory: checkInHistory || [],
                 checkInDate: localStorage.getItem('rebound_checkin_date') || '',
                 checkInData: parsedCheckIn,
                 generatedPlan: localStorage.getItem('rebound_generated_plan') || ''
@@ -1800,6 +1868,7 @@ FORMAT STRICTLY AS:
 
                     scheduledEvents = data.events || {};
                     favoriteRecipes = data.favoriteRecipes || [];
+                    checkInHistory = data.checkInHistory || [];
 
                     const todayStr = getTodayDateString();
                     if (data.checkInDate === todayStr) {
@@ -1828,7 +1897,12 @@ FORMAT STRICTLY AS:
                             document.getElementById('planOutput').innerHTML = formatRecoveryPlan(data.generatedPlan);
                         }
                     } else {
-                        resetToCleanSlate();
+                        // Reset inputs for today, but keep cumulative history!
+                        const container = document.getElementById('sessionsContainer');
+                        if (container) {
+                            container.innerHTML = '';
+                            addSessionInputRow('', '2');
+                        }
                     }
                 } else {
                     saveCloudData();
@@ -1838,6 +1912,7 @@ FORMAT STRICTLY AS:
                 renderSavedFavoritesList();
                 buildCalendar();
                 renderUpcomingEventsList();
+                renderHistoryLogs();
                 setSyncStatus('synced');
 
             } catch (e) {
