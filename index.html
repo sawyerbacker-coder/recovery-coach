@@ -52,6 +52,17 @@
             color: #ffffff;
             box-shadow: 0 8px 20px -4px rgba(14, 165, 233, 0.4);
         }
+        .muscle-chip {
+            transition: all 0.2s ease;
+            cursor: pointer;
+            user-select: none;
+        }
+        .muscle-chip.selected {
+            background-color: #0ea5e9;
+            color: #ffffff;
+            border-color: #0284c7;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+        }
         .sticker-badge {
             animation: float 4s ease-in-out infinite;
         }
@@ -159,6 +170,43 @@
                         </div>
                     </div>
 
+                    <!-- Multi-Muscle Area Soreness Selection Grid -->
+                    <div class="space-y-2 pt-1">
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs font-extrabold tracking-wider uppercase text-slate-700 flex items-center gap-2">
+                                <i class="fa-solid fa-person-dots-from-line text-sky-500"></i> Sore Target Muscle Areas (Select All That Apply)
+                            </label>
+                            <span class="text-[10px] text-slate-400 font-medium">Click to toggle multiple</span>
+                        </div>
+
+                        <div id="muscleChipsContainer" class="grid grid-cols-2 md:grid-cols-3 gap-2.5">
+                            <button type="button" onclick="toggleMuscleChip(this)" data-muscle="Quads" class="muscle-chip selected p-3 rounded-xl border border-slate-300 text-xs font-bold text-slate-700 bg-slate-50 flex items-center justify-between">
+                                <span>Quads</span>
+                                <i class="fa-solid fa-check text-[10px]"></i>
+                            </button>
+                            <button type="button" onclick="toggleMuscleChip(this)" data-muscle="Hamstrings" class="muscle-chip p-3 rounded-xl border border-slate-300 text-xs font-bold text-slate-700 bg-slate-50 flex items-center justify-between">
+                                <span>Hamstrings</span>
+                                <i class="fa-solid fa-check text-[10px] hidden"></i>
+                            </button>
+                            <button type="button" onclick="toggleMuscleChip(this)" data-muscle="Calves" class="muscle-chip p-3 rounded-xl border border-slate-300 text-xs font-bold text-slate-700 bg-slate-50 flex items-center justify-between">
+                                <span>Calves</span>
+                                <i class="fa-solid fa-check text-[10px] hidden"></i>
+                            </button>
+                            <button type="button" onclick="toggleMuscleChip(this)" data-muscle="Glutes & Hips" class="muscle-chip p-3 rounded-xl border border-slate-300 text-xs font-bold text-slate-700 bg-slate-50 flex items-center justify-between">
+                                <span>Glutes & Hips</span>
+                                <i class="fa-solid fa-check text-[10px] hidden"></i>
+                            </button>
+                            <button type="button" onclick="toggleMuscleChip(this)" data-muscle="Lower Back" class="muscle-chip p-3 rounded-xl border border-slate-300 text-xs font-bold text-slate-700 bg-slate-50 flex items-center justify-between">
+                                <span>Lower Back</span>
+                                <i class="fa-solid fa-check text-[10px] hidden"></i>
+                            </button>
+                            <button type="button" onclick="toggleMuscleChip(this)" data-muscle="Shoulders & Chest" class="muscle-chip p-3 rounded-xl border border-slate-300 text-xs font-bold text-slate-700 bg-slate-50 flex items-center justify-between">
+                                <span>Shoulders & Chest</span>
+                                <i class="fa-solid fa-check text-[10px] hidden"></i>
+                            </button>
+                        </div>
+                    </div>
+
                     <!-- Readiness & Physical Markers -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 pt-2">
                         
@@ -172,23 +220,13 @@
 
                         <div class="space-y-2">
                             <label class="text-xs font-extrabold tracking-wider uppercase text-slate-700 flex items-center gap-2">
-                                <i class="fa-solid fa-person-dots-from-line text-sky-500"></i> Soreness & Target Muscle
+                                <i class="fa-solid fa-gauge-high text-sky-500"></i> Soreness Intensity
                             </label>
-                            <div class="grid grid-cols-2 gap-2">
-                                <select id="sore" class="fluid-input px-3 py-3 text-sm">
-                                    <option value="1">1 - Mild</option>
-                                    <option value="2" selected>2 - Moderate</option>
-                                    <option value="3">3 - Severe</option>
-                                </select>
-                                <select id="area" class="fluid-input px-3 py-3 text-sm">
-                                    <option value="Quads">Quads</option>
-                                    <option value="Hamstrings">Hamstrings</option>
-                                    <option value="Calves">Calves</option>
-                                    <option value="Glutes & Hips">Glutes & Hips</option>
-                                    <option value="Lower Back">Lower Back</option>
-                                    <option value="Shoulders & Chest">Shoulders & Chest</option>
-                                </select>
-                            </div>
+                            <select id="sore" class="fluid-input w-full px-3 py-3 text-sm">
+                                <option value="1">1 - Mild Tightness</option>
+                                <option value="2" selected>2 - Moderate Soreness</option>
+                                <option value="3">3 - Severe Muscle Fatigue</option>
+                            </select>
                         </div>
 
                         <div class="space-y-2">
@@ -259,14 +297,14 @@
                         </div>
                         <div>
                             <h2 class="text-xl font-extrabold text-slate-900">Targeted Mobility Routine</h2>
-                            <p class="text-xs text-slate-500 font-medium" id="stretchTargetText">3-exercise movement protocol customized to target muscle</p>
+                            <p class="text-xs text-slate-500 font-medium" id="stretchTargetText">Movement protocol customized for your selected target muscles</p>
                         </div>
                     </div>
-                    <span class="text-xs bg-sky-100 text-sky-800 font-bold px-3 py-1 rounded-full border border-sky-300">3 Targeted Exercises</span>
+                    <span class="text-xs bg-sky-100 text-sky-800 font-bold px-3 py-1 rounded-full border border-sky-300" id="stretchCountBadge">Multi-Area Routine</span>
                 </div>
 
                 <div id="stretchingCardsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- 3 Exercise Cards Render Here -->
+                    <!-- Dynamic Exercise Cards Render Here -->
                 </div>
             </div>
         </section>
@@ -592,6 +630,37 @@
             return `${year}-${month}-${day}`;
         }
 
+        // MULTI-MUSCLE CHIP TOGGLE FUNCTION
+        function toggleMuscleChip(btn) {
+            btn.classList.toggle('selected');
+            const checkIcon = btn.querySelector('i');
+            if (checkIcon) checkIcon.classList.toggle('hidden');
+        }
+
+        function getSelectedMuscleAreas() {
+            const selectedChips = document.querySelectorAll('.muscle-chip.selected');
+            const muscles = [];
+            selectedChips.forEach(chip => {
+                muscles.push(chip.getAttribute('data-muscle'));
+            });
+            return muscles.length > 0 ? muscles : ['Quads'];
+        }
+
+        function setSelectedMuscleAreas(muscleArray) {
+            const chips = document.querySelectorAll('.muscle-chip');
+            chips.forEach(chip => {
+                const name = chip.getAttribute('data-muscle');
+                const checkIcon = chip.querySelector('i');
+                if (muscleArray.includes(name)) {
+                    chip.classList.add('selected');
+                    if (checkIcon) checkIcon.classList.remove('hidden');
+                } else {
+                    chip.classList.remove('selected');
+                    if (checkIcon) checkIcon.classList.add('hidden');
+                }
+            });
+        }
+
         // DYNAMIC MULTI-SESSION LOGGING FUNCTIONS
         function addSessionInputRow(activityVal = '', effortVal = '2') {
             const container = document.getElementById('sessionsContainer');
@@ -670,7 +739,8 @@
             // Display latest 3 entries
             const recent = checkInHistory.slice(-3).reverse();
             container.innerHTML = recent.map(entry => {
-                const sessionNames = entry.sessions.map(s => s.activity).join(', ');
+                const sessionNames = entry.sessions ? entry.sessions.map(s => s.activity).join(', ') : 'Workout';
+                const areasList = Array.isArray(entry.area) ? entry.area.join(', ') : (entry.area || 'General');
                 return `
                     <div class="p-3 bg-slate-50 rounded-xl border border-slate-200/90 text-xs space-y-1.5 shadow-sm">
                         <div class="flex justify-between items-center pb-1 border-b border-slate-200">
@@ -679,7 +749,7 @@
                         </div>
                         <p class="font-extrabold text-slate-900 truncate" title="${sessionNames}">${sessionNames}</p>
                         <div class="flex justify-between text-[10px] text-slate-500">
-                            <span>Soreness: <strong class="text-slate-800">${entry.sore}/3 (${entry.area})</strong></span>
+                            <span>Soreness: <strong class="text-slate-800">${entry.sore}/3 (${areasList})</strong></span>
                             <span>Stress: <strong class="text-slate-800">${entry.stress}/3</strong></span>
                         </div>
                     </div>
@@ -734,9 +804,10 @@
                 addSessionInputRow('', '2');
             }
 
+            setSelectedMuscleAreas(['Quads']);
+
             if (document.getElementById('sleep')) document.getElementById('sleep').value = '7.5';
             if (document.getElementById('sore')) document.getElementById('sore').value = '2';
-            if (document.getElementById('area')) document.getElementById('area').value = 'Quads';
             if (document.getElementById('stress')) document.getElementById('stress').value = '2';
 
             if (document.getElementById('planOutput')) {
@@ -757,7 +828,7 @@
 
             buildCalendar();
             renderUpcomingEventsList();
-            renderStretches('Quads');
+            renderStretches(['Quads']);
             renderHistoryLogs();
         }
 
@@ -937,16 +1008,6 @@
                     targetMuscle: 'Deep Hip Flexors & Psoas',
                     howTo: 'Place back knee against a wall with toes pointing straight up. Step opposite foot forward into a lunge and bring torso upright.',
                     proTip: 'Keep your core engaged—don\'t let your lower back arch backward as you press your hips forward.'
-                },
-                {
-                    name: 'Prone Strap Quad Pull',
-                    holdTime: '45 sec / leg',
-                    reps: '2 sets each side',
-                    side: 'Both Sides',
-                    equipment: 'Towel or Band',
-                    targetMuscle: 'Rectus Femoris (Upper Quad)',
-                    howTo: 'Lie flat on your stomach. Loop a strap around your foot and gently pull your heel toward your glute while keeping your hips flat on the floor.',
-                    proTip: 'Press your hip bone directly into the ground to isolate the quad without arching your spine.'
                 }
             ],
             'Hamstrings': [
@@ -969,16 +1030,6 @@
                     targetMuscle: 'Full Hamstring Belly',
                     howTo: 'Lie on your back near a doorframe. Rest one leg up against the frame with the other extended flat through the doorway.',
                     proTip: 'Flex your foot back toward your face to activate your calf and lengthen the entire posterior nerve pathway.'
-                },
-                {
-                    name: 'Seated Single-Leg Reach',
-                    holdTime: '45 sec / leg',
-                    reps: '2 sets each side',
-                    side: 'Both Sides',
-                    equipment: 'Floor Mat',
-                    targetMuscle: 'Mid-Hamstring & Lower Back',
-                    howTo: 'Sit on the floor with one leg straight and the other folded in. Hinge forward from your pelvis toward your straight foot.',
-                    proTip: 'Reach with your chest rather than rounding your shoulders to ensure the stretch stays in the hamstring.'
                 }
             ],
             'Calves': [
@@ -1001,16 +1052,6 @@
                     targetMuscle: 'Soleus (Lower Calf & Achilles)',
                     howTo: 'Stand close to a wall in a short stance. Bend BOTH knees and sink weight into your back heel without lifting it off the floor.',
                     proTip: 'Bending the back knee shifts the focus away from the main calf down into the lower Achilles tendon.'
-                },
-                {
-                    name: 'Downward Dog Pedal Drive',
-                    holdTime: '60 sec total',
-                    reps: '2 sets (10 pedals)',
-                    side: 'Alternating',
-                    equipment: 'Floor Mat',
-                    targetMuscle: 'Ankle Plantarflexors & Calves',
-                    howTo: 'Start in a push-up position, press hips up toward the ceiling, and slowly press one heel down to the floor at a time.',
-                    proTip: 'Hold each side for 3-5 seconds at the bottom of the heel-drive.'
                 }
             ],
             'Glutes & Hips': [
@@ -1023,16 +1064,6 @@
                     targetMuscle: 'Gluteus Medius & Piriformis',
                     howTo: 'Lie on your back, cross your right ankle over your left knee, and thread your hands through to pull your left thigh toward your chest.',
                     proTip: 'Relax your head and shoulders flat on the floor while gently pressing your crossed knee away from you.'
-                },
-                {
-                    name: 'Half-Kneeling Hip Drive',
-                    holdTime: '45 sec / leg',
-                    reps: '2 sets each side',
-                    side: 'Both Sides',
-                    equipment: 'Padded Mat',
-                    targetMuscle: 'Hip Flexors & TFL',
-                    howTo: 'Kneel on one knee at a 90-degree angle. Squeeze your back glute hard and gently shift your weight forward 2-3 inches.',
-                    proTip: 'Raise the arm on your back-leg side overhead and lean slightly to the opposite side for an extra hip stretch.'
                 },
                 {
                     name: 'Seated 90/90 Shin Box Switch',
@@ -1065,16 +1096,6 @@
                     targetMuscle: 'Latissimus Dorsi & Lower Back',
                     howTo: 'Kneel with big toes touching, sit hips back to heels, and reach hands forward. Walk both hands 45 degrees to the right side.',
                     proTip: 'Breathe deeply into the side of your ribcage to stretch out tight back muscles.'
-                },
-                {
-                    name: 'Knee-to-Chest Lumbar Decompress',
-                    holdTime: '45 sec hold',
-                    reps: '2 sets',
-                    side: 'Both Legs Together',
-                    equipment: 'Floor Mat',
-                    targetMuscle: 'Lumbar Spine & Sacrum',
-                    howTo: 'Lie flat on your back, pull both knees in toward your chest, and wrap your arms around your shins. Rock gently side-to-side.',
-                    proTip: 'Keep your neck relaxed and sink your tailbone toward the ground to relieve pressure off tight lower back discs.'
                 }
             ],
             'Shoulders & Chest': [
@@ -1097,30 +1118,31 @@
                     targetMuscle: 'Rear Deltoid & Rotator Cuff',
                     howTo: 'Bring one arm horizontally across your chest. Use your opposite hand to gently pull your arm closer in toward your torso.',
                     proTip: 'Keep your shoulder blades pulled down and back rather than letting them shrug up toward your chin.'
-                },
-                {
-                    name: 'Thread the Needle T-Spine Mobility',
-                    holdTime: '45 sec / side',
-                    reps: '2 sets each side',
-                    side: 'Both Sides',
-                    equipment: 'Floor Mat',
-                    targetMuscle: 'Thoracic Spine & Upper Back',
-                    howTo: 'Start on hands and knees. Slide one arm underneath your body along the floor, lowering your shoulder to the ground.',
-                    proTip: 'Exhale as you rotate through your middle back to release upper body tightness.'
                 }
             ]
         };
 
-        function renderStretches(area) {
+        function renderStretches(areas) {
             const container = document.getElementById('stretchingCardsContainer');
             const targetText = document.getElementById('stretchTargetText');
             if (!container) return;
 
-            const stretches = stretchLibrary[area] || stretchLibrary['Quads'];
-            targetText.textContent = `3-exercise mobility sequence targeted specifically for: ${area}`;
+            const areaList = Array.isArray(areas) ? areas : [areas];
+            targetText.textContent = `Targeted mobility sequence customized for: ${areaList.join(', ')}`;
+            
+            // Gather stretches from all selected areas
+            let combinedStretches = [];
+            areaList.forEach(a => {
+                const list = stretchLibrary[a] || stretchLibrary['Quads'];
+                combinedStretches = combinedStretches.concat(list);
+            });
+
+            // Display up to 3-6 targeted exercises
+            const finalStretches = combinedStretches.slice(0, 6);
+
             container.innerHTML = '';
 
-            stretches.forEach((item, index) => {
+            finalStretches.forEach((item, index) => {
                 container.innerHTML += `
                     <div class="bg-white p-5 rounded-2xl border border-slate-200/90 space-y-4 hover:border-sky-500 transition shadow-sm flex flex-col justify-between">
                         <div class="space-y-3">
@@ -1182,6 +1204,15 @@
                             <span>${cleanTitle}</span>
                         </h3>
                     `;
+                } else if (trimmed.includes('🍽️') || trimmed.includes('Recipe Idea') || trimmed.includes('Paired Recipe:')) {
+                    // Highlight inline paired recipes
+                    let cleanRecipe = trimmed.replace(/\*\*(.*?)\*\*/g, '<strong class="font-extrabold text-sky-900">$1</strong>');
+                    html += `
+                        <div class="bg-sky-100/80 border border-sky-300 p-3.5 rounded-xl text-xs text-sky-950 font-medium my-2 flex items-start gap-2 shadow-sm">
+                            <i class="fa-solid fa-utensils text-sky-600 text-sm mt-0.5"></i>
+                            <div>${cleanRecipe}</div>
+                        </div>
+                    `;
                 } else {
                     let cleanDesc = trimmed.replace(/\*\*(.*?)\*\*/g, '<strong class="font-extrabold text-slate-900">$1</strong>');
                     html += `<p class="text-sm text-slate-600 leading-relaxed font-normal mb-2">${cleanDesc}</p>`;
@@ -1191,7 +1222,7 @@
             return html;
         }
 
-        // ================= FORM SUBMIT & MULTI-SESSION + HISTORICAL AI INTEGRATION =================
+        // ================= FORM SUBMIT & MULTI-SESSION + HISTORICAL + RECIPE PAIRING AI INTEGRATION =================
         const form = document.getElementById('recoveryForm');
         const submitBtn = document.getElementById('submitBtn');
         const planOutput = document.getElementById('planOutput');
@@ -1216,7 +1247,9 @@
                 return;
             }
 
-            const areaVal = document.getElementById('area').value;
+            const selectedAreas = getSelectedMuscleAreas();
+            const areasFormatted = selectedAreas.join(', ');
+
             const sleepVal = document.getElementById('sleep').value;
             const soreVal = document.getElementById('sore').value;
             const stressVal = document.getElementById('stress').value;
@@ -1227,14 +1260,14 @@
                 sessions: sessions,
                 sleep: sleepVal,
                 sore: soreVal,
-                area: areaVal,
+                area: selectedAreas,
                 stress: stressVal
             };
 
             // Maintain rolling 3-day history array
-            checkInHistory = checkInHistory.filter(item => item.date !== todayStr); // Replace today if exists
+            checkInHistory = checkInHistory.filter(item => item.date !== todayStr);
             checkInHistory.push(checkInPayload);
-            if (checkInHistory.length > 5) checkInHistory.shift(); // keep max 5 entries
+            if (checkInHistory.length > 5) checkInHistory.shift();
 
             renderHistoryLogs();
 
@@ -1267,15 +1300,16 @@
 
             // Format past 3 days history text for AI
             const historyText = checkInHistory.filter(h => h.date !== todayStr).slice(-3).map(h => {
-                const hSessions = h.sessions.map(s => `"${s.activity}" (Effort ${s.effort}/3)`).join(', ');
-                return `- Date ${h.date}: Workouts: [${hSessions}] | Sleep: ${h.sleep}h | Soreness: ${h.sore}/3 (${h.area}) | Stress: ${h.stress}/3`;
+                const hSessions = h.sessions ? h.sessions.map(s => `"${s.activity}" (Effort ${s.effort}/3)`).join(', ') : 'Workout';
+                const hAreas = Array.isArray(h.area) ? h.area.join(', ') : (h.area || 'General');
+                return `- Date ${h.date}: Workouts: [${hSessions}] | Sleep: ${h.sleep}h | Soreness: ${h.sore}/3 (${hAreas}) | Stress: ${h.stress}/3`;
             }).join('\n');
 
             const multiDayContextText = historyText.length > 0
                 ? `PAST 3 DAYS CUMULATIVE TRAINING HISTORY:\n${historyText}`
                 : 'PAST 3 DAYS CUMULATIVE TRAINING HISTORY: No prior days logged yet.';
 
-            // HYPER-SPECIFIC AI PROMPT FOR MULTI-SESSION & MULTI-DAY RECOVERY
+            // HYPER-SPECIFIC AI PROMPT WITH INLINE RECIPE CONNECT & MULTI-AREA SORENESS
             const multiSportContext = `TODAY'S WORKOUT LOG (${todayStr}):
 ${sessionBreakdownText}
 
@@ -1283,20 +1317,20 @@ ${multiDayContextText}
 
 TODAY'S PHYSICAL & READINESS MARKERS:
 - Sleep Last Night: ${sleepVal} hours
-- Soreness Level: ${soreVal}/3 on Target Muscle Group: "${areaVal}"
+- Soreness Level: ${soreVal}/3 on Target Sore Areas: [${areasFormatted}]
 - Daily Stress Level: ${stressVal}/3
 - Athlete Bio: Primary Sport: ${profSport} | Secondary: ${profSecondary} | Age: ${profAge} | Phase: ${profSeason}
 ${eventContext}
 
 EVIDENCE-BASED RECOVERY DIRECTIVES:
-1. MULTI-DAY WORKLOAD & RESIDUAL FATIGUE ANALYSIS: Deeply evaluate both TODAY'S training load AND the PAST 3 DAYS cumulative history. If today is an easy session following heavy/brutal training days, factor in accumulated neural fatigue, muscle damage, and joint strain from previous days!
-2. DISTINCT SESSION BIOMECHANICS: Contrast the physical demands, eccentric muscle damage, and metabolic systems across all logged sessions.
-3. HIGHLY SPECIFIC, PROFESSIONAL PROTOCOLS: Do NOT offer generic boilerplate advice. Offer advanced sports science recovery methods tailored specifically to the cumulative multi-day fatigue.
-4. 3 DISTINCT MODALITIES: Combine 3 distinct recovery pillars:
-   - 1 Tissue & Movement Restoration Protocol specifically tailored to cumulative workload & target area (${areaVal})
-   - 1 Precision Nutrition & Electrolyte Strategy matching total metabolic expenditure
+1. MULTI-AREA SORENESS BIOMECHANICS: Address ALL checked sore muscle areas ([${areasFormatted}]) together! Explain how today's workouts loaded these muscle chains.
+2. CUMULATIVE fatigue & EASY DAY CONTRAST: If today was light but previous days were heavy, treat this as a high-residual recovery protocol (do NOT give light advice for a cumulative heavy week).
+3. INLINE RECIPE PAIRING MANDATE: Whenever you prescribe nutritional, protein, carbohydrate, or glycogen replenishment guidelines (e.g., "30g carbs + 20g protein"), you MUST IMMEDIATELY give an exact, delicious, real-world recipe idea right then and there with ingredients! Format as "🍽️ Recipe Idea: [Name] – [Quick ingredients & prep]".
+4. NO GENERIC OBVIOUS ADVICE: Do NOT waste time telling athletes to "drink water" or "eat food" unless providing precise electrolyte formulas (e.g. 1.2L water + 600mg sodium) or exact macronutrient ratios paired with recipes.
+5. 3 DISTINCT MODALITIES:
+   - 1 Tissue & Multi-Area Movement Protocol (addressing ${areasFormatted})
+   - 1 Precision Performance Nutrition & Paired Recipe Strategy
    - 1 Sleep, Thermal, or Nervous System Optimization Protocol
-5. TONE: Professional, authoritative sports performance coach. Direct, high-value, and actionable.
 
 FORMAT STRICTLY AS:
 1. [Strategy Title]
@@ -1313,14 +1347,14 @@ FORMAT STRICTLY AS:
                 effort: sessions[0].effort,
                 sleep: sleepVal,
                 sore: soreVal,
-                area: areaVal,
+                area: areasFormatted,
                 stress: stressVal
             };
 
-            renderStretches(areaVal);
+            renderStretches(selectedAreas);
 
             submitBtn.disabled = true;
-            submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i><span>Analyzing Cumulative Workload...</span>`;
+            submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i><span>Analyzing Session & Macro Demands...</span>`;
 
             try {
                 const response = await fetch('/api/recovery-plan', {
@@ -1886,23 +1920,24 @@ FORMAT STRICTLY AS:
                                 addSessionInputRow(c.activity, c.effort || '2');
                             }
 
+                            if (c.area) setSelectedMuscleAreas(Array.isArray(c.area) ? c.area : [c.area]);
                             if (c.sleep) document.getElementById('sleep').value = c.sleep;
                             if (c.sore) document.getElementById('sore').value = c.sore;
-                            if (c.area) document.getElementById('area').value = c.area;
                             if (c.stress) document.getElementById('stress').value = c.stress;
-                            renderStretches(c.area || 'Quads');
+                            renderStretches(c.area || ['Quads']);
                         }
                         if (data.generatedPlan) {
                             localStorage.setItem('rebound_generated_plan', data.generatedPlan);
                             document.getElementById('planOutput').innerHTML = formatRecoveryPlan(data.generatedPlan);
                         }
                     } else {
-                        // Reset inputs for today, but keep cumulative history!
+                        // Reset inputs for today
                         const container = document.getElementById('sessionsContainer');
                         if (container) {
                             container.innerHTML = '';
                             addSessionInputRow('', '2');
                         }
+                        setSelectedMuscleAreas(['Quads']);
                     }
                 } else {
                     saveCloudData();
