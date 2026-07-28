@@ -136,32 +136,32 @@
                     </div>
                     <div>
                         <h2 class="text-xl font-extrabold text-slate-900">Daily Athlete Check-In</h2>
-                        <p class="text-xs text-slate-500 font-medium">Log today's workout to generate tailored, high-value recovery protocols built for your upcoming schedule.</p>
+                        <p class="text-xs text-slate-500 font-medium">Log today's workout sessions to generate tailored, high-value recovery protocols built for your upcoming schedule.</p>
                     </div>
                 </div>
 
                 <form id="recoveryForm" class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    
+                    <!-- Dynamic Multi-Session Logger Container -->
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs font-extrabold tracking-wider uppercase text-slate-700 flex items-center gap-2">
+                                <i class="fa-solid fa-dumbbell text-emerald-600"></i> Workouts / Sessions Logged Today
+                            </label>
+                            <button type="button" onclick="addSessionInputRow()" class="text-xs font-extrabold text-emerald-800 bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 px-3 py-1.5 rounded-xl transition flex items-center gap-1.5 shadow-sm">
+                                <i class="fa-solid fa-plus text-[10px]"></i>
+                                <span>Add Another Session</span>
+                            </button>
+                        </div>
+
+                        <div id="sessionsContainer" class="space-y-3">
+                            <!-- Dynamic Session Cards populate here -->
+                        </div>
+                    </div>
+
+                    <!-- Readiness & Physical Markers -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 pt-2">
                         
-                        <div class="space-y-2">
-                            <label class="text-xs font-extrabold tracking-wider uppercase text-slate-700 flex items-center gap-2">
-                                <i class="fa-solid fa-dumbbell text-emerald-600"></i> Workout / Session Today
-                            </label>
-                            <input type="text" id="activity" required placeholder="e.g. Heavy Leg Day, Basketball Game, Tempo Run" 
-                                class="fluid-input w-full px-4 py-3 text-sm">
-                        </div>
-
-                        <div class="space-y-2">
-                            <label class="text-xs font-extrabold tracking-wider uppercase text-slate-700 flex items-center gap-2">
-                                <i class="fa-solid fa-gauge-high text-emerald-600"></i> Effort Level
-                            </label>
-                            <select id="effort" class="fluid-input w-full px-4 py-3 text-sm">
-                                <option value="1">1 - Light / Recovery Pace</option>
-                                <option value="2" selected>2 - Moderate Effort</option>
-                                <option value="3">3 - All-Out High Intensity</option>
-                            </select>
-                        </div>
-
                         <div class="space-y-2">
                             <label class="text-xs font-extrabold tracking-wider uppercase text-slate-700 flex items-center gap-2">
                                 <i class="fa-solid fa-bed text-emerald-600"></i> Sleep Last Night (Hours)
@@ -191,7 +191,7 @@
                             </div>
                         </div>
 
-                        <div class="space-y-2 md:col-span-2">
+                        <div class="space-y-2">
                             <label class="text-xs font-extrabold tracking-wider uppercase text-slate-700 flex items-center gap-2">
                                 <i class="fa-solid fa-brain text-emerald-600"></i> Daily Stress Level
                             </label>
@@ -578,6 +578,71 @@
             return `${year}-${month}-${day}`;
         }
 
+        // DYNAMIC MULTI-SESSION LOGGING FUNCTIONS
+        function addSessionInputRow(activityVal = '', effortVal = '2') {
+            const container = document.getElementById('sessionsContainer');
+            if (!container) return;
+
+            const sessionCount = container.children.length + 1;
+            const sessionCard = document.createElement('div');
+            sessionCard.className = "session-row bg-slate-50 p-4 rounded-2xl border border-slate-200/90 space-y-3 relative group hover:border-emerald-300 transition shadow-sm";
+
+            sessionCard.innerHTML = `
+                <div class="flex items-center justify-between pb-1 border-b border-slate-200/60">
+                    <span class="text-[10px] font-extrabold uppercase text-emerald-800 tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-bolt text-emerald-600"></i> Session <span class="session-number">${sessionCount}</span>
+                    </span>
+                    <button type="button" onclick="removeSessionInputRow(this)" class="remove-session-btn text-slate-400 hover:text-rose-600 text-xs transition p-1" title="Remove Session">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div class="md:col-span-2 space-y-1">
+                        <label class="text-[10px] font-extrabold text-slate-600 uppercase">Workout / Activity *</label>
+                        <input type="text" class="session-activity fluid-input w-full px-3.5 py-2.5 text-xs" required placeholder="e.g. Heavy Leg Day, 5k Tempo Run, Volleyball Practice" value="${activityVal}">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-extrabold text-slate-600 uppercase">Effort / Intensity Level *</label>
+                        <select class="session-effort fluid-input w-full px-3.5 py-2.5 text-xs">
+                            <option value="1" ${effortVal === '1' ? 'selected' : ''}>1 - Light / Easy Pace</option>
+                            <option value="2" ${effortVal === '2' ? 'selected' : ''}>2 - Moderate Effort</option>
+                            <option value="3" ${effortVal === '3' ? 'selected' : ''}>3 - All-Out High Intensity</option>
+                        </select>
+                    </div>
+                </div>
+            `;
+
+            container.appendChild(sessionCard);
+            reindexSessionRows();
+        }
+
+        function removeSessionInputRow(btn) {
+            const card = btn.closest('.session-row');
+            if (card) {
+                card.remove();
+                reindexSessionRows();
+            }
+        }
+
+        function reindexSessionRows() {
+            const container = document.getElementById('sessionsContainer');
+            if (!container) return;
+            const rows = container.querySelectorAll('.session-row');
+            rows.forEach((row, idx) => {
+                const numSpan = row.querySelector('.session-number');
+                if (numSpan) numSpan.textContent = idx + 1;
+                
+                const removeBtn = row.querySelector('.remove-session-btn');
+                if (removeBtn) {
+                    if (rows.length === 1) {
+                        removeBtn.classList.add('hidden');
+                    } else {
+                        removeBtn.classList.remove('hidden');
+                    }
+                }
+            });
+        }
+
         // Auto-Healing Cloud Sync State Controller with Guaranteed 2-Second Reset
         function setSyncStatus(state) {
             const syncIcon = document.getElementById('syncIcon');
@@ -592,7 +657,6 @@
                 syncIcon.className = "fa-solid fa-cloud-arrow-up text-amber-300 text-sm animate-pulse";
                 syncText.innerHTML = `Saving changes to cloud... <strong class="text-amber-200">(${email})</strong>`;
                 
-                // Auto-healing reset: never let "Saving..." sit stuck on screen for longer than 2 seconds
                 syncStatusTimer = setTimeout(() => {
                     if (currentUser) setSyncStatus('synced');
                 }, 2000);
@@ -613,28 +677,29 @@
             }
         }
 
-        // Completely reset all local variables, storage, and forms to an empty state
         function resetToCleanSlate() {
             localStorage.clear();
             scheduledEvents = {};
             favoriteRecipes = [];
 
-            // Clear Check-In form
-            if (document.getElementById('activity')) document.getElementById('activity').value = '';
-            if (document.getElementById('effort')) document.getElementById('effort').value = '2';
+            // Reset dynamic sessions list to 1 blank row
+            const container = document.getElementById('sessionsContainer');
+            if (container) {
+                container.innerHTML = '';
+                addSessionInputRow('', '2');
+            }
+
             if (document.getElementById('sleep')) document.getElementById('sleep').value = '7.5';
             if (document.getElementById('sore')) document.getElementById('sore').value = '2';
             if (document.getElementById('area')) document.getElementById('area').value = 'Quads';
             if (document.getElementById('stress')) document.getElementById('stress').value = '2';
 
-            // Reset plan container
             if (document.getElementById('planOutput')) {
                 document.getElementById('planOutput').innerHTML = `
                     <p class="text-slate-500 text-sm font-medium">Complete your Daily Check-In to generate today's customized protocol!</p>
                 `;
             }
 
-            // Clear Profile Bio
             if (document.getElementById('profSport')) document.getElementById('profSport').value = '';
             if (document.getElementById('profSecondarySports')) document.getElementById('profSecondarySports').value = '';
             if (document.getElementById('profAge')) document.getElementById('profAge').value = '18';
@@ -668,10 +733,8 @@
             auth = firebase.auth();
             db = firebase.firestore();
 
-            // Auto-detect best network protocol (Long-Polling or WebSockets) without freezing UI
             db.settings({ experimentalAutoDetectLongPolling: true });
 
-            // Enable offline persistence
             db.enablePersistence().catch(err => {
                 console.log("Persistence notice:", err.code);
             });
@@ -1082,7 +1145,7 @@
             return html;
         }
 
-        // ================= FORM SUBMIT & AI INTEGRATION =================
+        // ================= FORM SUBMIT & MULTI-SESSION AI INTEGRATION =================
         const form = document.getElementById('recoveryForm');
         const submitBtn = document.getElementById('submitBtn');
         const planOutput = document.getElementById('planOutput');
@@ -1090,16 +1153,34 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const rawActivity = document.getElementById('activity').value;
+            // Collect all sessions dynamically
+            const sessionRows = document.querySelectorAll('.session-row');
+            const sessions = [];
+
+            sessionRows.forEach(row => {
+                const act = row.querySelector('.session-activity').value.trim();
+                const eff = row.querySelector('.session-effort').value;
+                if (act) {
+                    sessions.push({ activity: act, effort: eff });
+                }
+            });
+
+            if (sessions.length === 0) {
+                alert('Please log at least one workout session.');
+                return;
+            }
+
             const areaVal = document.getElementById('area').value;
+            const sleepVal = document.getElementById('sleep').value;
+            const soreVal = document.getElementById('sore').value;
+            const stressVal = document.getElementById('stress').value;
 
             const checkInPayload = {
-                activity: rawActivity,
-                effort: document.getElementById('effort').value,
-                sleep: document.getElementById('sleep').value,
-                sore: document.getElementById('sore').value,
+                sessions: sessions,
+                sleep: sleepVal,
+                sore: soreVal,
                 area: areaVal,
-                stress: document.getElementById('stress').value
+                stress: stressVal
             };
 
             const profSport = document.getElementById('profSport').value || 'Athlete';
@@ -1121,43 +1202,59 @@
                 });
             }
             const eventContext = upcomingList.length > 0 
-                ? `SCHEDULED EVENTS: ${upcomingList.slice(0, 4).join(' | ')}. Adjust recovery focus specifically around these games/events!` 
-                : 'SCHEDULED EVENTS: None logged on calendar.';
+                ? `UPCOMING SCHEDULED EVENTS: ${upcomingList.slice(0, 4).join(' | ')}. Adjust recovery focus specifically around these games/events!` 
+                : 'UPCOMING SCHEDULED EVENTS: None logged on calendar.';
 
-            // HYPER-SPECIFIC AI PROMPT: Analyzes exact movement patterns of the logged activity
-            const multiSportContext = `WORKOUT LOGGED TODAY: "${rawActivity}"
-EFFORT LEVEL: ${checkInPayload.effort}/3 | SLEEP: ${checkInPayload.sleep} hrs | SORENESS: ${checkInPayload.sore}/3 on ${areaVal} | STRESS: ${checkInPayload.stress}/3
-ATHLETE BIO: Primary Sport: ${profSport} | Secondary: ${profSecondary} | Age: ${profAge} | Phase: ${profSeason}
+            // Format multi-session log text for AI
+            const sessionBreakdownText = sessions.map((s, idx) => {
+                const effortLabels = { '1': '1/3 (Light)', '2': '2/3 (Moderate)', '3': '3/3 (All-Out High Intensity)' };
+                return `Session ${idx + 1}: "${s.activity}" — Effort Level: ${effortLabels[s.effort] || s.effort}`;
+            }).join('\n');
+
+            // HYPER-SPECIFIC AI PROMPT FOR MULTI-SESSION RECOVERY
+            const multiSportContext = `MULTI-SESSION WORKOUT LOG TODAY (${sessions.length} Session(s)):
+${sessionBreakdownText}
+
+PHYSICAL & READINESS MARKERS:
+- Sleep Last Night: ${sleepVal} hours
+- Soreness Level: ${soreVal}/3 on Target Muscle Group: "${areaVal}"
+- Daily Stress Level: ${stressVal}/3
+- Athlete Bio: Primary Sport: ${profSport} | Secondary: ${profSecondary} | Age: ${profAge} | Phase: ${profSeason}
 ${eventContext}
 
-STRICT SPECIFICITY & DIVERSITY INSTRUCTIONS:
-1. WORKOUT BIOMECHANICS: Deeply analyze the biomechanical and metabolic demands of "${rawActivity}". (For example: high-mileage runs demand heel/soleus flush, eccentric quad drain, and glycogen reload; basketball demands cutting/rotational hip release and lateral ankle flush; weightlifting demands CNS reset and targeted mechanical tension release).
-2. DO NOT USE GENERIC DEFAULTS: NEVER default to generic routines like "Dead Hangs" or basic "Foam Rolling" unless the biomechanics of "${rawActivity}" specifically require it. If the user logs a run, give running-specific protocols (e.g., soleus elevation, foot arch activation, tendon stiffness reset). If they log basketball, give court-specific protocols.
-3. 3 DISTINCT MODALITIES: Combine 3 completely different recovery angles (e.g. 1 movement/tissue strategy specific to "${rawActivity}", 1 nutrition/hydration timing hack, and 1 sleep/nervous system/thermal protocol).
-4. TONE: Clear, athletic coach tone. Concise, high-value, and direct. AVOID overly dense medical/scientific jargon.
-5. FORMAT: 
-1. Strategy Name
-Explanation...
+EVIDENCE-BASED RECOVERY DIRECTIVES:
+1. DISTINCT SESSION BIOMECHANICS: Deeply analyze the unique physical and physiological demands of EACH session logged today. Contrast the eccentric muscle damage, CNS strain, joint loading, and metabolic energy systems used across the different activities (e.g. distinguishing heavy resistance lifting vs. rapid lateral cut/deceleration in court sports like basketball/volleyball vs. sustained linear ground impact forces in running).
+2. CONCURRENT TRAINING INTERFERENCE & FATIGUE: If multiple sessions were logged (e.g. a lift AND a run/practice), factor in concurrent training fatigue, total cumulative volume, central nervous system depletion, and intra-workout energy drain.
+3. HIGHLY SPECIFIC, PROFESSIONAL PROTOCOLS: Do NOT offer generic boilerplate advice like basic "foam rolling" or "dead hangs". Offer advanced sports science recovery methods (e.g., soleus/Achilles flushing, rotatory hip capsule mobilization, glycogen supercompensation, or neural decompression depending on the workouts).
+4. 3 DISTINCT MODALITIES: Combine 3 distinct, high-value recovery pillars:
+   - 1 Tissue & Movement Restoration Protocol specifically tailored to the logged workouts & target area (${areaVal})
+   - 1 Precision Nutrition & Electrolyte Strategy matching total metabolic expenditure
+   - 1 Sleep, Thermal, or Nervous System Optimization Protocol
+5. TONE: Professional, authoritative sports performance coach. Direct, high-value, and actionable.
 
-2. Strategy Name
-Explanation...
+FORMAT STRICTLY AS:
+1. [Strategy Title]
+[Detailed instruction...]
 
-3. Strategy Name
-Explanation...`;
+2. [Strategy Title]
+[Detailed instruction...]
+
+3. [Strategy Title]
+[Detailed instruction...]`;
 
             const payload = {
                 activity: multiSportContext,
-                effort: checkInPayload.effort,
-                sleep: checkInPayload.sleep,
-                sore: checkInPayload.sore,
+                effort: sessions[0].effort,
+                sleep: sleepVal,
+                sore: soreVal,
                 area: areaVal,
-                stress: checkInPayload.stress
+                stress: stressVal
             };
 
             renderStretches(areaVal);
 
             submitBtn.disabled = true;
-            submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i><span>Generating Custom Recovery Protocol...</span>`;
+            submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i><span>Analyzing Session Demands...</span>`;
 
             try {
                 const response = await fetch('/api/recovery-plan', {
@@ -1526,7 +1623,6 @@ Explanation...`;
 
         const recipeIndices = { pre: 0, post: 0, snack: 0, dinner: 0 };
 
-        // Randomize initial starting positions for all 4 categories
         function randomizeRecipeIndices() {
             Object.keys(recipeDatabase).forEach(category => {
                 recipeIndices[category] = Math.floor(Math.random() * recipeDatabase[category].length);
@@ -1643,7 +1739,7 @@ Explanation...`;
             ['pre', 'post', 'snack', 'dinner'].forEach(c => renderRecipeCard(c));
         }
 
-        // ================= CLOUD STORAGE PERSISTENCE (NON-BLOCKING) =================
+        // ================= CLOUD STORAGE PERSISTENCE =================
         function saveProfile() {
             if (!currentUser) {
                 alert('Please log in with your email account to save your Athlete Bio!');
@@ -1676,7 +1772,6 @@ Explanation...`;
                 generatedPlan: localStorage.getItem('rebound_generated_plan') || ''
             };
 
-            // Non-blocking fire-and-forget background save
             db.collection('users').doc(currentUser.uid).set(userDoc, { merge: true })
                 .then(() => {
                     setSyncStatus('synced');
@@ -1697,26 +1792,31 @@ Explanation...`;
                 if (doc.exists) {
                     const data = doc.data();
 
-                    // Restore Athlete Bio
                     if (data.sport !== undefined) document.getElementById('profSport').value = data.sport;
                     if (data.secondary !== undefined) document.getElementById('profSecondarySports').value = data.secondary;
                     if (data.age !== undefined) document.getElementById('profAge').value = data.age;
                     if (data.gender !== undefined) document.getElementById('profGender').value = data.gender;
                     if (data.season !== undefined) document.getElementById('profSeason').value = data.season;
 
-                    // Restore Scheduled Events & Favorites
                     scheduledEvents = data.events || {};
                     favoriteRecipes = data.favoriteRecipes || [];
 
-                    // Restore Today's Check-In & Generated Plan (If logged on today's date)
                     const todayStr = getTodayDateString();
                     if (data.checkInDate === todayStr) {
                         localStorage.setItem('rebound_checkin_date', data.checkInDate);
                         if (data.checkInData) {
                             localStorage.setItem('rebound_checkin_data', JSON.stringify(data.checkInData));
                             const c = data.checkInData;
-                            if (c.activity) document.getElementById('activity').value = c.activity;
-                            if (c.effort) document.getElementById('effort').value = c.effort;
+                            
+                            // Restore multi-session data
+                            const container = document.getElementById('sessionsContainer');
+                            if (container) container.innerHTML = '';
+                            if (c.sessions && c.sessions.length > 0) {
+                                c.sessions.forEach(s => addSessionInputRow(s.activity, s.effort));
+                            } else if (c.activity) {
+                                addSessionInputRow(c.activity, c.effort || '2');
+                            }
+
                             if (c.sleep) document.getElementById('sleep').value = c.sleep;
                             if (c.sore) document.getElementById('sore').value = c.sore;
                             if (c.area) document.getElementById('area').value = c.area;
@@ -1728,14 +1828,9 @@ Explanation...`;
                             document.getElementById('planOutput').innerHTML = formatRecoveryPlan(data.generatedPlan);
                         }
                     } else {
-                        // Reset if it's a new day after midnight
-                        document.getElementById('activity').value = '';
-                        document.getElementById('planOutput').innerHTML = `
-                            <p class="text-slate-500 text-sm font-medium">Complete your Daily Check-In to generate today's customized protocol!</p>
-                        `;
+                        resetToCleanSlate();
                     }
                 } else {
-                    // New user document setup
                     saveCloudData();
                 }
 
