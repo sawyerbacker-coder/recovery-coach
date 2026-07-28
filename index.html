@@ -312,7 +312,7 @@
         <!-- ================= TAB 3: SCHEDULE ================= -->
         <section id="tab-schedule" class="tab-content hidden space-y-6">
             <div class="fluid-card p-6 md:p-8 space-y-6">
-                <div class="flex items-center justify-between">
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                     <div class="flex items-center space-x-3">
                         <div class="w-10 h-10 rounded-2xl bg-sky-100 text-sky-800 flex items-center justify-center">
                             <i class="fa-solid fa-calendar-days text-lg"></i>
@@ -322,7 +322,14 @@
                             <p class="text-xs text-slate-500 font-medium">Events automatically sync to your account upon login</p>
                         </div>
                     </div>
-                    <span id="currentMonthYear" class="text-sm font-extrabold text-sky-700"></span>
+                    
+                    <div class="flex items-center space-x-2 w-full md:w-auto">
+                        <button onclick="syncGoogleCalendar()" class="w-full md:w-auto bg-white hover:bg-sky-50 border border-sky-300 text-sky-800 font-extrabold px-3.5 py-2 rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm transition">
+                            <i class="fa-brands fa-google text-sky-500"></i>
+                            <span>Sync Google Calendar</span>
+                        </button>
+                        <span id="currentMonthYear" class="text-sm font-extrabold text-sky-700 hidden md:inline"></span>
+                    </div>
                 </div>
 
                 <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-4">
@@ -441,6 +448,37 @@
             </div>
         </section>
 
+    </div>
+
+    <!-- ================= GOOGLE CALENDAR IMPORT REVIEW MODAL ================= -->
+    <div id="googleImportModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="fluid-card w-full max-w-lg p-6 space-y-5 bg-white relative shadow-2xl border-2 border-sky-400">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-2xl bg-sky-100 text-sky-800 flex items-center justify-center font-bold">
+                        <i class="fa-brands fa-google text-lg text-sky-600"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-extrabold text-slate-900">Google Athletic Events Preview</h3>
+                        <p class="text-xs text-slate-500">Smart Filtered: Uncheck any events that aren't yours!</p>
+                    </div>
+                </div>
+                <button onclick="closeGoogleImportModal()" class="text-slate-400 hover:text-slate-700 p-1 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div id="googleEventsChecklist" class="max-h-60 overflow-y-auto space-y-2 pr-1">
+                <!-- Checkboxes populated dynamically -->
+            </div>
+
+            <div class="pt-2 flex justify-end space-x-3 border-t border-slate-200">
+                <button onclick="closeGoogleImportModal()" class="px-4 py-2 rounded-xl font-bold text-slate-600 hover:bg-slate-100 text-xs">Cancel</button>
+                <button onclick="confirmGoogleEventsImport()" class="px-5 py-2.5 rounded-xl font-extrabold text-white bg-sky-500 hover:bg-sky-600 text-xs shadow-md">
+                    Import Selected Events
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- ================= EVENT STATUS CONFIRMATION MODAL ================= -->
@@ -619,6 +657,7 @@
         let scheduledEvents = {};
         let favoriteRecipes = [];
         let checkInHistory = []; // Rolling 3-day history array
+        let pendingGoogleEvents = []; // For preview checklist modal
         let syncStatusTimer = null;
 
         // Date helper: returns YYYY-MM-DD in local time
@@ -919,6 +958,133 @@
                 resetToCleanSlate();
                 alert('Signed out.');
             }
+        }
+
+        // ================= GOOGLE CALENDAR OAUTH & SMART FILTER ENGINE =================
+        async function syncGoogleCalendar() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            provider.addScope('https://www.googleapis.com/auth/calendar.events.readonly');
+
+            try {
+                const result = await auth.signInWithPopup(provider);
+                const token = result.credential.accessToken;
+
+                const now = new Date().toISOString();
+                const response = await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${now}&singleEvents=true&orderBy=startTime`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                const data = await response.json();
+
+                if (data.items) {
+                    processGoogleEvents(data.items);
+                } else {
+                    alert("No events found on Google Calendar.");
+                }
+            } catch (err) {
+                console.error("Google Calendar Sync Error:", err);
+                alert("Could not access Google Calendar: " + err.message);
+            }
+        }
+
+        function guessEventType(summary) {
+            const lower = summary.toLowerCase();
+            if (lower.includes('game') || lower.includes('vs') || lower.includes('match') || lower.includes('meet') || lower.includes('tournament')) return 'game';
+            if (lower.includes('practice') || lower.includes('drill')) return 'practice';
+            if (lower.includes('workout') || lower.includes('lift') || lower.includes('gym')) return 'workout';
+            return 'practice';
+        }
+
+        function processGoogleEvents(items) {
+            const sport = (document.getElementById('profSport').value || '').toLowerCase();
+            const keywords = ['game', 'practice', 'workout', 'training', 'tournament', 'match', 'meet', 'scrimmage', 'lifting', 'lift', 'run', 'race', 'track', 'varsity', 'jv', 'drill', 'conditioning', 'championship'];
+            if (sport) keywords.push(sport);
+
+            pendingGoogleEvents = [];
+
+            items.forEach((item, index) => {
+                const title = item.summary || '';
+                const desc = item.description || '';
+                const textCombined = `${title} ${desc}`.toLowerCase();
+
+                // Layer 1 & 2: Athletic Keyword and Sport Matching
+                const isAthletic = keywords.some(kw => textCombined.includes(kw));
+
+                if (isAthletic && item.start) {
+                    const startRaw = item.start.dateTime || item.start.date;
+                    const dateObj = new Date(startRaw);
+                    const year = dateObj.getFullYear();
+                    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+                    const day = String(dateObj.getDate()).padStart(2, '0');
+                    const dateStr = `${year}-${month}-${day}`;
+
+                    const startTimeStr = item.start.dateTime ? dateObj.toTimeString().substring(0, 5) : '';
+                    const endTimeStr = (item.end && item.end.dateTime) ? new Date(item.end.dateTime).toTimeString().substring(0, 5) : '';
+
+                    pendingGoogleEvents.push({
+                        id: 'g_' + index + '_' + Date.now(),
+                        title: title,
+                        date: dateStr,
+                        type: guessEventType(title),
+                        startTime: startTimeStr,
+                        endTime: endTimeStr,
+                        intensity: 'Moderate',
+                        selected: true
+                    });
+                }
+            });
+
+            if (pendingGoogleEvents.length === 0) {
+                alert("No sports or training events detected on your Google Calendar.");
+                return;
+            }
+
+            renderGoogleImportModal();
+        }
+
+        function renderGoogleImportModal() {
+            const container = document.getElementById('googleEventsChecklist');
+            if (!container) return;
+
+            container.innerHTML = pendingGoogleEvents.map((evt, idx) => `
+                <label class="p-3 bg-slate-50 hover:bg-sky-50 rounded-xl border border-slate-200/90 flex items-center justify-between transition cursor-pointer">
+                    <div class="flex items-center space-x-3">
+                        <input type="checkbox" ${evt.selected ? 'checked' : ''} onchange="pendingGoogleEvents[${idx}].selected = this.checked" class="w-4 h-4 text-sky-500 rounded border-slate-300 focus:ring-sky-400">
+                        <div>
+                            <div class="font-extrabold text-slate-900 text-xs">${evt.title}</div>
+                            <div class="text-[10px] text-slate-500">${evt.date} ${evt.startTime ? '• ' + evt.startTime : ''} (${evt.type})</div>
+                        </div>
+                    </div>
+                    <span class="text-[9px] uppercase font-bold bg-sky-100 text-sky-800 px-2 py-0.5 rounded border border-sky-300">Sports Event</span>
+                </label>
+            `).join('');
+
+            document.getElementById('googleImportModal').classList.remove('hidden');
+        }
+
+        function closeGoogleImportModal() {
+            document.getElementById('googleImportModal').classList.add('hidden');
+        }
+
+        function confirmGoogleEventsImport() {
+            let count = 0;
+            pendingGoogleEvents.forEach(evt => {
+                if (evt.selected) {
+                    if (!scheduledEvents[evt.date]) scheduledEvents[evt.date] = [];
+                    // Avoid duplicate title on same date
+                    const exists = scheduledEvents[evt.date].some(e => e.title.toLowerCase() === evt.title.toLowerCase());
+                    if (!exists) {
+                        scheduledEvents[evt.date].push(createEventObject(evt.title, evt.date, evt.type, evt.startTime, evt.endTime, evt.intensity));
+                        count++;
+                    }
+                }
+            });
+
+            saveCloudData();
+            buildCalendar();
+            renderUpcomingEventsList();
+            closeGoogleImportModal();
+            alert(`Successfully imported ${count} athletic event(s) to your schedule!`);
         }
 
         // ================= EVENT TIMING ENGINE =================
