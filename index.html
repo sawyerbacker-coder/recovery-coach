@@ -1609,7 +1609,7 @@
                 ? `PAST 3 DAYS CUMULATIVE TRAINING HISTORY:\n${historyText}`
                 : 'PAST 3 DAYS CUMULATIVE TRAINING HISTORY: No prior days logged yet.';
 
-            // CLEAR, ACCESSIBLE, REAL-WORLD SPORTS SCIENCE PROMPT (NO TEXTBOOK JARGON)
+            // HIGH-PRECISION PRO RECOVERY PROMPT (SIMPLE WORDS, ADVANCED SPECIFIC ACTIONS)
             const multiSportContext = `TODAY'S WORKOUT LOG (${todayStr}):
 ${sessionBreakdownText}
 
@@ -1625,22 +1625,21 @@ ${eventContext}
 EVIDENCE-BASED RECOVERY DIRECTIVES:
 YOU ARE REBOUND COACH, AN ELITE ATHLETIC PERFORMANCE & RECOVERY AI.
 
-CRITICAL TONE & LANGUAGE MANDATES:
-1. STRICTLY FORBIDDEN JARGON: NEVER use textbook medical terms like "vagus nerve", "parasympathetic", "downregulation", "myofascial", "eccentric braking", or "central fatigue".
-2. CLEAR, ATHLETE-FRIENDLY TONE: Speak directly like a smart head athletic trainer or recovery coach. Keep the science 100% accurate, but explain it in simple, direct, real-world language that high school and college athletes easily understand.
-3. ZERO NUTRITION / RECIPES: Do NOT give food, macro, recipe, or drink advice in these protocols. Focus entirely on physical body and mental recovery.
-4. TAILOR TO LOGGED WORKOUTS: Look at today's workouts (${sessionBreakdownText}). Explain how those specific drills/lifts loaded the muscles and joints, and give precise, easy-to-follow actions to restore them.
+CORE PROMPT GUIDELINES:
+1. SIMPLE TONE, ADVANCED SPECIFIC ACTIONS: Explain *why* muscles are strained using plain, understandable English (no textbook jargon like "vagus nerve" or "downregulation"). BUT make the *recovery steps* extremely specific, advanced, and actionable (e.g. precise hold times, PNF ratios, exact breathing counts, elevated drainage postures, thermal contrast cycles).
+2. NO GENERIC ADVICE: Never give lazy advice like "drink water" or "rest up". Every protocol must be a step-by-step masterclass routine tailored to today's sessions (${sessionBreakdownText}) and sore target muscles ([${areasFormatted}]).
+3. ZERO NUTRITION/RECIPES: Do NOT include any food, macro, recipe, or drink recommendations. All 3 protocols MUST be 100% focused on Body & Mind recovery.
 
 OUTPUT FORMAT (STRICTLY 3 CLEAN PROTOCOLS WITHOUT BRACKETS):
 
 1. Muscle & Movement Recovery
-[Analyze today's specific workouts and target sore areas ([${areasFormatted}]). Explain in clear terms what physical load happened and give 1-2 practical physical actions to flush out tightness...]
+[Analyze today's specific workouts and target sore areas ([${areasFormatted}]). Give a high-precision, multi-step physical recovery protocol with exact durations, holds, or active movement routines...]
 
 2. Mind & Nervous System Reset
-[Address mental stress (${stressVal}/3) and brain fatigue from today's sessions. Give a simple, practical breathing or relaxation technique to help the athlete unwind and drop their heart rate...]
+[Analyze today's mental stress (${stressVal}/3) and workout load. Prescribe a specific, step-by-step nervous system reset technique with exact breathing cadences or relaxation sequences...]
 
 3. Sleep & Deep Rest
-[Address sleep hours (${sleepVal}h) and upcoming games (${eventContext}). Give actionable steps for tonight's sleep setup or thermal cooling to help the body repair overnight...]`;
+[Analyze sleep hours (${sleepVal}h) and upcoming schedule (${eventContext}). Prescribe exact thermal setup, room environment, and circadian protocols for tonight...]`;
 
             const payload = {
                 activity: multiSportContext,
