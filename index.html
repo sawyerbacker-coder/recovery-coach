@@ -275,7 +275,7 @@
                         </div>
                         <div>
                             <h2 class="text-xl font-extrabold text-slate-900">Custom Body & Mind Recovery Protocol</h2>
-                            <p class="text-xs text-slate-500 font-medium">3 Core Science-Backed Physical & Mental Modalities</p>
+                            <p class="text-xs text-slate-500 font-medium">3 Core Physical & Mental Modalities Targeted for Today's Workouts</p>
                         </div>
                     </div>
                     <span class="text-xs bg-sky-100 text-sky-800 font-extrabold px-3 py-1 rounded-full border border-sky-300">Smart AI Insights</span>
@@ -1479,25 +1479,27 @@
                     if (inCard) html += `</div>`; // Close preceding card
                     inCard = true;
 
-                    let cleanTitle = trimmed.replace(/^[#\*\d\.\s]+/, '').replace(/\*+/g, '');
+                    // Strip any numbers, hashes, asterisks, OR brackets from header
+                    let cleanTitle = trimmed.replace(/^[#\*\d\.\s\[\]]+/, '').replace(/[\[\]\*]+/g, '').trim();
+                    
                     let icon = 'fa-dumbbell';
-                    let badgeText = 'Physical & Biomechanics';
-                    if (trimmed.startsWith('2.') || trimmed.startsWith('**2.')) { icon = 'fa-brain'; badgeText = 'Mental & Nervous System'; }
-                    if (trimmed.startsWith('3.') || trimmed.startsWith('**3.')) { icon = 'fa-moon'; badgeText = 'Sleep & Biological Focus'; }
+                    let badgeText = 'Muscle & Movement';
+                    if (trimmed.startsWith('2.') || trimmed.startsWith('**2.')) { icon = 'fa-brain'; badgeText = 'Mind & Nervous System'; }
+                    if (trimmed.startsWith('3.') || trimmed.startsWith('**3.')) { icon = 'fa-moon'; badgeText = 'Sleep & Deep Rest'; }
 
                     html += `
                         <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm space-y-2.5 mt-3">
-                            <div class="flex items-center justify-between">
+                            <div class="flex items-center justify-between pb-1 border-b border-slate-100">
                                 <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
                                     <i class="fa-solid ${icon} text-sky-500"></i>
                                     <span>${cleanTitle}</span>
                                 </h3>
-                                <span class="text-[10px] bg-slate-100 text-slate-700 font-bold px-2.5 py-0.5 rounded-full border border-slate-200">${badgeText}</span>
+                                <span class="text-[10px] bg-sky-50 text-sky-800 font-bold px-2.5 py-0.5 rounded-full border border-sky-200">${badgeText}</span>
                             </div>
                     `;
                 } else {
                     let cleanDesc = trimmed.replace(/\*\*(.*?)\*\*/g, '<strong class="font-extrabold text-slate-900">$1</strong>');
-                    html += `<p class="text-sm text-slate-600 leading-relaxed font-normal mb-1">${cleanDesc}</p>`;
+                    html += `<p class="text-sm text-slate-600 leading-relaxed font-normal pt-1">${cleanDesc}</p>`;
                 }
             });
 
@@ -1593,7 +1595,7 @@
                 ? `PAST 3 DAYS CUMULATIVE TRAINING HISTORY:\n${historyText}`
                 : 'PAST 3 DAYS CUMULATIVE TRAINING HISTORY: No prior days logged yet.';
 
-            // SCIENTIFICALLY BACKED BIOMECHANICAL & TISSUE RECOVERY PROMPT
+            // CLEAR, ACCESSIBLE, REAL-WORLD SPORTS SCIENCE PROMPT (NO TEXTBOOK JARGON)
             const multiSportContext = `TODAY'S WORKOUT LOG (${todayStr}):
 ${sessionBreakdownText}
 
@@ -1607,25 +1609,24 @@ TODAY'S PHYSICAL & READINESS MARKERS:
 ${eventContext}
 
 EVIDENCE-BASED RECOVERY DIRECTIVES:
-YOU ARE REBOUND COACH, A TOP-TIER SPORTS SCIENCE & ATHLETIC RECOVERY AI.
-Your protocol MUST be grounded in real biomechanics, exercise physiology, and sports science—NO generic fluff like "drink water" or "eat food".
+YOU ARE REBOUND COACH, AN ELITE ATHLETIC PERFORMANCE & RECOVERY AI.
 
-STRICT RULES:
-1. NO NUTRITION, RECIPES, MACROS, OR FOOD: Do NOT include any nutritional, macro, meal, or drink recommendations. All 3 protocols MUST be 100% focused on Body & Mind recovery.
-2. BIOMECHANICAL & MUSCLE TARGETING: Analyze the specific activities logged today (${sessionBreakdownText}). Explicitly state which exact muscle groups were taxed and what biomechanical stresses occurred (e.g. eccentric braking forces, high ground reaction impact, triple extension, rotational torque).
-3. EXPLICIT EVIDENCE-BASED ACTION: Match the physical recovery actions directly to those biomechanical strains (e.g., specific muscle lengthening parameters, myofascial release protocols, thermal contrast cycles, or parasympathetic vagal stimulation).
-4. ACCESSIBLE LANGUAGE: Explain the science in clear, accessible terms so younger athletes can understand "why" and "how" without getting lost in overly dense jargon.
+CRITICAL TONE & LANGUAGE MANDATES:
+1. STRICTLY FORBIDDEN JARGON: NEVER use textbook medical terms like "vagus nerve", "parasympathetic", "downregulation", "myofascial", "eccentric braking", or "central fatigue".
+2. CLEAR, ATHLETE-FRIENDLY TONE: Speak directly like a smart head athletic trainer or recovery coach. Keep the science 100% accurate, but explain it in simple, direct, real-world language that high school and college athletes easily understand.
+3. ZERO NUTRITION / RECIPES: Do NOT give food, macro, recipe, or drink advice in these protocols. Focus entirely on physical body and mental recovery.
+4. TAILOR TO LOGGED WORKOUTS: Look at today's workouts (${sessionBreakdownText}). Explain how those specific drills/lifts loaded the muscles and joints, and give precise, easy-to-follow actions to restore them.
 
-OUTPUT STRICTLY AS EXACTLY 3 PROTOCOLS:
+OUTPUT FORMAT (STRICTLY 3 CLEAN PROTOCOLS WITHOUT BRACKETS):
 
-1. [Physical Tissue & Biomechanical Protocol]
-[Analyze the specific activities logged, call out the exact muscles and tendons taxed, and prescribe targeted physical/tissue recovery techniques...]
+1. Muscle & Movement Recovery
+[Analyze today's specific workouts and target sore areas ([${areasFormatted}]). Explain in clear terms what physical load happened and give 1-2 practical physical actions to flush out tightness...]
 
-2. [Nervous System & Central Fatigue Downregulation]
-[Analyze central nervous system stress from today's session load and daily stress score (${stressVal}/3), and prescribe specific parasympathetic downregulation practices like box breathing or passive positioning...]
+2. Mind & Nervous System Reset
+[Address mental stress (${stressVal}/3) and brain fatigue from today's sessions. Give a simple, practical breathing or relaxation technique to help the athlete unwind and drop their heart rate...]
 
-3. [Sleep Hygiene & Biological Recovery]
-[Analyze sleep hours (${sleepVal}h) and upcoming schedule (${eventContext}), and prescribe concrete thermal, circadian, or environment optimization protocols for deep cellular repair...]`;
+3. Sleep & Deep Rest
+[Address sleep hours (${sleepVal}h) and upcoming games (${eventContext}). Give actionable steps for tonight's sleep setup or thermal cooling to help the body repair overnight...]`;
 
             const payload = {
                 activity: multiSportContext,
