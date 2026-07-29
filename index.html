@@ -1203,7 +1203,7 @@
             renderUpcomingEventsList();
         }
 
-        // ================= FULL INSTRUCTIONAL STRETCH LIBRARY =================
+        // ================= FULL INSTRUCTIONAL STRETCH LIBRARY (3 PER CATEGORY) =================
         const stretchLibrary = {
             'Quads': [
                 {
@@ -1225,6 +1225,16 @@
                     targetMuscle: 'Deep Hip Flexors & Psoas',
                     howTo: 'Place back knee against a wall with toes pointing straight up. Step opposite foot forward into a lunge and bring torso upright.',
                     proTip: 'Keep your core engaged—don\'t let your lower back arch backward as you press your hips forward.'
+                },
+                {
+                    name: 'Prone Lying Quad Stretch',
+                    holdTime: '45 sec / leg',
+                    reps: '2 sets each side',
+                    side: 'Both Sides',
+                    equipment: 'Floor Mat',
+                    targetMuscle: 'Rectus Femoris & Lower Quad',
+                    howTo: 'Lie face down on a mat, reach back with one hand to grab your ankle, and pull your heel toward your glutes while pressing your hips gently into the floor.',
+                    proTip: 'Keep your knees close together and tuck your pelvis to prevent your lower back from arching.'
                 }
             ],
             'Hamstrings': [
@@ -1247,6 +1257,16 @@
                     targetMuscle: 'Full Hamstring Belly',
                     howTo: 'Lie on your back near a doorframe. Rest one leg up against the frame with the other extended flat through the doorway.',
                     proTip: 'Flex your foot back toward your face to activate your calf and lengthen the entire posterior nerve pathway.'
+                },
+                {
+                    name: 'Standing Single-Leg Hamstring Sweep',
+                    holdTime: '45 sec / leg',
+                    reps: '2 sets each side',
+                    side: 'Both Sides',
+                    equipment: 'None',
+                    targetMuscle: 'Lower & Mid Hamstring',
+                    howTo: 'Step one foot forward with toes pointing up, hinge at your hips, and sweep both hands down toward the floor in a smooth, controlled motion.',
+                    proTip: 'Inhale on the way down and exhale as you sweep up to keep the nervous system relaxed.'
                 }
             ],
             'Calves': [
@@ -1269,6 +1289,16 @@
                     targetMuscle: 'Soleus (Lower Calf & Achilles)',
                     howTo: 'Stand close to a wall in a short stance. Bend BOTH knees and sink weight into your back heel without lifting it off the floor.',
                     proTip: 'Bending the back knee shifts the focus away from the main calf down into the lower Achilles tendon.'
+                },
+                {
+                    name: 'Downward Dog Step-Pedal',
+                    holdTime: '60 sec total',
+                    reps: '2 sets (10 slow pedals)',
+                    side: 'Alternating',
+                    equipment: 'Floor Mat',
+                    targetMuscle: 'Gastrocnemius & Plantar Fascia',
+                    howTo: 'Pike your hips up into a downward dog position and alternate pressing one heel firmly to the mat while slightly bending the opposite knee.',
+                    proTip: 'Pause for 3 seconds at the bottom of each heel press to let the muscle belly adapt.'
                 }
             ],
             'Glutes & Hips': [
@@ -1291,6 +1321,16 @@
                     targetMuscle: 'Hip Internal & External Rotators',
                     howTo: 'Sit on the floor with both legs bent at 90-degree angles (one in front, one to the side). Hinge forward over your front leg.',
                     proTip: 'Keep both hip bones grounded into the mat to unlock deeper rotational hip capsule mobility.'
+                },
+                {
+                    name: 'Kneeling Pigeon Pose Stretch',
+                    holdTime: '45 sec / leg',
+                    reps: '2 sets each side',
+                    side: 'Both Sides',
+                    equipment: 'Floor Mat',
+                    targetMuscle: 'Glute Max & Deep Rotators',
+                    howTo: 'Bring your front knee forward behind your wrist with your shin angled across your body. Extend your back leg straight behind you and lower your torso over your front leg.',
+                    proTip: 'Square your hips toward the floor and rest on your forearms if comfortable.'
                 }
             ],
             'Lower Back': [
@@ -1313,6 +1353,16 @@
                     targetMuscle: 'Latissimus Dorsi & Lower Back',
                     howTo: 'Kneel with big toes touching, sit hips back to heels, and reach hands forward. Walk both hands 45 degrees to the right side.',
                     proTip: 'Breathe deeply into the side of your ribcage to stretch out tight back muscles.'
+                },
+                {
+                    name: 'Supine Lumbar Knee Twist',
+                    holdTime: '45 sec / side',
+                    reps: '2 sets each side',
+                    side: 'Both Sides',
+                    equipment: 'Floor Mat',
+                    targetMuscle: 'Lumbar Rotators & QL Muscle',
+                    howTo: 'Lie flat on your back with arms spread in a T-shape. Draw your knees to 90 degrees and gently drop them to one side while keeping both shoulders pinned down.',
+                    proTip: 'Turn your head toward the opposite arm to gently rotate the entire spinal column.'
                 }
             ],
             'Shoulders & Chest': [
@@ -1335,6 +1385,16 @@
                     targetMuscle: 'Rear Deltoid & Rotator Cuff',
                     howTo: 'Bring one arm horizontally across your chest. Use your opposite hand to gently pull your arm closer in toward your torso.',
                     proTip: 'Keep your shoulder blades pulled down and back rather than letting them shrug up toward your chin.'
+                },
+                {
+                    name: 'Thread the Needle Opener',
+                    holdTime: '45 sec / side',
+                    reps: '2 sets each side',
+                    side: 'Both Sides',
+                    equipment: 'Floor Mat',
+                    targetMuscle: 'Rear Delts, Rhomboids & Thoracic Spine',
+                    howTo: 'Start on all fours. Slide one arm underneath your body along the floor, lowering your shoulder and side of head gently to the mat.',
+                    proTip: 'Breathe deeply into your upper back to unlock tight thoracic spine segment joints.'
                 }
             ]
         };
@@ -1414,8 +1474,8 @@
                 let trimmed = line.trim();
                 if (!trimmed) return;
 
-                // Check for Section 4 (Macro / Fueling Box)
-                if (trimmed.match(/^4\./) || trimmed.startsWith('**4.') || trimmed.toLowerCase().includes('macro & performance') || trimmed.toLowerCase().includes('macro & nutrition')) {
+                // Section 4: Macro / Fueling Box at VERY BOTTOM
+                if (trimmed.match(/^4\./) || trimmed.startsWith('**4.') || (trimmed.toLowerCase().includes('macro') && trimmed.toLowerCase().includes('fueling'))) {
                     if (inCard) html += `</div>`; // Close preceding card
                     inCard = true;
 
@@ -1431,22 +1491,26 @@
                             </div>
                     `;
                 } 
-                // Check for Sections 1, 2, 3 (Body & Mind Protocols)
+                // Sections 1, 2, 3: Body & Mind Core Protocols
                 else if (trimmed.match(/^(1|2|3)\./) || trimmed.startsWith('**1.') || trimmed.startsWith('**2.') || trimmed.startsWith('**3.')) {
                     if (inCard) html += `</div>`; // Close preceding card
                     inCard = true;
 
                     let cleanTitle = trimmed.replace(/^[#\*\d\.\s]+/, '').replace(/\*+/g, '');
                     let icon = 'fa-dumbbell';
-                    if (trimmed.startsWith('2.') || trimmed.startsWith('**2.')) icon = 'fa-brain';
-                    if (trimmed.startsWith('3.') || trimmed.startsWith('**3.')) icon = 'fa-moon';
+                    let badgeText = 'Physical Body';
+                    if (trimmed.startsWith('2.') || trimmed.startsWith('**2.')) { icon = 'fa-brain'; badgeText = 'Mental & Nervous System'; }
+                    if (trimmed.startsWith('3.') || trimmed.startsWith('**3.')) { icon = 'fa-moon'; badgeText = 'Sleep & Biological Focus'; }
 
                     html += `
                         <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm space-y-2.5 mt-3">
-                            <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
-                                <i class="fa-solid ${icon} text-sky-500"></i>
-                                <span>${cleanTitle}</span>
-                            </h3>
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                                    <i class="fa-solid ${icon} text-sky-500"></i>
+                                    <span>${cleanTitle}</span>
+                                </h3>
+                                <span class="text-[10px] bg-slate-100 text-slate-700 font-bold px-2 py-0.5 rounded border border-slate-200">${badgeText}</span>
+                            </div>
                     `;
                 } 
                 // Render Inline Recipe Cards
@@ -1558,7 +1622,7 @@
                 ? `PAST 3 DAYS CUMULATIVE TRAINING HISTORY:\n${historyText}`
                 : 'PAST 3 DAYS CUMULATIVE TRAINING HISTORY: No prior days logged yet.';
 
-            // HYPER-SPECIFIC AI PROMPT WITH DEDICATED BODY, MIND & FLEXIBLE MACRO SECTIONS
+            // HYPER-SPECIFIC AI PROMPT WITH DEDICATED BODY, MIND & SEPARATE BOTTOM MACRO BOX
             const multiSportContext = `TODAY'S WORKOUT LOG (${todayStr}):
 ${sessionBreakdownText}
 
@@ -1572,12 +1636,12 @@ TODAY'S PHYSICAL & READINESS MARKERS:
 ${eventContext}
 
 EVIDENCE-BASED RECOVERY DIRECTIVES:
-1. BODY & MIND FOCUS FOR MAIN 3 PROTOCOLS: The primary 3 recovery protocols MUST focus strictly on physical tissue repair, nervous system downregulation, and mental readiness. Do NOT waste any of the top 3 ideas on nutrition or macro advice.
-   - Protocol 1 (Body): Physical Tissue & Biomechanical Protocol (Addressing [${areasFormatted}]).
-   - Protocol 2 (Mind): Autonomic Nervous System & Mental Readiness (Parasympathetic downregulation, breathwork, cognitive stress reduction for stress level ${stressVal}/3).
-   - Protocol 3 (Body & Mind): Biological, Thermal, or Sleep Optimization (Contrast therapy, circadian regulation, sleep hygiene for ${sleepVal}h sleep).
-2. SEPARATE FLEXIBLE MACRO SECTION (Section 4): Provide a 4th dedicated section specifically for "Post-Session Macro & Recipe Guidance". Note that this is flexible post-training replenishment for whenever the athlete eats. Include 1 exact recipe idea formatted as "🍽️ Recipe Idea: [Name] – [Quick ingredients & prep]".
-3. NO GENERIC OBVIOUS ADVICE: Keep protocols specific, evidence-based, and actionable.
+CRITICAL RULE: DO NOT MAKE ANY OF THE TOP 3 PROTOCOLS ABOUT NUTRITION, MACROS, FOOD, OR HYDRATION!
+Items 1, 2, and 3 MUST BE 100% BODY AND MIND RESTORATION.
+1. Protocol 1 (Physical Body): Physical Tissue & Biomechanical Recovery (Addressing target sore areas: [${areasFormatted}]).
+2. Protocol 2 (Mental & Mind): Autonomic Nervous System & Stress Reduction (Parasympathetic downregulation, breathwork, mental stress reduction for stress level ${stressVal}/3).
+3. Protocol 3 (Body & Mind): Sleep Hygiene, Thermal, or Circadian Recovery (Sleep/circadian optimization for ${sleepVal} hours of sleep).
+4. Section 4 (Post-Session Macro Strategy - VERY BOTTOM ONLY): Provide a 4th separate section at the very bottom specifically titled "Post-Session Macro & Performance Fueling". Note that this is flexible fueling whenever the athlete eats. Include 1 exact recipe idea formatted as "🍽️ Recipe Idea: [Name] – [Quick ingredients & prep]".
 
 FORMAT STRICTLY AS:
 1. [Physical Tissue & Biomechanical Protocol]
