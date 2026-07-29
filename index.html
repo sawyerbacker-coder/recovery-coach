@@ -1811,33 +1811,36 @@ OUTPUT FORMAT (STRICTLY 3 CLEAN PROTOCOLS WITHOUT BRACKETS):
 
             const contextPrompt = `You are Rebound Live Coach, an energetic and knowledgeable AI assistant specializing in athletic performance, nutrition, and recovery.
 
-CORE RULE: Answer the user's exact question directly and specifically. 
+MANDATORY RULES:
+1. ANSWER DIRECTLY: Respond directly to the user's question without any filler, fluff, or preachy lectures.
+2. NO PROTOCOLS / NO STEPS: DO NOT use "Step 1", "Step 2", "Step 3", "Protocol", or structured 3-part templates under any circumstances.
+3. CONCISE & SIMPLE: Use clear, easy-to-understand, concise words.
+4. RELEVANCE ONLY: Do not bring up unasked-for mobility drills, wall-rests, or sleep tricks unless the user specifically asks for them.
 
-GUIDELINES:
-1. Match the Request: 
-   - If the user asks for a snack or recipe, give them a nutrition recommendation immediately. 
-   - If they ask a "why" question (e.g., afternoon fatigue), explain the cause concisely and offer a quick solution. 
-   - Do NOT force responses into a rigid 3-step recovery format unless the user specifically asks for a routine or step-by-step plan.
-
-2. Relevant Context Only:
-   - Do NOT bring up cross-country (XC) running, hamstring tightness, or previous workout data unless it is directly relevant to their specific question. 
-   - Never force leg drain routines, wall-rests, or breathwork into answers about general questions because that info is not needed.
-
-3. Tone & Format:
-   - Be helpful, direct, and concise. 
-   - Keep answers clear, scannable, and actionable without fluff or filler steps.
-
-ATHLETE'S QUESTION: "${question}"`;
+ATHLETE QUESTION: "${question}"`;
 
             try {
                 const response = await fetch('/api/recovery-plan', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ activity: contextPrompt, effort: '2', sleep: '8', sore: '2', area: 'General', stress: '2' })
+                    body: JSON.stringify({ 
+                        mode: 'chat',
+                        activity: contextPrompt, 
+                        effort: '2', 
+                        sleep: '8', 
+                        sore: '2', 
+                        area: 'General', 
+                        stress: '2' 
+                    })
                 });
 
                 const data = await response.json();
-                appendChatMessage('coach', data.plan || "I'm right here! Let me know how I can help with your training, nutrition, or recovery.");
+                let answer = data.plan || "I'm right here! Let me know how I can help with your training, nutrition, or recovery.";
+                
+                // Clean any leftover forced step labels
+                answer = answer.replace(/^Step \d+:?\s*/gmi, '').trim();
+
+                appendChatMessage('coach', answer);
             } catch (err) {
                 appendChatMessage('coach', "I couldn't fetch that right now! Give it another shot in a second.");
             } finally {
