@@ -125,7 +125,7 @@
             <button onclick="handleSignOut()" class="text-slate-300 hover:text-white underline font-bold ml-4">Sign Out</button>
         </div>
 
-        <!-- Navigation Bar (Updated to 5 Grid Columns) -->
+        <!-- Navigation Bar -->
         <nav class="grid grid-cols-2 md:grid-cols-5 gap-2 bg-slate-200/70 backdrop-blur-md p-1.5 rounded-2xl border border-slate-300/60">
             <button onclick="switchTab('checkin')" id="tab-btn-checkin" class="tab-btn active flex items-center justify-center space-x-2 py-3 px-2 text-xs md:text-sm font-bold">
                 <i class="fa-solid fa-clipboard-check"></i>
@@ -1806,30 +1806,40 @@ OUTPUT FORMAT (STRICTLY 3 CLEAN PROTOCOLS WITHOUT BRACKETS):
             sendBtn.disabled = true;
             sendBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i>`;
 
-            const profSport = document.getElementById('profSport')?.value || 'Athlete';
-            const profAge = document.getElementById('profAge')?.value || '18';
-            const selectedAreas = typeof getSelectedMuscleAreas === 'function' ? getSelectedMuscleAreas().join(', ') : 'Quads';
+            const profSport = document.getElementById('profSport')?.value || '';
+            const profAge = document.getElementById('profAge')?.value || '';
 
-            const contextPrompt = `ATHLETE CONTEXT: Primary Sport: ${profSport} | Age: ${profAge} | Current Sore Areas: ${selectedAreas}.
-ATHLETE QUESTION: "${question}"
+            const contextPrompt = `You are Rebound Live Coach, an energetic and knowledgeable AI assistant specializing in athletic performance, nutrition, and recovery.
 
-SYSTEM INSTRUCTIONS:
-- You are Rebound Live Coach. Keep your tone encouraging, direct, and energetic.
-- Use clear, simple, understandable English for athletes of all ages (no textbook medical jargon).
-- Provide SPECIFIC, HIGHLY ACTIONABLE recovery routines, exact hold times, or step-by-step recipe/snack ideas.
-- Keep responses concise (2-4 bullet points max) so they are fast and readable.`;
+CORE RULE: Answer the user's exact question directly and specifically. 
+
+GUIDELINES:
+1. Match the Request: 
+   - If the user asks for a snack or recipe, give them a nutrition recommendation immediately. 
+   - If they ask a "why" question (e.g., afternoon fatigue), explain the cause concisely and offer a quick solution. 
+   - Do NOT force responses into a rigid 3-step recovery format unless the user specifically asks for a routine or step-by-step plan.
+
+2. Relevant Context Only:
+   - Do NOT bring up cross-country (XC) running, hamstring tightness, or previous workout data unless it is directly relevant to their specific question. 
+   - Never force leg drain routines, wall-rests, or breathwork into answers about general questions because that info is not needed.
+
+3. Tone & Format:
+   - Be helpful, direct, and concise. 
+   - Keep answers clear, scannable, and actionable without fluff or filler steps.
+
+ATHLETE'S QUESTION: "${question}"`;
 
             try {
                 const response = await fetch('/api/recovery-plan', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ activity: contextPrompt, effort: '2', sleep: '8', sore: '2', area: selectedAreas, stress: '2' })
+                    body: JSON.stringify({ activity: contextPrompt, effort: '2', sleep: '8', sore: '2', area: 'General', stress: '2' })
                 });
 
                 const data = await response.json();
-                appendChatMessage('coach', data.plan || "I'm right here! Give that tight area a gentle 45-second hold and stay hydrated before your next session.");
+                appendChatMessage('coach', data.plan || "I'm right here! Let me know how I can help with your training, nutrition, or recovery.");
             } catch (err) {
-                appendChatMessage('coach', "I couldn't fetch that right now! Stay focused, do some gentle light movement, and try asking again in a second.");
+                appendChatMessage('coach', "I couldn't fetch that right now! Give it another shot in a second.");
             } finally {
                 sendBtn.disabled = false;
                 sendBtn.innerHTML = `<span>Send</span><i class="fa-solid fa-paper-plane text-xs"></i>`;
