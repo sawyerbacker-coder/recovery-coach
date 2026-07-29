@@ -87,6 +87,14 @@
     <div class="fixed bottom-12 right-8 text-sky-400/30 text-6xl pointer-events-none sticker-badge" style="animation-delay: 2s;"><i class="fa-solid fa-person-running"></i></div>
     <div class="fixed top-1/2 -left-8 text-sky-200/40 text-7xl pointer-events-none sticker-badge" style="animation-delay: 1s;"><i class="fa-solid fa-trophy"></i></div>
 
+    <!-- Floating Immediate "Undo" Toast Notification -->
+    <div id="undoToast" class="fixed bottom-6 right-6 z-50 hidden bg-slate-900 text-white px-5 py-3.5 rounded-2xl shadow-2xl border border-slate-700 flex items-center space-x-4 transition-all duration-300">
+        <span id="undoToastText" class="text-xs font-semibold">Event deleted.</span>
+        <button onclick="undoLastDelete()" class="text-xs font-extrabold text-sky-400 hover:text-sky-300 underline uppercase tracking-wider flex items-center gap-1">
+            <i class="fa-solid fa-rotate-left"></i> Undo
+        </button>
+    </div>
+
     <div class="max-w-4xl w-full space-y-6 relative z-10">
         
         <!-- Header & Account/Profile Controls -->
@@ -484,6 +492,21 @@
                         <!-- Events List -->
                     </div>
                 </div>
+
+                <!-- RECENTLY DELETED & DISMISSED DRAWER -->
+                <div class="space-y-3 pt-4 border-t border-slate-200">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-2">
+                            <i class="fa-solid fa-trash-can text-slate-400"></i>
+                            <span>Recently Deleted & Dismissed Events</span>
+                        </h3>
+                        <span id="deletedCountBadge" class="text-[10px] bg-slate-200 text-slate-700 font-bold px-2 py-0.5 rounded-full">0</span>
+                    </div>
+                    <div id="recentlyDeletedList" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+                        <!-- Deleted items populated dynamically -->
+                    </div>
+                </div>
+
             </div>
         </section>
 
@@ -737,6 +760,9 @@
         let auth, db, currentUser = null;
         let activeModalEventId = null;
         let scheduledEvents = {};
+        let deletedEvents = []; // Stores deleted & dismissed items for restore
+        let lastDeletedEventContext = null; // Stores last delete info for immediate Undo Toast
+        let undoToastTimer = null;
         let favoriteRecipes = [];
         let checkInHistory = []; // Rolling 3-day history array
         let pendingGoogleEvents = []; // For preview checklist modal
@@ -916,6 +942,7 @@
         function resetToCleanSlate() {
             localStorage.clear();
             scheduledEvents = {};
+            deletedEvents = [];
             favoriteRecipes = [];
             checkInHistory = [];
 
@@ -950,6 +977,7 @@
 
             buildCalendar();
             renderUpcomingEventsList();
+            renderRecentlyDeletedList();
             renderStretches(['Quads']);
             renderHistoryLogs();
         }
@@ -987,7 +1015,7 @@
                     authBtnText.textContent = user.email.split('@')[0];
                     accountBanner.classList.remove('hidden');
                     
-                    // First load cloud data (restores existing scheduledEvents)
+                    // First load cloud data (restores existing scheduledEvents & deletedEvents)
                     await loadCloudData();
 
                     // Auto background sync calendar silently ONLY IF token exists
@@ -1134,13 +1162,18 @@
                     // Direct ISO string extraction to preserve exact calendar date
                     const dateStr = startRaw.split('T')[0];
 
-                    // CHECK IF EVENT IS ALREADY ADDED TO SCHEDULE
+                    // CHECK IF EVENT IS ALREADY ON SCHEDULE
                     const alreadyAdded = scheduledEvents[dateStr] && scheduledEvents[dateStr].some(
                         e => e.title.trim().toLowerCase() === title.trim().toLowerCase()
                     );
 
-                    // ONLY ADD TO PREVIEW IF IT IS A BRAND NEW EVENT
-                    if (!alreadyAdded) {
+                    // CHECK IF EVENT WAS PREVIOUSLY DELETED OR DISMISSED
+                    const wasDeleted = deletedEvents.some(
+                        e => e.title.trim().toLowerCase() === title.trim().toLowerCase() && e.date === dateStr
+                    );
+
+                    // ONLY ADD TO PREVIEW IF IT IS GENUINELY NEW AND NOT DELETED/DISMISSED
+                    if (!alreadyAdded && !wasDeleted) {
                         let startTimeStr = '';
                         let endTimeStr = '';
 
@@ -1170,7 +1203,7 @@
             // IF NO NEW UNADDED EVENTS ARE FOUND:
             if (pendingGoogleEvents.length === 0) {
                 if (!silent) {
-                    alert("All Google Calendar sports events are already added to your Rebound schedule!");
+                    alert("All Google Calendar sports events are already added or up to date on your Rebound schedule!");
                 }
                 return; // Silence modal popup when everything is up to date!
             }
@@ -1214,12 +1247,25 @@
                         scheduledEvents[evt.date].push(createEventObject(evt.title, evt.date, evt.type, evt.startTime, evt.endTime, evt.intensity));
                         count++;
                     }
+                } else {
+                    // Store unchecked items in deletedEvents as "dismissed" so Google Calendar scan won't re-prompt
+                    deletedEvents.push({
+                        id: evt.id,
+                        title: evt.title,
+                        date: evt.date,
+                        type: evt.type,
+                        startTime: evt.startTime,
+                        endTime: evt.endTime,
+                        intensity: evt.intensity,
+                        deletedAt: new Date().toISOString()
+                    });
                 }
             });
 
             saveCloudData();
             buildCalendar();
             renderUpcomingEventsList();
+            renderRecentlyDeletedList();
             closeGoogleImportModal();
             alert(`Successfully imported ${count} new athletic event(s) to your schedule!`);
         }
@@ -1944,16 +1990,137 @@ ATHLETE QUESTION: "${question}"`;
             document.getElementById('eventTitle').value = '';
         }
 
+        // DELETE EVENT (WITH UNDO TOAST + RECENTLY DELETED DRAWER PERSISTENCE)
         function deleteScheduleEvent(dateKey, index) {
-            if (scheduledEvents[dateKey]) {
+            if (scheduledEvents[dateKey] && scheduledEvents[dateKey][index]) {
+                const targetEvt = scheduledEvents[dateKey][index];
+
+                // Save context for immediate Undo Toast
+                lastDeletedEventContext = {
+                    event: { ...targetEvt },
+                    dateKey: dateKey,
+                    index: index
+                };
+
+                // Move event to deletedEvents array for drawer & Google duplicate prevention
+                deletedEvents.unshift({
+                    ...targetEvt,
+                    deletedAt: new Date().toISOString()
+                });
+
+                // Remove from active scheduledEvents
                 scheduledEvents[dateKey].splice(index, 1);
                 if (scheduledEvents[dateKey].length === 0) {
                     delete scheduledEvents[dateKey];
                 }
+
                 saveCloudData();
                 buildCalendar();
                 renderUpcomingEventsList();
+                renderRecentlyDeletedList();
+
+                // Trigger Floating Undo Toast
+                showUndoToast(`"${targetEvt.title}" deleted.`);
             }
+        }
+
+        function showUndoToast(msg) {
+            const toast = document.getElementById('undoToast');
+            const toastText = document.getElementById('undoToastText');
+            if (!toast || !toastText) return;
+
+            if (undoToastTimer) clearTimeout(undoToastTimer);
+
+            toastText.textContent = msg;
+            toast.classList.remove('hidden');
+
+            undoToastTimer = setTimeout(() => {
+                toast.classList.add('hidden');
+                lastDeletedEventContext = null;
+            }, 6000);
+        }
+
+        function undoLastDelete() {
+            if (!lastDeletedEventContext) return;
+
+            const { event, dateKey } = lastDeletedEventContext;
+
+            // Remove from deletedEvents array
+            deletedEvents = deletedEvents.filter(e => e.id !== event.id);
+
+            // Add back to active scheduledEvents
+            if (!scheduledEvents[dateKey]) scheduledEvents[dateKey] = [];
+            
+            const exists = scheduledEvents[dateKey].some(e => e.id === event.id);
+            if (!exists) {
+                scheduledEvents[dateKey].push(event);
+            }
+
+            // Hide Toast
+            const toast = document.getElementById('undoToast');
+            if (toast) toast.classList.add('hidden');
+            
+            if (undoToastTimer) clearTimeout(undoToastTimer);
+            lastDeletedEventContext = null;
+
+            saveCloudData();
+            buildCalendar();
+            renderUpcomingEventsList();
+            renderRecentlyDeletedList();
+        }
+
+        function restoreDeletedEvent(eventId) {
+            const index = deletedEvents.findIndex(e => e.id === eventId);
+            if (index === -1) return;
+
+            const evt = deletedEvents[index];
+            deletedEvents.splice(index, 1);
+
+            if (!scheduledEvents[evt.date]) scheduledEvents[evt.date] = [];
+            
+            const restoredEvt = {
+                id: evt.id || ('evt_' + Date.now()),
+                title: evt.title,
+                date: evt.date,
+                type: evt.type || 'game',
+                startTime: evt.startTime || '',
+                endTime: evt.endTime || '',
+                intensity: evt.intensity || 'Moderate',
+                manualStatus: null
+            };
+
+            scheduledEvents[evt.date].push(restoredEvt);
+
+            saveCloudData();
+            buildCalendar();
+            renderUpcomingEventsList();
+            renderRecentlyDeletedList();
+        }
+
+        function renderRecentlyDeletedList() {
+            const container = document.getElementById('recentlyDeletedList');
+            const badge = document.getElementById('deletedCountBadge');
+            if (!container) return;
+
+            if (badge) badge.textContent = deletedEvents.length;
+
+            if (deletedEvents.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 italic py-1">No recently deleted or dismissed events.</p>`;
+                return;
+            }
+
+            container.innerHTML = deletedEvents.map(evt => `
+                <div class="p-3 bg-slate-50 hover:bg-slate-100 rounded-xl border border-slate-200 flex justify-between items-center text-xs shadow-sm transition">
+                    <div class="flex items-center space-x-2 truncate pr-2">
+                        <i class="fa-solid fa-arrow-rotate-left text-slate-400 text-[10px]"></i>
+                        <span class="font-bold text-slate-700 truncate">${evt.title}</span>
+                        <span class="text-[10px] text-slate-400">(${evt.date})</span>
+                    </div>
+                    <button onclick="restoreDeletedEvent('${evt.id}')" class="bg-white hover:bg-sky-50 text-sky-700 font-extrabold px-2.5 py-1 rounded-lg border border-sky-300 text-[10px] uppercase tracking-wider shrink-0 transition shadow-sm">
+                        Restore ↩
+                    </button>
+                </div>
+            `).join('');
         }
 
         function renderUpcomingEventsList() {
@@ -2345,6 +2512,7 @@ ATHLETE QUESTION: "${question}"`;
                 gender: document.getElementById('profGender').value || 'Male',
                 season: document.getElementById('profSeason').value || 'In-Season Competition Phase',
                 events: scheduledEvents || {},
+                deletedEvents: deletedEvents || [],
                 favoriteRecipes: favoriteRecipes || [],
                 checkInHistory: checkInHistory || [],
                 checkInDate: localStorage.getItem('rebound_checkin_date') || '',
@@ -2379,6 +2547,7 @@ ATHLETE QUESTION: "${question}"`;
                     if (data.season !== undefined) document.getElementById('profSeason').value = data.season;
 
                     scheduledEvents = data.events || {};
+                    deletedEvents = data.deletedEvents || [];
                     favoriteRecipes = data.favoriteRecipes || [];
                     checkInHistory = data.checkInHistory || [];
 
@@ -2425,6 +2594,7 @@ ATHLETE QUESTION: "${question}"`;
                 renderSavedFavoritesList();
                 buildCalendar();
                 renderUpcomingEventsList();
+                renderRecentlyDeletedList();
                 renderHistoryLogs();
                 setSyncStatus('synced');
 
