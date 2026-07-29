@@ -109,18 +109,12 @@
                 </h1>
             </div>
 
-            <!-- Top-Right Account, Streak Bar & Trophy Case -->
+            <!-- Top-Right Account, Clean Trophy Case Button & Profile -->
             <div class="flex items-center space-x-2">
-                <!-- Live Streak Banner -->
-                <div class="flex items-center space-x-1.5 bg-amber-100 border border-amber-300 text-amber-900 px-3 py-2 rounded-2xl font-extrabold text-xs shadow-sm" title="Check-in Streak">
-                    <i class="fa-solid fa-fire text-amber-500 text-sm"></i>
-                    <span id="streakDisplay">0 Day Streak</span>
-                </div>
-
-                <!-- Sleep Badge Stack Display -->
-                <button onclick="toggleTrophyModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white p-2.5 rounded-2xl shadow-md transition font-extrabold text-xs flex items-center gap-1.5" title="View Trophy Collection">
-                    <i class="fa-solid fa-moon text-indigo-200 text-sm"></i>
-                    <span id="badgeCountDisplay" class="bg-indigo-900 text-indigo-100 px-2 py-0.5 rounded-full text-[10px] font-black">0</span>
+                <!-- Clean Trophy Case Button -->
+                <button onclick="toggleTrophyModal()" class="flex items-center space-x-2 bg-amber-400 hover:bg-amber-500 text-slate-950 px-3.5 py-2.5 rounded-2xl shadow-md transition font-extrabold text-xs cursor-pointer" title="Open Trophy Case">
+                    <i class="fa-solid fa-trophy text-slate-950 text-sm"></i>
+                    <span>Trophy Case</span>
                 </button>
 
                 <button id="authBtn" onclick="toggleAuthModal()" class="flex items-center space-x-2 bg-slate-900 hover:bg-slate-800 text-white px-3.5 py-2.5 rounded-2xl shadow-md transition font-extrabold text-xs">
@@ -867,11 +861,6 @@
         }
 
         function renderGamificationUI() {
-            const streakDisplay = document.getElementById("streakDisplay");
-            const badgeCountDisplay = document.getElementById("badgeCountDisplay");
-            if (streakDisplay) streakDisplay.textContent = `${streakCount} Day Streak`;
-            if (badgeCountDisplay) badgeCountDisplay.textContent = sleepBadgesCount;
-
             const badgeGridContainer = document.getElementById("badgeGridContainer");
             if (!badgeGridContainer) return;
 
@@ -2664,7 +2653,8 @@ ATHLETE QUESTION: "${question}"`;
                 sleepBadgesCount: sleepBadgesCount || 0
             };
 
-            db.collection('users').doc(currentUser.uid).set(userDoc, { merge: true })
+            // EXACT OVERWRITE SAVE (WITHOUT MERGE PITFALL) TO PERMANENTLY PURGE DELETED MAP KEYS IN FIRESTORE
+            db.collection('users').doc(currentUser.uid).set(userDoc)
                 .then(() => {
                     setSyncStatus('synced');
                 })
