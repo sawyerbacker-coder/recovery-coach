@@ -117,10 +117,10 @@
                     <span id="streakDisplay">0 Day Streak</span>
                 </div>
 
-                <!-- Trophy Case Button -->
-                <button onclick="toggleTrophyModal()" class="bg-amber-400 hover:bg-amber-500 text-slate-950 p-2.5 rounded-2xl shadow-md transition font-extrabold text-xs flex items-center gap-1" title="View Achievements">
-                    <i class="fa-solid fa-trophy text-slate-950 text-sm"></i>
-                    <span id="badgeCountDisplay" class="bg-slate-950 text-amber-400 px-1.5 py-0.5 rounded-full text-[10px]">0</span>
+                <!-- Sleep Badge Stack Display -->
+                <button onclick="toggleTrophyModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white p-2.5 rounded-2xl shadow-md transition font-extrabold text-xs flex items-center gap-1.5" title="View Trophy Collection">
+                    <i class="fa-solid fa-moon text-indigo-200 text-sm"></i>
+                    <span id="badgeCountDisplay" class="bg-indigo-900 text-indigo-100 px-2 py-0.5 rounded-full text-[10px] font-black">0</span>
                 </button>
 
                 <button id="authBtn" onclick="toggleAuthModal()" class="flex items-center space-x-2 bg-slate-900 hover:bg-slate-800 text-white px-3.5 py-2.5 rounded-2xl shadow-md transition font-extrabold text-xs">
@@ -567,17 +567,17 @@
 
     </div>
 
-    <!-- ================= TROPHY CASE & ACHIEVEMENTS MODAL ================= -->
+    <!-- ================= TROPHY CASE & RECOVERY STATS MODAL ================= -->
     <div id="trophyModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="fluid-card w-full max-w-lg p-6 space-y-5 bg-white relative shadow-2xl border-2 border-amber-400">
+        <div class="fluid-card w-full max-w-md p-6 space-y-5 bg-white relative shadow-2xl border-2 border-indigo-400">
             <div class="flex items-center justify-between pb-3 border-b border-slate-200">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-900 flex items-center justify-center font-bold">
-                        <i class="fa-solid fa-trophy text-lg text-amber-500"></i>
+                    <div class="w-10 h-10 rounded-2xl bg-indigo-100 text-indigo-900 flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-trophy text-lg text-indigo-600"></i>
                     </div>
                     <div>
-                        <h3 class="text-base font-extrabold text-slate-900">Athlete Achievements & Badges</h3>
-                        <p class="text-xs text-slate-500">Earn badges by logging sleep, maintaining streaks & completing protocols!</p>
+                        <h3 class="text-base font-extrabold text-slate-900">Athlete Recovery Trophy Stack</h3>
+                        <p class="text-xs text-slate-500">Collect Sleep Badges & build your infinite streak!</p>
                     </div>
                 </div>
                 <button onclick="toggleTrophyModal()" class="text-slate-400 hover:text-slate-700 p-1 text-lg">
@@ -585,8 +585,8 @@
                 </button>
             </div>
 
-            <div id="badgeGridContainer" class="grid grid-cols-2 gap-3 max-h-72 overflow-y-auto pr-1">
-                <!-- Badges populated dynamically -->
+            <div id="badgeGridContainer" class="grid grid-cols-1 gap-3">
+                <!-- Stackable Stat Cards populated dynamically -->
             </div>
 
             <div class="pt-2 flex justify-end border-t border-slate-200">
@@ -811,18 +811,10 @@
         let syncStatusTimer = null;
         let currentViewDate = new Date(); // Active Calendar View Month
 
-        // GAMIFICATION STATE
+        // GAMIFICATION STATE (INFINITE STREAKS & COLLECTIBLE BADGE STACKING)
         let streakCount = 0;
         let lastCheckInDate = "";
-        let planGenerationCount = 0;
-        let unlockedBadges = [];
-
-        const allBadges = [
-            { id: "sleep_8h", title: "Sleep Champion", icon: "fa-moon", color: "text-indigo-500 bg-indigo-50 border-indigo-200", desc: "Logged 8+ hours of sleep!" },
-            { id: "streak_3", title: "3-Day Grind", icon: "fa-bolt", color: "text-amber-500 bg-amber-50 border-amber-200", desc: "Maintained a 3-day check-in streak!" },
-            { id: "streak_7", title: "7-Day Machine", icon: "fa-fire", color: "text-rose-500 bg-rose-50 border-rose-200", desc: "Maintained a 7-day check-in streak!" },
-            { id: "plan_5", title: "Mobility Master", icon: "fa-wand-magic-sparkles", color: "text-sky-500 bg-sky-50 border-sky-200", desc: "Generated 5 recovery protocols!" }
-        ];
+        let sleepBadgesCount = 0;
 
         // Date helper: returns YYYY-MM-DD in local time
         function getTodayDateString() {
@@ -848,47 +840,29 @@
             if (!lastCheckInDate) {
                 streakCount = 1;
             } else if (lastCheckInDate === todayStr) {
-                // Same day check-in, preserve streak
+                // Same day check-in, preserve continuous streak
             } else if (lastCheckInDate === getYesterdayDateString()) {
                 streakCount += 1;
             } else {
-                streakCount = 1; // Streak reset after missed day
+                streakCount = 1; // Streak resets after a missed day
             }
             lastCheckInDate = todayStr;
             renderGamificationUI();
         }
 
         function checkAndAwardBadges(sleepVal) {
-            let newlyUnlocked = [];
+            let alerts = [];
 
-            // 1. Sleep Champion (8+ Hours)
-            if (parseFloat(sleepVal) >= 8 && !unlockedBadges.includes("sleep_8h")) {
-                unlockedBadges.push("sleep_8h");
-                newlyUnlocked.push("Sleep Champion 🌙");
-            }
-
-            // 2. 3-Day Grind
-            if (streakCount >= 3 && !unlockedBadges.includes("streak_3")) {
-                unlockedBadges.push("streak_3");
-                newlyUnlocked.push("3-Day Grind ⚡");
-            }
-
-            // 3. 7-Day Machine
-            if (streakCount >= 7 && !unlockedBadges.includes("streak_7")) {
-                unlockedBadges.push("streak_7");
-                newlyUnlocked.push("7-Day Machine 🔥");
-            }
-
-            // 4. Mobility Master
-            if (planGenerationCount >= 5 && !unlockedBadges.includes("plan_5")) {
-                unlockedBadges.push("plan_5");
-                newlyUnlocked.push("Mobility Master 🧘");
+            // Stackable Sleep Badge (collected every single time sleep >= 8 hours)
+            if (parseFloat(sleepVal) >= 8) {
+                sleepBadgesCount += 1;
+                alerts.push(`🌙 Sleep Badge Collected! (Total Stack: ${sleepBadgesCount})`);
             }
 
             renderGamificationUI();
 
-            if (newlyUnlocked.length > 0) {
-                alert(`🎉 ACHIEVEMENT UNLOCKED!\nYou earned: ${newlyUnlocked.join(", ")}`);
+            if (alerts.length > 0) {
+                alert(`🎉 RECOVERY REWARD!\n${alerts.join("\n")}`);
             }
         }
 
@@ -896,26 +870,40 @@
             const streakDisplay = document.getElementById("streakDisplay");
             const badgeCountDisplay = document.getElementById("badgeCountDisplay");
             if (streakDisplay) streakDisplay.textContent = `${streakCount} Day Streak`;
-            if (badgeCountDisplay) badgeCountDisplay.textContent = unlockedBadges.length;
+            if (badgeCountDisplay) badgeCountDisplay.textContent = sleepBadgesCount;
 
             const badgeGridContainer = document.getElementById("badgeGridContainer");
             if (!badgeGridContainer) return;
 
-            badgeGridContainer.innerHTML = allBadges.map(badge => {
-                const isUnlocked = unlockedBadges.includes(badge.id);
-                return `
-                    <div class="p-3.5 rounded-2xl border text-left transition ${isUnlocked ? badge.color + ' shadow-sm' : 'bg-slate-50 border-slate-200 opacity-50 grayscale'}">
-                        <div class="flex items-center justify-between mb-1">
-                            <i class="fa-solid ${badge.icon} text-lg"></i>
-                            <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full ${isUnlocked ? 'bg-white text-slate-900 shadow-xs' : 'bg-slate-200 text-slate-600'}">
-                                ${isUnlocked ? 'Unlocked' : 'Locked'}
-                            </span>
+            badgeGridContainer.innerHTML = `
+                <!-- Stackable Sleep Badges Display Card -->
+                <div class="p-4 rounded-2xl border bg-indigo-50 border-indigo-200 text-left shadow-sm flex items-center justify-between">
+                    <div class="flex items-center space-x-3.5">
+                        <div class="w-12 h-12 rounded-2xl bg-indigo-500 text-white flex items-center justify-center text-xl shadow-md shrink-0">
+                            <i class="fa-solid fa-moon"></i>
                         </div>
-                        <p class="font-extrabold text-xs text-slate-900">${badge.title}</p>
-                        <p class="text-[10px] text-slate-600 leading-tight mt-0.5">${badge.desc}</p>
+                        <div>
+                            <p class="font-extrabold text-sm text-slate-900">Sleep Badges Collected</p>
+                            <p class="text-xs text-slate-600">Earned each night you log 8+ hours of sleep</p>
+                        </div>
                     </div>
-                `;
-            }).join('');
+                    <span class="text-2xl font-black text-indigo-600 bg-white px-3.5 py-1.5 rounded-xl border border-indigo-200 shrink-0 ml-2">${sleepBadgesCount}</span>
+                </div>
+
+                <!-- Continuous Daily Streak Card -->
+                <div class="p-4 rounded-2xl border bg-amber-50 border-amber-200 text-left shadow-sm flex items-center justify-between">
+                    <div class="flex items-center space-x-3.5">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-xl shadow-md shrink-0">
+                            <i class="fa-solid fa-fire"></i>
+                        </div>
+                        <div>
+                            <p class="font-extrabold text-sm text-slate-900">Continuous Check-In Streak</p>
+                            <p class="text-xs text-slate-600">Consecutive days logging daily recovery</p>
+                        </div>
+                    </div>
+                    <span class="text-2xl font-black text-amber-600 bg-white px-3.5 py-1.5 rounded-xl border border-amber-200 shrink-0 ml-2">${streakCount} d</span>
+                </div>
+            `;
         }
 
         function toggleTrophyModal() {
@@ -1092,8 +1080,7 @@
             checkInHistory = [];
             streakCount = 0;
             lastCheckInDate = "";
-            planGenerationCount = 0;
-            unlockedBadges = [];
+            sleepBadgesCount = 0;
 
             // Reset dynamic sessions list to 1 blank row
             const container = document.getElementById('sessionsContainer');
@@ -1837,9 +1824,8 @@
             checkInHistory.push(checkInPayload);
             if (checkInHistory.length > 5) checkInHistory.shift();
 
-            // Update Streak & Gamification Milestones
+            // Update Infinite Streak & Collectible Sleep Badges
             updateStreakLogic(todayStr);
-            planGenerationCount += 1;
             checkAndAwardBadges(sleepVal);
 
             renderHistoryLogs();
@@ -2675,8 +2661,7 @@ ATHLETE QUESTION: "${question}"`;
                 generatedPlan: localStorage.getItem('rebound_generated_plan') || '',
                 streakCount: streakCount || 0,
                 lastCheckInDate: lastCheckInDate || '',
-                planGenerationCount: planGenerationCount || 0,
-                unlockedBadges: unlockedBadges || []
+                sleepBadgesCount: sleepBadgesCount || 0
             };
 
             db.collection('users').doc(currentUser.uid).set(userDoc, { merge: true })
@@ -2711,8 +2696,7 @@ ATHLETE QUESTION: "${question}"`;
                     checkInHistory = data.checkInHistory || [];
                     streakCount = data.streakCount || 0;
                     lastCheckInDate = data.lastCheckInDate || '';
-                    planGenerationCount = data.planGenerationCount || 0;
-                    unlockedBadges = data.unlockedBadges || [];
+                    sleepBadgesCount = data.sleepBadgesCount || 0;
 
                     const todayStr = getTodayDateString();
                     if (data.checkInDate === todayStr) {
