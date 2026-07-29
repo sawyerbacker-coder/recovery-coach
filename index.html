@@ -275,7 +275,7 @@
                         </div>
                         <div>
                             <h2 class="text-xl font-extrabold text-slate-900">Custom Body & Mind Recovery Protocol</h2>
-                            <p class="text-xs text-slate-500 font-medium">3 Core Physical & Mental Modalities + Flexible Macro Fueling</p>
+                            <p class="text-xs text-slate-500 font-medium">3 Core Science-Backed Physical & Mental Modalities</p>
                         </div>
                     </div>
                     <span class="text-xs bg-sky-100 text-sky-800 font-extrabold px-3 py-1 rounded-full border border-sky-300">Smart AI Insights</span>
@@ -1414,7 +1414,7 @@
                 combinedStretches = combinedStretches.concat(list);
             });
 
-            // Display up to 3-6 targeted exercises
+            // Display 3-6 targeted exercises
             const finalStretches = combinedStretches.slice(0, 6);
 
             container.innerHTML = '';
@@ -1474,31 +1474,14 @@
                 let trimmed = line.trim();
                 if (!trimmed) return;
 
-                // Section 4: Macro / Fueling Box at VERY BOTTOM
-                if (trimmed.match(/^4\./) || trimmed.startsWith('**4.') || (trimmed.toLowerCase().includes('macro') && trimmed.toLowerCase().includes('fueling'))) {
-                    if (inCard) html += `</div>`; // Close preceding card
-                    inCard = true;
-
-                    let cleanTitle = trimmed.replace(/^[#\*\d\.\s]+/, '').replace(/\*+/g, '');
-                    html += `
-                        <div class="bg-sky-50/90 border-2 border-sky-300 p-5 rounded-2xl shadow-sm space-y-3 mt-6">
-                            <div class="flex items-center justify-between pb-2 border-b border-sky-200">
-                                <h3 class="text-base font-extrabold text-sky-950 flex items-center gap-2">
-                                    <i class="fa-solid fa-utensils text-sky-600"></i>
-                                    <span>${cleanTitle}</span>
-                                </h3>
-                                <span class="text-[10px] bg-sky-200/70 text-sky-900 font-extrabold px-2.5 py-0.5 rounded-full border border-sky-300">Flexible Timing</span>
-                            </div>
-                    `;
-                } 
-                // Sections 1, 2, 3: Body & Mind Core Protocols
-                else if (trimmed.match(/^(1|2|3)\./) || trimmed.startsWith('**1.') || trimmed.startsWith('**2.') || trimmed.startsWith('**3.')) {
+                // Parse 3 Core Body & Mind Protocols
+                if (trimmed.match(/^(1|2|3)\./) || trimmed.startsWith('**1.') || trimmed.startsWith('**2.') || trimmed.startsWith('**3.')) {
                     if (inCard) html += `</div>`; // Close preceding card
                     inCard = true;
 
                     let cleanTitle = trimmed.replace(/^[#\*\d\.\s]+/, '').replace(/\*+/g, '');
                     let icon = 'fa-dumbbell';
-                    let badgeText = 'Physical Body';
+                    let badgeText = 'Physical & Biomechanics';
                     if (trimmed.startsWith('2.') || trimmed.startsWith('**2.')) { icon = 'fa-brain'; badgeText = 'Mental & Nervous System'; }
                     if (trimmed.startsWith('3.') || trimmed.startsWith('**3.')) { icon = 'fa-moon'; badgeText = 'Sleep & Biological Focus'; }
 
@@ -1509,24 +1492,12 @@
                                     <i class="fa-solid ${icon} text-sky-500"></i>
                                     <span>${cleanTitle}</span>
                                 </h3>
-                                <span class="text-[10px] bg-slate-100 text-slate-700 font-bold px-2 py-0.5 rounded border border-slate-200">${badgeText}</span>
+                                <span class="text-[10px] bg-slate-100 text-slate-700 font-bold px-2.5 py-0.5 rounded-full border border-slate-200">${badgeText}</span>
                             </div>
                     `;
-                } 
-                // Render Inline Recipe Cards
-                else if (trimmed.includes('🍽️') || trimmed.includes('Recipe Idea')) {
-                    let cleanRecipe = trimmed.replace(/\*\*(.*?)\*\*/g, '<strong class="font-extrabold text-sky-900">$1</strong>');
-                    html += `
-                        <div class="bg-white/80 border border-sky-300 p-3.5 rounded-xl text-xs text-sky-950 font-medium my-2 flex items-start gap-2 shadow-sm">
-                            <i class="fa-solid fa-utensils text-sky-600 text-sm mt-0.5"></i>
-                            <div>${cleanRecipe}</div>
-                        </div>
-                    `;
-                } 
-                // Regular Paragraph Lines
-                else {
+                } else {
                     let cleanDesc = trimmed.replace(/\*\*(.*?)\*\*/g, '<strong class="font-extrabold text-slate-900">$1</strong>');
-                    html += `<p class="text-sm text-slate-600 leading-relaxed font-normal mb-1.5">${cleanDesc}</p>`;
+                    html += `<p class="text-sm text-slate-600 leading-relaxed font-normal mb-1">${cleanDesc}</p>`;
                 }
             });
 
@@ -1535,7 +1506,7 @@
             return html;
         }
 
-        // ================= FORM SUBMIT & MULTI-SESSION + HISTORICAL + RECIPE PAIRING AI INTEGRATION =================
+        // ================= FORM SUBMIT & MULTI-SESSION + HISTORICAL AI INTEGRATION =================
         const form = document.getElementById('recoveryForm');
         const submitBtn = document.getElementById('submitBtn');
         const planOutput = document.getElementById('planOutput');
@@ -1622,7 +1593,7 @@
                 ? `PAST 3 DAYS CUMULATIVE TRAINING HISTORY:\n${historyText}`
                 : 'PAST 3 DAYS CUMULATIVE TRAINING HISTORY: No prior days logged yet.';
 
-            // HYPER-SPECIFIC AI PROMPT WITH DEDICATED BODY, MIND & SEPARATE BOTTOM MACRO BOX
+            // SCIENTIFICALLY BACKED BIOMECHANICAL & TISSUE RECOVERY PROMPT
             const multiSportContext = `TODAY'S WORKOUT LOG (${todayStr}):
 ${sessionBreakdownText}
 
@@ -1636,26 +1607,25 @@ TODAY'S PHYSICAL & READINESS MARKERS:
 ${eventContext}
 
 EVIDENCE-BASED RECOVERY DIRECTIVES:
-CRITICAL RULE: DO NOT MAKE ANY OF THE TOP 3 PROTOCOLS ABOUT NUTRITION, MACROS, FOOD, OR HYDRATION!
-Items 1, 2, and 3 MUST BE 100% BODY AND MIND RESTORATION.
-1. Protocol 1 (Physical Body): Physical Tissue & Biomechanical Recovery (Addressing target sore areas: [${areasFormatted}]).
-2. Protocol 2 (Mental & Mind): Autonomic Nervous System & Stress Reduction (Parasympathetic downregulation, breathwork, mental stress reduction for stress level ${stressVal}/3).
-3. Protocol 3 (Body & Mind): Sleep Hygiene, Thermal, or Circadian Recovery (Sleep/circadian optimization for ${sleepVal} hours of sleep).
-4. Section 4 (Post-Session Macro Strategy - VERY BOTTOM ONLY): Provide a 4th separate section at the very bottom specifically titled "Post-Session Macro & Performance Fueling". Note that this is flexible fueling whenever the athlete eats. Include 1 exact recipe idea formatted as "🍽️ Recipe Idea: [Name] – [Quick ingredients & prep]".
+YOU ARE REBOUND COACH, A TOP-TIER SPORTS SCIENCE & ATHLETIC RECOVERY AI.
+Your protocol MUST be grounded in real biomechanics, exercise physiology, and sports science—NO generic fluff like "drink water" or "eat food".
 
-FORMAT STRICTLY AS:
+STRICT RULES:
+1. NO NUTRITION, RECIPES, MACROS, OR FOOD: Do NOT include any nutritional, macro, meal, or drink recommendations. All 3 protocols MUST be 100% focused on Body & Mind recovery.
+2. BIOMECHANICAL & MUSCLE TARGETING: Analyze the specific activities logged today (${sessionBreakdownText}). Explicitly state which exact muscle groups were taxed and what biomechanical stresses occurred (e.g. eccentric braking forces, high ground reaction impact, triple extension, rotational torque).
+3. EXPLICIT EVIDENCE-BASED ACTION: Match the physical recovery actions directly to those biomechanical strains (e.g., specific muscle lengthening parameters, myofascial release protocols, thermal contrast cycles, or parasympathetic vagal stimulation).
+4. ACCESSIBLE LANGUAGE: Explain the science in clear, accessible terms so younger athletes can understand "why" and "how" without getting lost in overly dense jargon.
+
+OUTPUT STRICTLY AS EXACTLY 3 PROTOCOLS:
+
 1. [Physical Tissue & Biomechanical Protocol]
-[Detailed physical instruction...]
+[Analyze the specific activities logged, call out the exact muscles and tendons taxed, and prescribe targeted physical/tissue recovery techniques...]
 
-2. [Nervous System & Mental Readiness Protocol]
-[Detailed mental/nervous system instruction...]
+2. [Nervous System & Central Fatigue Downregulation]
+[Analyze central nervous system stress from today's session load and daily stress score (${stressVal}/3), and prescribe specific parasympathetic downregulation practices like box breathing or passive positioning...]
 
-3. [Biological & Sleep/Thermal Optimization]
-[Detailed biological/sleep/thermal instruction...]
-
-4. [Post-Session Macro & Performance Fueling Strategy]
-[Macro guidelines for protein/carbs...]
-🍽️ Recipe Idea: [Name] – [Ingredients & prep]`;
+3. [Sleep Hygiene & Biological Recovery]
+[Analyze sleep hours (${sleepVal}h) and upcoming schedule (${eventContext}), and prescribe concrete thermal, circadian, or environment optimization protocols for deep cellular repair...]`;
 
             const payload = {
                 activity: multiSportContext,
@@ -1669,7 +1639,7 @@ FORMAT STRICTLY AS:
             renderStretches(selectedAreas);
 
             submitBtn.disabled = true;
-            submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i><span>Analyzing Session & Macro Demands...</span>`;
+            submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i><span>Analyzing Biomechanical & Recovery Demands...</span>`;
 
             try {
                 const response = await fetch('/api/recovery-plan', {
