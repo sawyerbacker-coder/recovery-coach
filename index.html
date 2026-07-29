@@ -109,8 +109,20 @@
                 </h1>
             </div>
 
-            <!-- Top-Right Account & Profile Bar -->
+            <!-- Top-Right Account, Streak Bar & Trophy Case -->
             <div class="flex items-center space-x-2">
+                <!-- Live Streak Banner -->
+                <div class="flex items-center space-x-1.5 bg-amber-100 border border-amber-300 text-amber-900 px-3 py-2 rounded-2xl font-extrabold text-xs shadow-sm" title="Check-in Streak">
+                    <i class="fa-solid fa-fire text-amber-500 text-sm"></i>
+                    <span id="streakDisplay">0 Day Streak</span>
+                </div>
+
+                <!-- Trophy Case Button -->
+                <button onclick="toggleTrophyModal()" class="bg-amber-400 hover:bg-amber-500 text-slate-950 p-2.5 rounded-2xl shadow-md transition font-extrabold text-xs flex items-center gap-1" title="View Achievements">
+                    <i class="fa-solid fa-trophy text-slate-950 text-sm"></i>
+                    <span id="badgeCountDisplay" class="bg-slate-950 text-amber-400 px-1.5 py-0.5 rounded-full text-[10px]">0</span>
+                </button>
+
                 <button id="authBtn" onclick="toggleAuthModal()" class="flex items-center space-x-2 bg-slate-900 hover:bg-slate-800 text-white px-3.5 py-2.5 rounded-2xl shadow-md transition font-extrabold text-xs">
                     <i class="fa-solid fa-user-circle text-sky-400"></i>
                     <span id="authBtnText">Account Login</span>
@@ -555,6 +567,36 @@
 
     </div>
 
+    <!-- ================= TROPHY CASE & ACHIEVEMENTS MODAL ================= -->
+    <div id="trophyModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="fluid-card w-full max-w-lg p-6 space-y-5 bg-white relative shadow-2xl border-2 border-amber-400">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-900 flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-trophy text-lg text-amber-500"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-extrabold text-slate-900">Athlete Achievements & Badges</h3>
+                        <p class="text-xs text-slate-500">Earn badges by logging sleep, maintaining streaks & completing protocols!</p>
+                    </div>
+                </div>
+                <button onclick="toggleTrophyModal()" class="text-slate-400 hover:text-slate-700 p-1 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div id="badgeGridContainer" class="grid grid-cols-2 gap-3 max-h-72 overflow-y-auto pr-1">
+                <!-- Badges populated dynamically -->
+            </div>
+
+            <div class="pt-2 flex justify-end border-t border-slate-200">
+                <button onclick="toggleTrophyModal()" class="px-5 py-2 rounded-xl font-extrabold text-white bg-sky-500 hover:bg-sky-600 text-xs shadow-md">
+                    Close Trophy Case
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- ================= GOOGLE CALENDAR IMPORT REVIEW MODAL ================= -->
     <div id="googleImportModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="fluid-card w-full max-w-lg p-6 space-y-5 bg-white relative shadow-2xl border-2 border-sky-400">
@@ -769,6 +811,19 @@
         let syncStatusTimer = null;
         let currentViewDate = new Date(); // Active Calendar View Month
 
+        // GAMIFICATION STATE
+        let streakCount = 0;
+        let lastCheckInDate = "";
+        let planGenerationCount = 0;
+        let unlockedBadges = [];
+
+        const allBadges = [
+            { id: "sleep_8h", title: "Sleep Champion", icon: "fa-moon", color: "text-indigo-500 bg-indigo-50 border-indigo-200", desc: "Logged 8+ hours of sleep!" },
+            { id: "streak_3", title: "3-Day Grind", icon: "fa-bolt", color: "text-amber-500 bg-amber-50 border-amber-200", desc: "Maintained a 3-day check-in streak!" },
+            { id: "streak_7", title: "7-Day Machine", icon: "fa-fire", color: "text-rose-500 bg-rose-50 border-rose-200", desc: "Maintained a 7-day check-in streak!" },
+            { id: "plan_5", title: "Mobility Master", icon: "fa-wand-magic-sparkles", color: "text-sky-500 bg-sky-50 border-sky-200", desc: "Generated 5 recovery protocols!" }
+        ];
+
         // Date helper: returns YYYY-MM-DD in local time
         function getTodayDateString() {
             const d = new Date();
@@ -776,6 +831,96 @@
             const month = String(d.getMonth() + 1).padStart(2, '0');
             const day = String(d.getDate()).padStart(2, '0');
             return `${year}-${month}-${day}`;
+        }
+
+        // Date helper: returns yesterday's YYYY-MM-DD
+        function getYesterdayDateString() {
+            const d = new Date();
+            d.setDate(d.getDate() - 1);
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // GAMIFICATION FUNCTIONS
+        function updateStreakLogic(todayStr) {
+            if (!lastCheckInDate) {
+                streakCount = 1;
+            } else if (lastCheckInDate === todayStr) {
+                // Same day check-in, preserve streak
+            } else if (lastCheckInDate === getYesterdayDateString()) {
+                streakCount += 1;
+            } else {
+                streakCount = 1; // Streak reset after missed day
+            }
+            lastCheckInDate = todayStr;
+            renderGamificationUI();
+        }
+
+        function checkAndAwardBadges(sleepVal) {
+            let newlyUnlocked = [];
+
+            // 1. Sleep Champion (8+ Hours)
+            if (parseFloat(sleepVal) >= 8 && !unlockedBadges.includes("sleep_8h")) {
+                unlockedBadges.push("sleep_8h");
+                newlyUnlocked.push("Sleep Champion 🌙");
+            }
+
+            // 2. 3-Day Grind
+            if (streakCount >= 3 && !unlockedBadges.includes("streak_3")) {
+                unlockedBadges.push("streak_3");
+                newlyUnlocked.push("3-Day Grind ⚡");
+            }
+
+            // 3. 7-Day Machine
+            if (streakCount >= 7 && !unlockedBadges.includes("streak_7")) {
+                unlockedBadges.push("streak_7");
+                newlyUnlocked.push("7-Day Machine 🔥");
+            }
+
+            // 4. Mobility Master
+            if (planGenerationCount >= 5 && !unlockedBadges.includes("plan_5")) {
+                unlockedBadges.push("plan_5");
+                newlyUnlocked.push("Mobility Master 🧘");
+            }
+
+            renderGamificationUI();
+
+            if (newlyUnlocked.length > 0) {
+                alert(`🎉 ACHIEVEMENT UNLOCKED!\nYou earned: ${newlyUnlocked.join(", ")}`);
+            }
+        }
+
+        function renderGamificationUI() {
+            const streakDisplay = document.getElementById("streakDisplay");
+            const badgeCountDisplay = document.getElementById("badgeCountDisplay");
+            if (streakDisplay) streakDisplay.textContent = `${streakCount} Day Streak`;
+            if (badgeCountDisplay) badgeCountDisplay.textContent = unlockedBadges.length;
+
+            const badgeGridContainer = document.getElementById("badgeGridContainer");
+            if (!badgeGridContainer) return;
+
+            badgeGridContainer.innerHTML = allBadges.map(badge => {
+                const isUnlocked = unlockedBadges.includes(badge.id);
+                return `
+                    <div class="p-3.5 rounded-2xl border text-left transition ${isUnlocked ? badge.color + ' shadow-sm' : 'bg-slate-50 border-slate-200 opacity-50 grayscale'}">
+                        <div class="flex items-center justify-between mb-1">
+                            <i class="fa-solid ${badge.icon} text-lg"></i>
+                            <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full ${isUnlocked ? 'bg-white text-slate-900 shadow-xs' : 'bg-slate-200 text-slate-600'}">
+                                ${isUnlocked ? 'Unlocked' : 'Locked'}
+                            </span>
+                        </div>
+                        <p class="font-extrabold text-xs text-slate-900">${badge.title}</p>
+                        <p class="text-[10px] text-slate-600 leading-tight mt-0.5">${badge.desc}</p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleTrophyModal() {
+            renderGamificationUI();
+            document.getElementById('trophyModal').classList.toggle('hidden');
         }
 
         // MULTI-MUSCLE CHIP TOGGLE FUNCTION
@@ -945,6 +1090,10 @@
             deletedEvents = [];
             favoriteRecipes = [];
             checkInHistory = [];
+            streakCount = 0;
+            lastCheckInDate = "";
+            planGenerationCount = 0;
+            unlockedBadges = [];
 
             // Reset dynamic sessions list to 1 blank row
             const container = document.getElementById('sessionsContainer');
@@ -978,6 +1127,7 @@
             buildCalendar();
             renderUpcomingEventsList();
             renderRecentlyDeletedList();
+            renderGamificationUI();
             renderStretches(['Quads']);
             renderHistoryLogs();
         }
@@ -1686,6 +1836,11 @@
             checkInHistory = checkInHistory.filter(item => item.date !== todayStr);
             checkInHistory.push(checkInPayload);
             if (checkInHistory.length > 5) checkInHistory.shift();
+
+            // Update Streak & Gamification Milestones
+            updateStreakLogic(todayStr);
+            planGenerationCount += 1;
+            checkAndAwardBadges(sleepVal);
 
             renderHistoryLogs();
 
@@ -2517,7 +2672,11 @@ ATHLETE QUESTION: "${question}"`;
                 checkInHistory: checkInHistory || [],
                 checkInDate: localStorage.getItem('rebound_checkin_date') || '',
                 checkInData: parsedCheckIn,
-                generatedPlan: localStorage.getItem('rebound_generated_plan') || ''
+                generatedPlan: localStorage.getItem('rebound_generated_plan') || '',
+                streakCount: streakCount || 0,
+                lastCheckInDate: lastCheckInDate || '',
+                planGenerationCount: planGenerationCount || 0,
+                unlockedBadges: unlockedBadges || []
             };
 
             db.collection('users').doc(currentUser.uid).set(userDoc, { merge: true })
@@ -2550,6 +2709,10 @@ ATHLETE QUESTION: "${question}"`;
                     deletedEvents = data.deletedEvents || [];
                     favoriteRecipes = data.favoriteRecipes || [];
                     checkInHistory = data.checkInHistory || [];
+                    streakCount = data.streakCount || 0;
+                    lastCheckInDate = data.lastCheckInDate || '';
+                    planGenerationCount = data.planGenerationCount || 0;
+                    unlockedBadges = data.unlockedBadges || [];
 
                     const todayStr = getTodayDateString();
                     if (data.checkInDate === todayStr) {
@@ -2595,6 +2758,7 @@ ATHLETE QUESTION: "${question}"`;
                 buildCalendar();
                 renderUpcomingEventsList();
                 renderRecentlyDeletedList();
+                renderGamificationUI();
                 renderHistoryLogs();
                 setSyncStatus('synced');
 
