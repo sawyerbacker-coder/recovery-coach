@@ -469,8 +469,8 @@
                         <i class="fa-brands fa-google text-lg text-sky-600"></i>
                     </div>
                     <div>
-                        <h3 class="text-base font-extrabold text-slate-900">Google Athletic Events Preview</h3>
-                        <p class="text-xs text-slate-500">Smart Filtered: Uncheck any events that aren't yours!</p>
+                        <h3 class="text-base font-extrabold text-slate-900">New Google Athletic Events Found</h3>
+                        <p class="text-xs text-slate-500">Smart Filtered: Review and confirm new schedule items!</p>
                     </div>
                 </div>
                 <button onclick="closeGoogleImportModal()" class="text-slate-400 hover:text-slate-700 p-1 text-lg">
@@ -906,7 +906,7 @@
                 console.log("Persistence notice:", err.code);
             });
 
-            auth.onAuthStateChanged(user => {
+            auth.onAuthStateChanged(async user => {
                 currentUser = user;
                 const authBtnText = document.getElementById('authBtnText');
                 const accountBanner = document.getElementById('accountBanner');
@@ -914,9 +914,11 @@
                 if (user) {
                     authBtnText.textContent = user.email.split('@')[0];
                     accountBanner.classList.remove('hidden');
-                    loadCloudData();
+                    
+                    // First load cloud data (restores existing scheduledEvents)
+                    await loadCloudData();
 
-                    // Auto background sync calendar if token exists
+                    // Auto background sync calendar silently ONLY IF token exists
                     const cachedToken = sessionStorage.getItem('gcal_access_token');
                     if (cachedToken) {
                         fetchGoogleCalendarData(cachedToken, true);
@@ -1057,39 +1059,51 @@
                 if (isAthletic && item.start) {
                     const startRaw = item.start.dateTime || item.start.date;
                     
-                    // Direct ISO string extraction to preserve exact calendar date (Prevents timezone day shift)
+                    // Direct ISO string extraction to preserve exact calendar date
                     const dateStr = startRaw.split('T')[0];
 
-                    let startTimeStr = '';
-                    let endTimeStr = '';
+                    // CHECK IF EVENT IS ALREADY ADDED TO SCHEDULE
+                    const alreadyAdded = scheduledEvents[dateStr] && scheduledEvents[dateStr].some(
+                        e => e.title.trim().toLowerCase() === title.trim().toLowerCase()
+                    );
 
-                    if (item.start.dateTime) {
-                        const sObj = new Date(item.start.dateTime);
-                        startTimeStr = sObj.toTimeString().substring(0, 5);
-                    }
-                    if (item.end && item.end.dateTime) {
-                        const eObj = new Date(item.end.dateTime);
-                        endTimeStr = eObj.toTimeString().substring(0, 5);
-                    }
+                    // ONLY ADD TO PREVIEW IF IT IS A BRAND NEW EVENT
+                    if (!alreadyAdded) {
+                        let startTimeStr = '';
+                        let endTimeStr = '';
 
-                    pendingGoogleEvents.push({
-                        id: 'g_' + index + '_' + Date.now(),
-                        title: title,
-                        date: dateStr,
-                        type: guessEventType(title),
-                        startTime: startTimeStr,
-                        endTime: endTimeStr,
-                        intensity: 'Moderate',
-                        selected: true
-                    });
+                        if (item.start.dateTime) {
+                            const sObj = new Date(item.start.dateTime);
+                            startTimeStr = sObj.toTimeString().substring(0, 5);
+                        }
+                        if (item.end && item.end.dateTime) {
+                            const eObj = new Date(item.end.dateTime);
+                            endTimeStr = eObj.toTimeString().substring(0, 5);
+                        }
+
+                        pendingGoogleEvents.push({
+                            id: 'g_' + index + '_' + Date.now(),
+                            title: title,
+                            date: dateStr,
+                            type: guessEventType(title),
+                            startTime: startTimeStr,
+                            endTime: endTimeStr,
+                            intensity: 'Moderate',
+                            selected: true
+                        });
+                    }
                 }
             });
 
+            // IF NO NEW UNADDED EVENTS ARE FOUND:
             if (pendingGoogleEvents.length === 0) {
-                if (!silent) alert("No sports or training events detected on your Google Calendar.");
-                return;
+                if (!silent) {
+                    alert("All Google Calendar sports events are already added to your Rebound schedule!");
+                }
+                return; // Silence modal popup when everything is up to date!
             }
 
+            // ONLY POPUP MODAL IF THERE ARE GENUINELY NEW UNADDED EVENTS
             renderGoogleImportModal();
         }
 
@@ -1106,7 +1120,7 @@
                             <div class="text-[10px] text-slate-500">${evt.date} ${evt.startTime ? '• ' + evt.startTime : ''} (${evt.type})</div>
                         </div>
                     </div>
-                    <span class="text-[9px] uppercase font-bold bg-sky-100 text-sky-800 px-2 py-0.5 rounded border border-sky-300">Sports Event</span>
+                    <span class="text-[9px] uppercase font-bold bg-sky-100 text-sky-800 px-2 py-0.5 rounded border border-sky-300">New Event</span>
                 </label>
             `).join('');
 
@@ -1135,7 +1149,7 @@
             buildCalendar();
             renderUpcomingEventsList();
             closeGoogleImportModal();
-            alert(`Successfully imported ${count} athletic event(s) to your schedule!`);
+            alert(`Successfully imported ${count} new athletic event(s) to your schedule!`);
         }
 
         // ================= EVENT TIMING ENGINE =================
