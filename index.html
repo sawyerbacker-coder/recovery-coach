@@ -147,7 +147,7 @@
                     </div>
                     <div>
                         <h2 class="text-xl font-extrabold text-slate-900">Daily Athlete Check-In</h2>
-                        <p class="text-xs text-slate-500 font-medium">Log today's workout sessions to generate tailored, high-value recovery protocols built for your upcoming schedule.</p>
+                        <p class="text-xs text-slate-500 font-medium">Log today's workout sessions to generate tailored body & mind recovery protocols built for your upcoming schedule.</p>
                     </div>
                 </div>
 
@@ -271,11 +271,11 @@
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
                         <div class="w-10 h-10 rounded-2xl bg-sky-100 text-sky-800 flex items-center justify-center font-bold">
-                            <i class="fa-solid fa-microscope text-lg"></i>
+                            <i class="fa-solid fa-brain-circuit text-lg"></i>
                         </div>
                         <div>
-                            <h2 class="text-xl font-extrabold text-slate-900">Customized Athlete Recovery Protocol</h2>
-                            <p class="text-xs text-slate-500 font-medium">Personalized strategies combining today's training load, sleep, stress, and upcoming games</p>
+                            <h2 class="text-xl font-extrabold text-slate-900">Custom Body & Mind Recovery Protocol</h2>
+                            <p class="text-xs text-slate-500 font-medium">3 Core Physical & Mental Modalities + Flexible Macro Fueling</p>
                         </div>
                     </div>
                     <span class="text-xs bg-sky-100 text-sky-800 font-extrabold px-3 py-1 rounded-full border border-sky-300">Smart AI Insights</span>
@@ -283,7 +283,7 @@
 
                 <hr class="border-slate-200">
 
-                <div id="planOutput" class="space-y-4 bg-slate-50/80 p-5 rounded-2xl border border-slate-200">
+                <div id="planOutput" class="space-y-4">
                     <p class="text-slate-500 text-sm font-medium">Complete your Daily Check-In to generate today's customized protocol!</p>
                 </div>
             </div>
@@ -1408,33 +1408,65 @@
             
             let lines = text.split('\n');
             let html = '';
+            let inCard = false;
 
             lines.forEach(line => {
                 let trimmed = line.trim();
                 if (!trimmed) return;
 
-                if (trimmed.startsWith('#') || trimmed.match(/^(1|2|3|4|5)\./) || trimmed.startsWith('**1.') || trimmed.startsWith('**2.') || trimmed.startsWith('**3.')) {
+                // Check for Section 4 (Macro / Fueling Box)
+                if (trimmed.match(/^4\./) || trimmed.startsWith('**4.') || trimmed.toLowerCase().includes('macro & performance') || trimmed.toLowerCase().includes('macro & nutrition')) {
+                    if (inCard) html += `</div>`; // Close preceding card
+                    inCard = true;
+
                     let cleanTitle = trimmed.replace(/^[#\*\d\.\s]+/, '').replace(/\*+/g, '');
                     html += `
-                        <h3 class="text-lg md:text-xl font-extrabold text-slate-900 mt-5 mb-1.5 flex items-center gap-2">
-                            <i class="fa-solid fa-circle-check text-sky-500 text-sm"></i>
-                            <span>${cleanTitle}</span>
-                        </h3>
+                        <div class="bg-sky-50/90 border-2 border-sky-300 p-5 rounded-2xl shadow-sm space-y-3 mt-6">
+                            <div class="flex items-center justify-between pb-2 border-b border-sky-200">
+                                <h3 class="text-base font-extrabold text-sky-950 flex items-center gap-2">
+                                    <i class="fa-solid fa-utensils text-sky-600"></i>
+                                    <span>${cleanTitle}</span>
+                                </h3>
+                                <span class="text-[10px] bg-sky-200/70 text-sky-900 font-extrabold px-2.5 py-0.5 rounded-full border border-sky-300">Flexible Timing</span>
+                            </div>
                     `;
-                } else if (trimmed.includes('🍽️') || trimmed.includes('Recipe Idea') || trimmed.includes('Paired Recipe:')) {
-                    // Highlight inline paired recipes
+                } 
+                // Check for Sections 1, 2, 3 (Body & Mind Protocols)
+                else if (trimmed.match(/^(1|2|3)\./) || trimmed.startsWith('**1.') || trimmed.startsWith('**2.') || trimmed.startsWith('**3.')) {
+                    if (inCard) html += `</div>`; // Close preceding card
+                    inCard = true;
+
+                    let cleanTitle = trimmed.replace(/^[#\*\d\.\s]+/, '').replace(/\*+/g, '');
+                    let icon = 'fa-dumbbell';
+                    if (trimmed.startsWith('2.') || trimmed.startsWith('**2.')) icon = 'fa-brain';
+                    if (trimmed.startsWith('3.') || trimmed.startsWith('**3.')) icon = 'fa-moon';
+
+                    html += `
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm space-y-2.5 mt-3">
+                            <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                                <i class="fa-solid ${icon} text-sky-500"></i>
+                                <span>${cleanTitle}</span>
+                            </h3>
+                    `;
+                } 
+                // Render Inline Recipe Cards
+                else if (trimmed.includes('🍽️') || trimmed.includes('Recipe Idea')) {
                     let cleanRecipe = trimmed.replace(/\*\*(.*?)\*\*/g, '<strong class="font-extrabold text-sky-900">$1</strong>');
                     html += `
-                        <div class="bg-sky-100/80 border border-sky-300 p-3.5 rounded-xl text-xs text-sky-950 font-medium my-2 flex items-start gap-2 shadow-sm">
+                        <div class="bg-white/80 border border-sky-300 p-3.5 rounded-xl text-xs text-sky-950 font-medium my-2 flex items-start gap-2 shadow-sm">
                             <i class="fa-solid fa-utensils text-sky-600 text-sm mt-0.5"></i>
                             <div>${cleanRecipe}</div>
                         </div>
                     `;
-                } else {
+                } 
+                // Regular Paragraph Lines
+                else {
                     let cleanDesc = trimmed.replace(/\*\*(.*?)\*\*/g, '<strong class="font-extrabold text-slate-900">$1</strong>');
-                    html += `<p class="text-sm text-slate-600 leading-relaxed font-normal mb-2">${cleanDesc}</p>`;
+                    html += `<p class="text-sm text-slate-600 leading-relaxed font-normal mb-1.5">${cleanDesc}</p>`;
                 }
             });
+
+            if (inCard) html += `</div>`; // Close final card
 
             return html;
         }
@@ -1526,7 +1558,7 @@
                 ? `PAST 3 DAYS CUMULATIVE TRAINING HISTORY:\n${historyText}`
                 : 'PAST 3 DAYS CUMULATIVE TRAINING HISTORY: No prior days logged yet.';
 
-            // HYPER-SPECIFIC AI PROMPT WITH INLINE RECIPE CONNECT & MULTI-AREA SORENESS
+            // HYPER-SPECIFIC AI PROMPT WITH DEDICATED BODY, MIND & FLEXIBLE MACRO SECTIONS
             const multiSportContext = `TODAY'S WORKOUT LOG (${todayStr}):
 ${sessionBreakdownText}
 
@@ -1540,24 +1572,26 @@ TODAY'S PHYSICAL & READINESS MARKERS:
 ${eventContext}
 
 EVIDENCE-BASED RECOVERY DIRECTIVES:
-1. MULTI-AREA SORENESS BIOMECHANICS: Address ALL checked sore muscle areas ([${areasFormatted}]) together! Explain how today's workouts loaded these muscle chains.
-2. CUMULATIVE fatigue & EASY DAY CONTRAST: If today was light but previous days were heavy, treat this as a high-residual recovery protocol (do NOT give light advice for a cumulative heavy week).
-3. INLINE RECIPE PAIRING MANDATE: Whenever you prescribe nutritional, protein, carbohydrate, or glycogen replenishment guidelines (e.g., "30g carbs + 20g protein"), you MUST IMMEDIATELY give an exact, delicious, real-world recipe idea right then and there with ingredients! Format as "🍽️ Recipe Idea: [Name] – [Quick ingredients & prep]".
-4. NO GENERIC OBVIOUS ADVICE: Do NOT waste time telling athletes to "drink water" or "eat food" unless providing precise electrolyte formulas (e.g. 1.2L water + 600mg sodium) or exact macronutrient ratios paired with recipes.
-5. 3 DISTINCT MODALITIES:
-   - 1 Tissue & Multi-Area Movement Protocol (addressing ${areasFormatted})
-   - 1 Precision Performance Nutrition & Paired Recipe Strategy
-   - 1 Sleep, Thermal, or Nervous System Optimization Protocol
+1. BODY & MIND FOCUS FOR MAIN 3 PROTOCOLS: The primary 3 recovery protocols MUST focus strictly on physical tissue repair, nervous system downregulation, and mental readiness. Do NOT waste any of the top 3 ideas on nutrition or macro advice.
+   - Protocol 1 (Body): Physical Tissue & Biomechanical Protocol (Addressing [${areasFormatted}]).
+   - Protocol 2 (Mind): Autonomic Nervous System & Mental Readiness (Parasympathetic downregulation, breathwork, cognitive stress reduction for stress level ${stressVal}/3).
+   - Protocol 3 (Body & Mind): Biological, Thermal, or Sleep Optimization (Contrast therapy, circadian regulation, sleep hygiene for ${sleepVal}h sleep).
+2. SEPARATE FLEXIBLE MACRO SECTION (Section 4): Provide a 4th dedicated section specifically for "Post-Session Macro & Recipe Guidance". Note that this is flexible post-training replenishment for whenever the athlete eats. Include 1 exact recipe idea formatted as "🍽️ Recipe Idea: [Name] – [Quick ingredients & prep]".
+3. NO GENERIC OBVIOUS ADVICE: Keep protocols specific, evidence-based, and actionable.
 
 FORMAT STRICTLY AS:
-1. [Strategy Title]
-[Detailed instruction...]
+1. [Physical Tissue & Biomechanical Protocol]
+[Detailed physical instruction...]
 
-2. [Strategy Title]
-[Detailed instruction...]
+2. [Nervous System & Mental Readiness Protocol]
+[Detailed mental/nervous system instruction...]
 
-3. [Strategy Title]
-[Detailed instruction...]`;
+3. [Biological & Sleep/Thermal Optimization]
+[Detailed biological/sleep/thermal instruction...]
+
+4. [Post-Session Macro & Performance Fueling Strategy]
+[Macro guidelines for protein/carbs...]
+🍽️ Recipe Idea: [Name] – [Ingredients & prep]`;
 
             const payload = {
                 activity: multiSportContext,
