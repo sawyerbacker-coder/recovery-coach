@@ -323,12 +323,22 @@
                         </div>
                     </div>
                     
-                    <div class="flex items-center space-x-2 w-full md:w-auto">
-                        <button onclick="syncGoogleCalendar()" class="w-full md:w-auto bg-white hover:bg-sky-50 border border-sky-300 text-sky-800 font-extrabold px-3.5 py-2 rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm transition">
+                    <div class="flex items-center space-x-2 w-full md:w-auto justify-between md:justify-end">
+                        <!-- Month Navigation Controls -->
+                        <div class="flex items-center bg-white border border-sky-300 rounded-xl px-1 py-0.5 shadow-sm">
+                            <button onclick="changeMonth(-1)" class="px-2.5 py-1 hover:bg-sky-50 rounded-lg text-sky-800 font-bold text-xs" title="Previous Month">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </button>
+                            <span id="currentMonthYear" class="px-2 text-xs font-extrabold text-sky-900 min-w-[100px] text-center"></span>
+                            <button onclick="changeMonth(1)" class="px-2.5 py-1 hover:bg-sky-50 rounded-lg text-sky-800 font-bold text-xs" title="Next Month">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+                        </div>
+
+                        <button onclick="syncGoogleCalendar()" class="bg-white hover:bg-sky-50 border border-sky-300 text-sky-800 font-extrabold px-3.5 py-2 rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm transition">
                             <i class="fa-brands fa-google text-sky-500"></i>
                             <span>Sync Google Calendar</span>
                         </button>
-                        <span id="currentMonthYear" class="text-sm font-extrabold text-sky-700 hidden md:inline"></span>
                     </div>
                 </div>
 
@@ -659,6 +669,7 @@
         let checkInHistory = []; // Rolling 3-day history array
         let pendingGoogleEvents = []; // For preview checklist modal
         let syncStatusTimer = null;
+        let currentViewDate = new Date(); // Active Calendar View Month
 
         // Date helper: returns YYYY-MM-DD in local time
         function getTodayDateString() {
@@ -904,6 +915,12 @@
                     authBtnText.textContent = user.email.split('@')[0];
                     accountBanner.classList.remove('hidden');
                     loadCloudData();
+
+                    // Auto background sync calendar if token exists
+                    const cachedToken = sessionStorage.getItem('gcal_access_token');
+                    if (cachedToken) {
+                        fetchGoogleCalendarData(cachedToken, true);
+                    }
                 } else {
                     authBtnText.textContent = "Account Login";
                     accountBanner.classList.add('hidden');
@@ -911,6 +928,15 @@
                 }
             });
         } catch (e) { console.log('Firebase init error:', e); }
+
+        // Periodic Background Polling for Google Calendar (15 min interval)
+        setInterval(() => {
+            const cachedToken = sessionStorage.getItem('gcal_access_token');
+            if (cachedToken && currentUser) {
+                console.log("🔄 Running silent background calendar scan...");
+                fetchGoogleCalendarData(cachedToken, true);
+            }
+        }, 15 * 60 * 1000);
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
@@ -955,35 +981,49 @@
         async function handleSignOut() {
             if (auth) {
                 await auth.signOut();
+                sessionStorage.removeItem('gcal_access_token');
                 resetToCleanSlate();
                 alert('Signed out.');
             }
         }
 
         // ================= GOOGLE CALENDAR OAUTH & SMART FILTER ENGINE =================
-        async function syncGoogleCalendar() {
+        async function syncGoogleCalendar(silent = false) {
             const provider = new firebase.auth.GoogleAuthProvider();
             provider.addScope('https://www.googleapis.com/auth/calendar.events.readonly');
 
             try {
                 const result = await auth.signInWithPopup(provider);
                 const token = result.credential.accessToken;
+                sessionStorage.setItem('gcal_access_token', token);
 
+                await fetchGoogleCalendarData(token, silent);
+            } catch (err) {
+                console.error("Google Calendar Sync Error:", err);
+                if (!silent) alert("Could not access Google Calendar: " + err.message);
+            }
+        }
+
+        async function fetchGoogleCalendarData(token, silent = false) {
+            try {
                 const now = new Date().toISOString();
-                const response = await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${now}&singleEvents=true&orderBy=startTime`, {
+                // 60-Day Look-Ahead Window (2 months)
+                const maxDate = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString();
+
+                const response = await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${now}&timeMax=${maxDate}&singleEvents=true&orderBy=startTime`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
                 const data = await response.json();
 
                 if (data.items) {
-                    processGoogleEvents(data.items);
-                } else {
+                    processGoogleEvents(data.items, silent);
+                } else if (!silent) {
                     alert("No events found on Google Calendar.");
                 }
             } catch (err) {
-                console.error("Google Calendar Sync Error:", err);
-                alert("Could not access Google Calendar: " + err.message);
+                console.error("Fetch Calendar Error:", err);
+                if (!silent) alert("Error fetching Google Calendar events.");
             }
         }
 
@@ -995,10 +1035,14 @@
             return 'practice';
         }
 
-        function processGoogleEvents(items) {
-            const sport = (document.getElementById('profSport').value || '').toLowerCase();
-            const keywords = ['game', 'practice', 'workout', 'training', 'tournament', 'match', 'meet', 'scrimmage', 'lifting', 'lift', 'run', 'race', 'track', 'varsity', 'jv', 'drill', 'conditioning', 'championship'];
-            if (sport) keywords.push(sport);
+        function processGoogleEvents(items, silent = false) {
+            const mainSport = (document.getElementById('profSport').value || '').toLowerCase();
+            const secSport = (document.getElementById('profSecondarySports').value || '').toLowerCase();
+            
+            const keywords = ['game', 'practice', 'workout', 'training', 'tournament', 'match', 'meet', 'scrimmage', 'lifting', 'lift', 'run', 'race', 'track', 'varsity', 'jv', 'drill', 'conditioning', 'championship', 'basketball', 'soccer', 'football', 'volleyball', 'baseball', 'softball', 'tennis', 'swim'];
+            
+            if (mainSport) keywords.push(...mainSport.split(/[\s,]+/));
+            if (secSport) keywords.push(...secSport.split(/[\s,]+/));
 
             pendingGoogleEvents = [];
 
@@ -1008,18 +1052,25 @@
                 const textCombined = `${title} ${desc}`.toLowerCase();
 
                 // Layer 1 & 2: Athletic Keyword and Sport Matching
-                const isAthletic = keywords.some(kw => textCombined.includes(kw));
+                const isAthletic = keywords.some(kw => kw.length > 2 && textCombined.includes(kw));
 
                 if (isAthletic && item.start) {
                     const startRaw = item.start.dateTime || item.start.date;
-                    const dateObj = new Date(startRaw);
-                    const year = dateObj.getFullYear();
-                    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-                    const day = String(dateObj.getDate()).padStart(2, '0');
-                    const dateStr = `${year}-${month}-${day}`;
+                    
+                    // Direct ISO string extraction to preserve exact calendar date (Prevents timezone day shift)
+                    const dateStr = startRaw.split('T')[0];
 
-                    const startTimeStr = item.start.dateTime ? dateObj.toTimeString().substring(0, 5) : '';
-                    const endTimeStr = (item.end && item.end.dateTime) ? new Date(item.end.dateTime).toTimeString().substring(0, 5) : '';
+                    let startTimeStr = '';
+                    let endTimeStr = '';
+
+                    if (item.start.dateTime) {
+                        const sObj = new Date(item.start.dateTime);
+                        startTimeStr = sObj.toTimeString().substring(0, 5);
+                    }
+                    if (item.end && item.end.dateTime) {
+                        const eObj = new Date(item.end.dateTime);
+                        endTimeStr = eObj.toTimeString().substring(0, 5);
+                    }
 
                     pendingGoogleEvents.push({
                         id: 'g_' + index + '_' + Date.now(),
@@ -1035,7 +1086,7 @@
             });
 
             if (pendingGoogleEvents.length === 0) {
-                alert("No sports or training events detected on your Google Calendar.");
+                if (!silent) alert("No sports or training events detected on your Google Calendar.");
                 return;
             }
 
@@ -1550,21 +1601,28 @@ FORMAT STRICTLY AS:
         });
 
         // ================= CALENDAR & EVENT MANAGEMENT =================
+        function changeMonth(offset) {
+            currentViewDate.setMonth(currentViewDate.getMonth() + offset);
+            buildCalendar();
+        }
+
         function buildCalendar() {
             const calGrid = document.getElementById('calendarDays');
             const monthHeader = document.getElementById('currentMonthYear');
             if (!calGrid) return;
 
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = now.getMonth();
+            const year = currentViewDate.getFullYear();
+            const month = currentViewDate.getMonth();
 
             const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            monthHeader.textContent = `${monthNames[month]} ${year}`;
+            if (monthHeader) monthHeader.textContent = `${monthNames[month]} ${year}`;
 
             const firstDay = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const todayDate = now.getDate();
+
+            const realToday = new Date();
+            const isCurrentMonthView = realToday.getFullYear() === year && realToday.getMonth() === month;
+            const todayDate = realToday.getDate();
 
             calGrid.innerHTML = '';
 
@@ -1575,7 +1633,7 @@ FORMAT STRICTLY AS:
             for (let day = 1; day <= daysInMonth; day++) {
                 const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const hasEvents = scheduledEvents[dateKey] && scheduledEvents[dateKey].length > 0;
-                const isToday = day === todayDate;
+                const isToday = isCurrentMonthView && (day === todayDate);
 
                 let eventBadge = '';
                 if (hasEvents) {
