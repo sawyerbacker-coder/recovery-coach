@@ -70,6 +70,14 @@
             0%, 100% { transform: translateY(0px) rotate(0deg); }
             50% { transform: translateY(-6px) rotate(3deg); }
         }
+        /* Custom scrollbar for Live Chat Stream */
+        .chat-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-start p-4 md:p-8 relative overflow-x-hidden">
@@ -117,21 +125,25 @@
             <button onclick="handleSignOut()" class="text-slate-300 hover:text-white underline font-bold ml-4">Sign Out</button>
         </div>
 
-        <!-- Navigation Bar -->
-        <nav class="grid grid-cols-2 md:grid-cols-4 gap-2 bg-slate-200/70 backdrop-blur-md p-1.5 rounded-2xl border border-slate-300/60">
-            <button onclick="switchTab('checkin')" id="tab-btn-checkin" class="tab-btn active flex items-center justify-center space-x-2 py-3 px-3 text-xs md:text-sm font-bold">
+        <!-- Navigation Bar (Updated to 5 Grid Columns) -->
+        <nav class="grid grid-cols-2 md:grid-cols-5 gap-2 bg-slate-200/70 backdrop-blur-md p-1.5 rounded-2xl border border-slate-300/60">
+            <button onclick="switchTab('checkin')" id="tab-btn-checkin" class="tab-btn active flex items-center justify-center space-x-2 py-3 px-2 text-xs md:text-sm font-bold">
                 <i class="fa-solid fa-clipboard-check"></i>
                 <span>Daily Check-In</span>
             </button>
-            <button onclick="switchTab('protocol')" id="tab-btn-protocol" class="tab-btn flex items-center justify-center space-x-2 py-3 px-3 text-xs md:text-sm font-bold text-slate-600 hover:text-slate-900">
+            <button onclick="switchTab('protocol')" id="tab-btn-protocol" class="tab-btn flex items-center justify-center space-x-2 py-3 px-2 text-xs md:text-sm font-bold text-slate-600 hover:text-slate-900">
                 <i class="fa-solid fa-wand-magic-sparkles"></i>
                 <span>Plan & Mobility</span>
             </button>
-            <button onclick="switchTab('schedule')" id="tab-btn-schedule" class="tab-btn flex items-center justify-center space-x-2 py-3 px-3 text-xs md:text-sm font-bold text-slate-600 hover:text-slate-900">
+            <button onclick="switchTab('ask')" id="tab-btn-ask" class="tab-btn flex items-center justify-center space-x-2 py-3 px-2 text-xs md:text-sm font-bold text-slate-600 hover:text-slate-900">
+                <i class="fa-solid fa-comments text-sky-500"></i>
+                <span>Ask Coach</span>
+            </button>
+            <button onclick="switchTab('schedule')" id="tab-btn-schedule" class="tab-btn flex items-center justify-center space-x-2 py-3 px-2 text-xs md:text-sm font-bold text-slate-600 hover:text-slate-900">
                 <i class="fa-solid fa-calendar-days"></i>
                 <span>Schedule</span>
             </button>
-            <button onclick="switchTab('nutrition')" id="tab-btn-nutrition" class="tab-btn flex items-center justify-center space-x-2 py-3 px-3 text-xs md:text-sm font-bold text-slate-600 hover:text-slate-900">
+            <button onclick="switchTab('nutrition')" id="tab-btn-nutrition" class="tab-btn flex items-center justify-center space-x-2 py-3 px-2 text-xs md:text-sm font-bold text-slate-600 hover:text-slate-900">
                 <i class="fa-solid fa-utensils"></i>
                 <span>Nutrition</span>
             </button>
@@ -309,7 +321,67 @@
             </div>
         </section>
 
-        <!-- ================= TAB 3: SCHEDULE ================= -->
+        <!-- ================= TAB 3: ASK COACH (LIVE ATHLETE AI CHAT) ================= -->
+        <section id="tab-ask" class="tab-content hidden space-y-6">
+            <div class="fluid-card p-6 md:p-8 space-y-6">
+                
+                <!-- Chat Header -->
+                <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-2xl bg-sky-500 text-white flex items-center justify-center shadow-md shadow-sky-500/30">
+                            <i class="fa-solid fa-robot text-lg"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-extrabold text-slate-900">Ask Coach (Live Athletic Q&A)</h2>
+                            <p class="text-xs text-slate-500 font-medium">Real-time answers for snacks, tight muscles, pre-game routines, and training prep.</p>
+                        </div>
+                    </div>
+                    <span class="text-xs bg-sky-100 text-sky-800 font-bold px-3 py-1 rounded-full border border-sky-300">Live AI Assistant</span>
+                </div>
+
+                <!-- Chat Stream Window -->
+                <div id="chatMessages" class="chat-scroll h-[380px] overflow-y-auto space-y-4 p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                    <!-- Welcome Coach Message -->
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 rounded-xl bg-sky-500 text-white flex items-center justify-center shrink-0 text-xs font-bold">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl border border-slate-200 text-xs text-slate-800 space-y-1 max-w-[85%] shadow-sm">
+                            <p class="font-extrabold text-sky-900 text-xs">Rebound Live Coach</p>
+                            <p class="leading-relaxed">Hey athlete! Ask me anything about performance nutrition, tight muscles/soreness, pre-race prep, or recovery hacks. What's on your mind today?</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Starter Prompt Chips -->
+                <div class="space-y-1.5">
+                    <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Quick Prompts (Click to Ask):</p>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="useQuickPrompt('Give me a quick high-protein snack idea with chocolate!')" class="text-[11px] font-bold bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-900 px-3 py-1.5 rounded-xl transition">
+                            🍫 High-protein chocolate snack
+                        </button>
+                        <button onclick="useQuickPrompt('My right calf has been bugging me after practice, what exact steps should I take?')" class="text-[11px] font-bold bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-900 px-3 py-1.5 rounded-xl transition">
+                            ⚡ Right calf bugging me
+                        </button>
+                        <button onclick="useQuickPrompt('I have an intense cross country workout tomorrow morning. What should I do tonight for a great night of sleep?')" class="text-[11px] font-bold bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-900 px-3 py-1.5 rounded-xl transition">
+                            🏃 Sleep prep for XC workout
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chat Input Form -->
+                <form id="chatForm" class="flex gap-2">
+                    <input type="text" id="chatInput" placeholder="e.g. Give me a high protein snack with chocolate..." required class="fluid-input flex-1 px-4 py-3.5 text-xs font-medium">
+                    <button type="submit" id="sendChatBtn" class="bg-sky-500 hover:bg-sky-600 text-white font-extrabold px-6 py-3.5 rounded-xl text-xs uppercase tracking-wider shadow-md transition flex items-center gap-2">
+                        <span>Send</span>
+                        <i class="fa-solid fa-paper-plane text-xs"></i>
+                    </button>
+                </form>
+
+            </div>
+        </section>
+
+        <!-- ================= TAB 4: SCHEDULE ================= -->
         <section id="tab-schedule" class="tab-content hidden space-y-6">
             <div class="fluid-card p-6 md:p-8 space-y-6">
                 <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
@@ -415,7 +487,7 @@
             </div>
         </section>
 
-        <!-- ================= TAB 4: NUTRITION ================= -->
+        <!-- ================= TAB 5: NUTRITION ================= -->
         <section id="tab-nutrition" class="tab-content hidden space-y-6">
             <div class="fluid-card p-6 md:p-8 space-y-6">
                 <div class="flex items-center justify-between">
@@ -1680,6 +1752,93 @@ OUTPUT FORMAT (STRICTLY 3 CLEAN PROTOCOLS WITHOUT BRACKETS):
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i><span>Generate Custom Recovery Protocol</span>`;
             }
+        });
+
+        // ================= LIVE AI COACH CHAT CONTROLLER =================
+        function useQuickPrompt(text) {
+            document.getElementById('chatInput').value = text;
+            handleChatSubmit(new Event('submit'));
+        }
+
+        function appendChatMessage(sender, text) {
+            const container = document.getElementById('chatMessages');
+            if (!container) return;
+            const isUser = sender === 'user';
+            
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `flex items-start space-x-3 ${isUser ? 'justify-end' : ''}`;
+
+            const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+
+            if (isUser) {
+                msgDiv.innerHTML = `
+                    <div class="bg-sky-500 text-white p-3.5 rounded-2xl text-xs space-y-1 max-w-[85%] shadow-sm">
+                        <p class="font-extrabold text-[10px] text-sky-100 uppercase">You</p>
+                        <p class="leading-relaxed font-medium">${formattedText}</p>
+                    </div>
+                `;
+            } else {
+                msgDiv.innerHTML = `
+                    <div class="w-8 h-8 rounded-xl bg-sky-500 text-white flex items-center justify-center shrink-0 text-xs font-bold">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 text-xs text-slate-800 space-y-1 max-w-[85%] shadow-sm">
+                        <p class="font-extrabold text-sky-900 text-xs">Rebound Live Coach</p>
+                        <p class="leading-relaxed">${formattedText}</p>
+                    </div>
+                `;
+            }
+
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        async function handleChatSubmit(e) {
+            if (e) e.preventDefault();
+            const input = document.getElementById('chatInput');
+            const question = input.value.trim();
+            if (!question) return;
+
+            appendChatMessage('user', question);
+            input.value = '';
+
+            const sendBtn = document.getElementById('sendChatBtn');
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i>`;
+
+            const profSport = document.getElementById('profSport')?.value || 'Athlete';
+            const profAge = document.getElementById('profAge')?.value || '18';
+            const selectedAreas = typeof getSelectedMuscleAreas === 'function' ? getSelectedMuscleAreas().join(', ') : 'Quads';
+
+            const contextPrompt = `ATHLETE CONTEXT: Primary Sport: ${profSport} | Age: ${profAge} | Current Sore Areas: ${selectedAreas}.
+ATHLETE QUESTION: "${question}"
+
+SYSTEM INSTRUCTIONS:
+- You are Rebound Live Coach. Keep your tone encouraging, direct, and energetic.
+- Use clear, simple, understandable English for athletes of all ages (no textbook medical jargon).
+- Provide SPECIFIC, HIGHLY ACTIONABLE recovery routines, exact hold times, or step-by-step recipe/snack ideas.
+- Keep responses concise (2-4 bullet points max) so they are fast and readable.`;
+
+            try {
+                const response = await fetch('/api/recovery-plan', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ activity: contextPrompt, effort: '2', sleep: '8', sore: '2', area: selectedAreas, stress: '2' })
+                });
+
+                const data = await response.json();
+                appendChatMessage('coach', data.plan || "I'm right here! Give that tight area a gentle 45-second hold and stay hydrated before your next session.");
+            } catch (err) {
+                appendChatMessage('coach', "I couldn't fetch that right now! Stay focused, do some gentle light movement, and try asking again in a second.");
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = `<span>Send</span><i class="fa-solid fa-paper-plane text-xs"></i>`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const chatForm = document.getElementById('chatForm');
+            if (chatForm) chatForm.addEventListener('submit', handleChatSubmit);
         });
 
         // ================= CALENDAR & EVENT MANAGEMENT =================
